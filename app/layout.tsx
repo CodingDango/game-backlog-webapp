@@ -1,6 +1,7 @@
+import "./globals.css";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import { Toaster } from "@/components/ui/sonner"
 import { AuthProvider } from "@/components/ui/AuthContext";
 
 const geistSans = Geist({
@@ -29,9 +30,10 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black dark`}
       >
         <AuthProvider>
-            <main className="min-h-dvh flex justify-center items-center p-4">
+            <main className="min-h-dvh flex justify-center px-4 py-6 items-center">
               {children}
             </main>
+            <Toaster/>
         </AuthProvider>
       </body>
     </html>

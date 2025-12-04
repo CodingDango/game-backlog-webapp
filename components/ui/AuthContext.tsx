@@ -3,6 +3,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client'; // Your Supabase client instance
 import { SignInWithPasswordlessCredentials, Session, AuthOtpResponse } from '@supabase/supabase-js';
+import { useRouter } from 'next/navigation';
 
 interface AuthContextValue {
   session: Session;
@@ -16,6 +17,7 @@ const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
   const [session, setSession] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
   const supabase = createClient();
   
   useEffect(() => {
@@ -34,7 +36,10 @@ export const AuthProvider = ({ children }) => {
   const value: AuthContextValue = {
     session,
     loading,
-    signOut: () => supabase.auth.signOut(),
+    signOut: () => {
+      supabase.auth.signOut();
+      router.push('/login');
+    },
   };
 
   return (
