@@ -1,25 +1,36 @@
 "use client";
 
 import GameCard from "@/components/GameCard";
+import { keyByMap } from "@/lib/utils";
 import { useAuth } from "@/components/ui/AuthContext";
 import { Button } from "@/components/ui/button";
-import { gameService } from "@/lib/services/game-service";
-import { Game } from "@/lib/types";
-
+import { getRawgGames, getUserLibrary } from "@/lib/actions";
+import { Game, UserGame } from "@/lib/types";
+import { toast } from "sonner";
 import { useState, useEffect } from "react";
 
 export default function Home() {
   const { session, signOut } = useAuth();
   const [games, setGames] = useState<Game[]>([]);
+  const [userLibrary, setUserLibrary] = useState<Map<number, UserGame>>(
+    new Map()
+  );
 
   useEffect(() => {
-    gameService.getGames()
-      .then(gameRes => {
+    const fetchGames = async () => {
+      try {
+        const gameRes = await getRawgGames();
+        const fetchedUserLibrary = await getUserLibrary();
+        const userLibraryAsMap = keyByMap(fetchedUserLibrary, "rawg_id");
+
         setGames(gameRes.results);
-      })
-      .catch(err => {
-        console.log('Oops! Error!', err);
-      })
+        setUserLibrary(userLibraryAsMap);
+      } catch (err) {
+        toast.error(`Error fetching games: ${err}`);
+      }
+    };
+
+    fetchGames();
   }, []);
 
   if (!session) return;
@@ -39,7 +50,17 @@ export default function Home() {
         </div>
       </header>
       <div className="w-full grid grid-cols-3 gap-6">
-        {games.map((game) => (<GameCard key={game.id} game={game}/>))}
+        {games.map((game) => {
+          const isInUserLibrary = userLibrary.has(game.id);
+
+          return (
+            <GameCard
+              key={game.id}
+              game={game}
+              isInUserLibrary={isInUserLibrary}
+            />
+          );
+        })}
       </div>
     </div>
   );

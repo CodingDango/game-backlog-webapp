@@ -20,3 +20,15 @@ export function getMetascoreColor(metascore: number): MetascoreColor {
     return { bgCol: "bg-red-400", textCol: "text-red-400", borderCol: 'border-red-400'};
   }
 }
+
+// TODO LEARN THIS CONFUSING GIBERRISH LATER
+export function keyByMap<T, K extends keyof T>(
+  array: T[],
+  key: K
+): Map<T[K], T> {
+  return array.reduce((map, item) => {
+    const keyForMap = item[key];
+    map.set(keyForMap, item);
+    return map;
+  }, new Map());
+}
