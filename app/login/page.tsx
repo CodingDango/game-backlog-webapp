@@ -7,7 +7,7 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/components/ui/AuthContext";
+import { useAuth } from "@/components/AuthContext";
 import { createClient } from "@/lib/supabase/client";
 import { Input } from "@/components/ui/input";
 import { useRouter } from 'next/navigation'

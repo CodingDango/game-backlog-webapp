@@ -1,11 +1,4 @@
-export interface RawgGamesResponse {
-  count: number;
-  next: string | null;
-  previous: string | null;
-  results: Game[];
-}
-
-export interface Game {
+export interface RawgGame {
   id: number;
   name: string;
   released: string;
@@ -24,6 +17,8 @@ export interface UserGame {
   rawg_id: number;
 }
 
+export type HydratedUserGame = UserGame & { rawg_game: RawgGame | undefined };
+  
 export interface Genre {
   name: string;
   games_count: number;
@@ -36,9 +31,3 @@ export interface InsertResponse {
   success: boolean;
   error?: string;
 }
-
-export interface UserLibraryResponse {
-  success: boolean;
-  error?: string;
-  results?: UserGame[]
-};

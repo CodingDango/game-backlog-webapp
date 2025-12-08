@@ -42,8 +42,10 @@ export const AuthProvider = ({ children }) => {
     },
   };
 
+  // TODO: make this a spinner
   return (
     <AuthContext.Provider value={value}>
+      {loading && <p>Loading Session...</p>}
       {!loading && children}
     </AuthContext.Provider>
   );
