@@ -1,0 +1,20 @@
+import { HydratedGame } from "@/lib/types";
+import GameCard from "./GameCard";
+
+interface Props {
+  hydratedGames: HydratedGame[];
+}
+
+export default function GameGrid({ hydratedGames }: Props) {
+  return (
+    <div className="w-full grid grid-cols-3 gap-6">
+      {hydratedGames.map((hydrated) => (
+        <GameCard
+          key={hydrated.rawg_game.id}
+          game={hydrated.rawg_game}
+          userGame={hydrated.user_game}
+        />
+      ))}
+    </div>
+  );
+}

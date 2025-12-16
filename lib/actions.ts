@@ -3,7 +3,7 @@
 import { error } from "console";
 import { createClient } from "./supabase/server";
 import { RawgGame } from "./types";
-import type { Category, HydratedUserGame, InsertResponse, UserGame, UserRating } from "./types";
+import type { Category, HydratedGame, InsertResponse, UserGame, UserRating } from "./types";
 import { join } from "path";
 
 interface SuccessResponse<T> {
@@ -202,7 +202,7 @@ export async function modifyUserGameCategory(id: number, category: Category) {
   return { success: true };
 }
 
-export async function getHydratedUserLibrary(): Promise<SuccessResponse<HydratedUserGame> | ErrorResponse> {
+export async function getHydratedUserLibrary(): Promise<SuccessResponse<HydratedGame> | ErrorResponse> {
   const userGamesRes = await getUserGames();
   
   if (!userGamesRes.success) {
@@ -221,13 +221,11 @@ export async function getHydratedUserLibrary(): Promise<SuccessResponse<Hydrated
   );
 
   const hydrated = rawgGamesRes.results.map(rawgGame => {
-    const userGame = userGamesMap.get(rawgGame.id)!;
+    const userGame = userGamesMap.get(rawgGame.id);
 
     return {
-      ...userGame,
-      rawg_game: {
-        ...rawgGame
-      }
+      rawg_game: rawgGame,
+      user_game: userGame
     };
   });
 

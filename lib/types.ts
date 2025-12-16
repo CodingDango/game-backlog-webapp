@@ -17,7 +17,7 @@ export interface UserGame {
   rawg_id: number;
 }
 
-export type HydratedUserGame = UserGame & { rawg_game: RawgGame | undefined };
+export type HydratedGame = { user_game: UserGame | undefined, rawg_game: RawgGame };
   
 export interface Genre {
   name: string;

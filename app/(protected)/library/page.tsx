@@ -2,11 +2,16 @@
 
 import { hydrate, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { getHydratedUserLibrary, getRawgGames, getUserGames } from "@/lib/actions";
+import {
+  getHydratedUserLibrary,
+  getRawgGames,
+  getUserGames,
+} from "@/lib/actions";
 import { Spinner } from "@/components/ui/spinner";
 import GameCard from "@/components/GameCard";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import GameGrid from "@/components/GameGrid";
 
 export default function UserLibrary() {
   const {
@@ -15,7 +20,7 @@ export default function UserLibrary() {
     isError: isErrorUserGames,
     error: errorUserGames,
   } = useQuery({
-    queryKey: ["userGames", 'hydratedUserLibrary'],
+    queryKey: ["userGames", "hydratedUserLibrary"],
     queryFn: async () => {
       const hydratedLibraryRes = await getHydratedUserLibrary();
 
@@ -29,20 +34,16 @@ export default function UserLibrary() {
   });
 
   return (
-    <div className="w-full max-w-5xl flex flex-col gap-8">
+    <div className="w-full flex flex-col gap-8">
       <header className="w-full flex justify-between items-center">
         <h1 className="text-2xl font-medium">Your Library</h1>
       </header>
 
-      <div className="w-full grid grid-cols-3 gap-6">
-        {isLoadingUserGames ? (
-          <Spinner />
-        ) : (
-          hydratedUserLibrary?.map(userGame => (
-            <GameCard key={userGame.id} game={userGame.rawg_game!} userGame={userGame} />
-          ))
-        )}
-      </div>
+      {isLoadingUserGames ? (
+        <Spinner />
+      ) : (
+        <GameGrid hydratedGames={hydratedUserLibrary || []} />
+      )}
     </div>
   );
 }

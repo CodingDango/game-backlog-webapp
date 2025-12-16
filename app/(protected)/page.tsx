@@ -5,8 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { Input } from "@/components/ui/input";
 import { useRawgGames, useUserLibrary } from "@/hooks/useGames";
+import { useMemo } from "react";
+import { HydratedGame } from "@/lib/types";
 
-import GameCard from "@/components/GameCard";
+import GameGrid from "@/components/GameGrid";
 
 export default function Home() {
   const { session } = useAuth();
@@ -18,6 +20,16 @@ export default function Home() {
   } = useRawgGames();
 
   const { userLibrary } = useUserLibrary(session);
+  
+  const hydratedGames: HydratedGame[] = useMemo(() => {
+    const hydrated = rawgGames.map(rawgGame => ({
+        rawg_game: rawgGame,
+        user_game: userLibrary.get(rawgGame.id)
+    }));
+
+    return hydrated;
+
+  }, [userLibrary, rawgGames]);
 
   return (
     <div className="w-full flex flex-col gap-8">
@@ -30,12 +42,7 @@ export default function Home() {
         placeholder="Search games by title"
       />
 
-      <div className="w-full grid grid-cols-3 gap-6">
-        {rawgGames.map((game) => {
-          const userGame = userLibrary.get(game.id);
-          return <GameCard key={game.id} game={game} userGame={userGame} />;
-        })}
-      </div>
+      <GameGrid hydratedGames={hydratedGames}/>
 
       <div className="flex justify-center">
         {/* where  do i get the isLoading? not from rawgGames.. okay i cant think of a solution  */}
