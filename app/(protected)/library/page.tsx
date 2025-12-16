@@ -32,9 +32,6 @@ export default function UserLibrary() {
     <div className="w-full max-w-5xl flex flex-col gap-8">
       <header className="w-full flex justify-between items-center">
         <h1 className="text-2xl font-medium">Your Library</h1>
-        <Button asChild variant={"secondary"}>
-          <Link href={"/"}>Home</Link>
-        </Button>
       </header>
 
       <div className="w-full grid grid-cols-3 gap-6">

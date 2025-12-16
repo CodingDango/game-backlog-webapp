@@ -87,7 +87,7 @@ export async function getUserGames(): Promise<UserGamesResponse> {
   } = await supabase.auth.getUser();
 
   if (authError || !user) {
-    const error = authError?.message || "I dont know, user session is null";
+    const error = authError?.message || "I don't know, user session is null";
     console.error(error);
 
     return {

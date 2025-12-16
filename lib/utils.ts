@@ -21,11 +21,8 @@ export function getMetascoreColor(metascore: number): MetascoreColor {
   }
 }
 
-// TODO LEARN THIS CONFUSING GIBERRISH LATER
-export function keyByMap<T, K extends keyof T>(
-  array: T[],
-  key: K
-): Map<T[K], T> {
+// TODO LEARN THIS CONFUSING GIBBERISH LATER
+export function keyByMap(array: any[], key: string) {
   return array.reduce((map, item) => {
     const keyForMap = item[key];
     map.set(keyForMap, item);
