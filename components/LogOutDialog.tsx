@@ -18,7 +18,7 @@ export function LogOutDialog({ handleLogOut }: Props) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant={'destructive'}>Log Out</Button>
+        <Button variant={'default'}>Log Out</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>

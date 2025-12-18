@@ -117,7 +117,7 @@ export async function getUserGames(): Promise<UserGamesResponse> {
 
 export async function addGameToLibrary(
   rawgId: number,
-  category: Category = null,
+  category: Category = 'uncategorized',
   userRating: UserRating = null
 ): Promise<InsertResponse> {
   const supabase = await createClient();

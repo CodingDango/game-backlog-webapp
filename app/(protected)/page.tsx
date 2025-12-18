@@ -33,9 +33,9 @@ export default function Home() {
 
   return (
     <div className="w-full flex flex-col gap-8">
-      <header className="w-full flex flex-col gap-6">
+      <div className="w-full flex flex-col gap-6">
         <h2 className="text-2xl font-medium">Games List</h2>
-      </header>
+      </div>
 
       <Input
         className="px-4 py-6 rounded-xl"
@@ -45,7 +45,6 @@ export default function Home() {
       <GameGrid hydratedGames={hydratedGames}/>
 
       <div className="flex justify-center">
-        {/* where  do i get the isLoading? not from rawgGames.. okay i cant think of a solution  */}
         <Button
           variant={"secondary"}
           size={"lg"}

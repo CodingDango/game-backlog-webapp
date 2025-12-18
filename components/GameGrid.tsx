@@ -11,8 +11,7 @@ export default function GameGrid({ hydratedGames }: Props) {
       {hydratedGames.map((hydrated) => (
         <GameCard
           key={hydrated.rawg_game.id}
-          game={hydrated.rawg_game}
-          userGame={hydrated.user_game}
+          hydratedGame={hydrated}
         />
       ))}
     </div>

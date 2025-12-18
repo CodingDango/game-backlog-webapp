@@ -1,16 +1,9 @@
 "use client";
 
-import { hydrate, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
-import {
-  getHydratedUserLibrary,
-  getRawgGames,
-  getUserGames,
-} from "@/lib/actions";
+import { getHydratedUserLibrary } from "@/lib/actions";
 import { Spinner } from "@/components/ui/spinner";
-import GameCard from "@/components/GameCard";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import GameGrid from "@/components/GameGrid";
 
 export default function UserLibrary() {

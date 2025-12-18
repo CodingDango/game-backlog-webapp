@@ -24,7 +24,7 @@ export interface Genre {
   games_count: number;
 }
 
-export type Category = 'uncategorized' | 'playing' | 'played' | 'unplayed' | null | undefined;
+export type Category = 'uncategorized' | 'currently playing' | 'completed' | 'played' | 'not played';
 export type UserRating = 'meh' | 'recommended' | 'exceptional' | null | undefined;
 
 export interface InsertResponse {
