@@ -1,5 +1,6 @@
 export interface RawgGame {
   id: number;
+  slug: string;
   name: string;
   released: string;
   background_image: string;
@@ -25,6 +26,7 @@ export interface Genre {
 }
 
 export type Category = 'uncategorized' | 'currently playing' | 'completed' | 'played' | 'not played';
+export type LibraryCategory = 'all games' | Category;
 export type UserRating = 'meh' | 'recommended' | 'exceptional' | null | undefined;
 
 export interface InsertResponse {

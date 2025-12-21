@@ -1,18 +1,27 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
-import { getRawgGameList } from "@/lib/actions";
+import { getHydratedUserLibrary, getRawgGameList } from "@/lib/actions";
 import { useMemo } from "react";
 import { toast } from "sonner";
 import { keyByMap } from "@/lib/utils";
 import { UserGame } from "@/lib/types";
 import { getUserGames } from "@/lib/actions";
+import { useAuth } from "@/components/AuthProvider";
 
-export function useRawgGames() {
+interface GetGamesParams {
+  page?: number;
+  search?: string;
+  ids?: number[];
+}
+
+export function useRawgGames({ page = 1, search, ids }: GetGamesParams = {}) {
   const query = useInfiniteQuery({
-    queryKey: ["rawgGames"],
-    queryFn: ({ pageParam = 1 }) => getRawgGameList(pageParam),
-    initialPageParam: 1,
+    queryKey: ["rawgGames", search, ids],
+    initialPageParam: page,
+    queryFn: ({ pageParam = 1 }) => getRawgGameList(pageParam, search, ids),
     getNextPageParam: (lastPage) => {
       if (!lastPage || !lastPage.success || !lastPage.next) return undefined;
+
+      debugger;
 
       const urlStr = lastPage.next;
       const url = new URL(urlStr);
@@ -35,7 +44,7 @@ export function useRawgGames() {
   };
 }
 
-export function useUserLibrary(session: any) {
+export function useLibraryMap(session: any) {
   const query = useQuery({
     enabled: Boolean(session),
     queryKey: ["userGames"],
@@ -50,7 +59,7 @@ export function useUserLibrary(session: any) {
       }
     },
   });
-  
+
   const userGames = query?.data || [];
 
   const userLibrary = useMemo(() => {
@@ -63,6 +72,26 @@ export function useUserLibrary(session: any) {
 
   return {
     userLibrary,
-    ...query
+    ...query,
   };
+}
+
+export function useHydratedLibrary() {
+  const { session } = useAuth();
+  const userId = session?.user?.id;
+
+  const query = useQuery({
+    enabled: !!userId,
+    queryKey: ["userGames", "hydratedUserLibrary"],
+    queryFn: async () => {
+      const res = await getHydratedUserLibrary();
+      if (!res.success) {
+        toast.error(res.error);
+        throw new Error(res.error);
+      }
+      return res.results;
+    },
+  });
+
+  return query;
 }

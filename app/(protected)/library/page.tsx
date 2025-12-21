@@ -5,38 +5,41 @@ import { toast } from "sonner";
 import { getHydratedUserLibrary } from "@/lib/actions";
 import { Spinner } from "@/components/ui/spinner";
 import GameGrid from "@/components/GameGrid";
+import { Input } from "@/components/ui/input";
+import { Category, LibraryCategory } from "@/lib/types";
+import { LibraryCategories } from "@/components/LibraryCategories";
+import { useMemo, useState } from "react";
+import { useHydratedLibrary } from "@/hooks/useGames";
 
 export default function UserLibrary() {
-  const {
-    data: hydratedUserLibrary,
-    isLoading: isLoadingUserGames,
-    isError: isErrorUserGames,
-    error: errorUserGames,
-  } = useQuery({
-    queryKey: ["userGames", "hydratedUserLibrary"],
-    queryFn: async () => {
-      const hydratedLibraryRes = await getHydratedUserLibrary();
+  const { data: hydratedLibrary, isLoading } = useHydratedLibrary();
+  const [category, setCategory] = useState<LibraryCategory>("all games");
 
-      if (!hydratedLibraryRes.success) {
-        toast.error(hydratedLibraryRes.error);
-        return [];
-      }
+  const games = useMemo(() => {
+    if (!hydratedLibrary?.length) return [];
 
-      return hydratedLibraryRes.results;
-    },
-  });
+    const filtered = hydratedLibrary.filter(
+      (game) =>
+        category === "all games"
+        || game.user_game?.category === (category as Category) 
+    );
+
+    filtered.sort(
+      (a, b) =>
+        new Date(b.user_game?.created_at || "").getTime() -
+        new Date(a.user_game?.created_at || "").getTime()
+    );
+
+    return filtered;
+  }, [hydratedLibrary, category]);
 
   return (
-    <div className="w-full flex flex-col gap-8">
-      <header className="w-full flex justify-between items-center">
-        <h1 className="text-2xl font-medium">Your Library</h1>
-      </header>
+    <div className="w-full flex flex-col gap-12">
+      <h1 className="text-4xl font-medium">Your Library</h1>
 
-      {isLoadingUserGames ? (
-        <Spinner />
-      ) : (
-        <GameGrid hydratedGames={hydratedUserLibrary || []} />
-      )}
+      <LibraryCategories value={category} onValueChange={setCategory} />
+
+      {isLoading ? <Spinner /> : <GameGrid hydratedGames={games || []} />}
     </div>
   );
 }

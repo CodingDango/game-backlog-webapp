@@ -3,7 +3,13 @@
 import { error } from "console";
 import { createClient } from "./supabase/server";
 import { RawgGame } from "./types";
-import type { Category, HydratedGame, InsertResponse, UserGame, UserRating } from "./types";
+import type {
+  Category,
+  HydratedGame,
+  InsertResponse,
+  UserGame,
+  UserRating,
+} from "./types";
 import { join } from "path";
 
 interface SuccessResponse<T> {
@@ -28,11 +34,26 @@ export type UserGamesResponse = UserLibrarySuccess | ErrorResponse;
 export type RawgGamesResponse = SuccessResponse<RawgGame> | ErrorResponse;
 
 export async function getRawgGameList(
-  page: number = 1
+  page = 1,
+  search?: string,
+  ids?: number[]
 ): Promise<RawgGamesResponse> {
   const endpoint = `${process.env.RAWG_ENDPOINT}/games`;
-  const apiKey = process.env.RAWG_API_KEY;
-  const res = await fetch(`${endpoint}?key=${apiKey}&page=${page}`);
+  const url = new URL(endpoint);
+
+  url.searchParams.set("key", process.env.RAWG_API_KEY!);
+  url.searchParams.set("page", page.toString());
+
+  if (search) {
+    url.searchParams.set("search", search);
+  }
+
+  if (ids && ids.length > 0) {
+    url.searchParams.set("ids", ids.join(","));
+  }
+
+  console.log(`Fetching: ${url.toString()}`); // Good for debugging
+  const res = await fetch(url.toString());
 
   if (!res.ok) {
     return {
@@ -42,7 +63,6 @@ export async function getRawgGameList(
   }
 
   const json = await res.json();
-  console.log("Success fetching for games", page);
 
   return {
     success: true,
@@ -117,7 +137,7 @@ export async function getUserGames(): Promise<UserGamesResponse> {
 
 export async function addGameToLibrary(
   rawgId: number,
-  category: Category = 'uncategorized',
+  category: Category = "uncategorized",
   userRating: UserRating = null
 ): Promise<InsertResponse> {
   const supabase = await createClient();
@@ -190,7 +210,7 @@ export async function modifyUserGameCategory(id: number, category: Category) {
   const userId = authData.user.id;
   const { error: removeErr } = await supabase
     .from("user_games")
-    .update({category})
+    .update({ category })
     .eq("user_id", userId)
     .eq("id", id);
 
@@ -202,30 +222,35 @@ export async function modifyUserGameCategory(id: number, category: Category) {
   return { success: true };
 }
 
-export async function getHydratedUserLibrary(): Promise<SuccessResponse<HydratedGame> | ErrorResponse> {
+// TODO: Add pagination to getHydratedUserLibrary
+export async function getHydratedUserLibrary(): Promise<
+  SuccessResponse<HydratedGame> | ErrorResponse
+> {
   const userGamesRes = await getUserGames();
-  
+
   if (!userGamesRes.success) {
     return { success: false, error: userGamesRes.error };
   }
 
-  const userGameRawgIds = userGamesRes.results.map(userGame => userGame.rawg_id);
+  const userGameRawgIds = userGamesRes.results.map(
+    (userGame) => userGame.rawg_id
+  );
   const rawgGamesRes = await getRawgGames(userGameRawgIds);
-  
+
   if (!rawgGamesRes.success) {
     return { success: false, error: rawgGamesRes.error };
   }
 
   const userGamesMap = new Map(
-    userGamesRes.results.map(entry => [entry.rawg_id, entry])
+    userGamesRes.results.map((entry) => [entry.rawg_id, entry])
   );
 
-  const hydrated = rawgGamesRes.results.map(rawgGame => {
+  const hydrated = rawgGamesRes.results.map((rawgGame) => {
     const userGame = userGamesMap.get(rawgGame.id);
 
     return {
       rawg_game: rawgGame,
-      user_game: userGame
+      user_game: userGame,
     };
   });
 
@@ -234,6 +259,6 @@ export async function getHydratedUserLibrary(): Promise<SuccessResponse<Hydrated
     next: null,
     previous: null,
     count: hydrated.length,
-    results: hydrated
+    results: hydrated,
   };
 }

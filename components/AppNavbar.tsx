@@ -4,15 +4,17 @@ import { LogOutDialog } from "./LogOutDialog";
 import { useAuth } from "./AuthProvider";
 
 import Link from "next/link";
+import AppSearchInput from "./AppSearchInput";
 
 export default function AppNavbar() {
   const { session, logOut } = useAuth();
 
   return (
-    <nav className="px-8 py-4 flex justify-center bg-card">
-      <div className="max-w-5xl w-full">
+    <nav className="px-8 py-4 flex justify-center border-b-accent border-b">
+      <div className="max-w-7xl w-full">
         <div className="flex gap-8 justify-between items-center">
-          <h1>Backlog</h1>
+        <Link className="font-medium" href={'/'}>Backlog</Link>
+          <AppSearchInput/>
           <ul className="flex gap-8 items-center">
             <li>
               <Link href="/">Games</Link>
