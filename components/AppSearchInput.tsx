@@ -15,7 +15,7 @@ export default function AppSearchInput() {
       value={query}
       onChange={(e) => setQuery(e.target.value)}
       onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-      className="px-4 py-4 rounded-2xl border-0 bg-card!"
+      className="px-3 py-4 rounded-lg bg-card! border border-accent w-full"
       placeholder="Search games by title"
     />
   );
