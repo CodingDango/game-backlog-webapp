@@ -14,7 +14,7 @@ export default function ProtectedLayout({ children }: Props) {
         <div className="w-full min-h-dvh flex flex-col">
           <AppNavbar />
           <div className="px-8 py-12 flex justify-center">
-            <main className="max-w-7xl w-full">{children}</main>
+            <main className="max-w-7xl w-full relative">{children}</main>
           </div>
         </div>
         <Toaster />

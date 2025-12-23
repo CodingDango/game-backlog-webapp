@@ -7,10 +7,10 @@ import type {
   Category,
   HydratedGame,
   InsertResponse,
+  RawgGameDetails,
   UserGame,
   UserRating,
 } from "./types";
-import { join } from "path";
 
 interface SuccessResponse<T> {
   success: true;
@@ -33,6 +33,7 @@ interface UserLibrarySuccess {
 export type UserGamesResponse = UserLibrarySuccess | ErrorResponse;
 export type RawgGamesResponse = SuccessResponse<RawgGame> | ErrorResponse;
 
+// TODO: Understand this function as AI contributed to this a lot
 export async function getRawgGameList(
   page = 1,
   search?: string,
@@ -261,4 +262,18 @@ export async function getHydratedUserLibrary(): Promise<
     count: hydrated.length,
     results: hydrated,
   };
+}
+
+export async function getRawgGameDetails(slug: string): Promise<ErrorResponse | RawgGameDetails> {
+  const apiKey = process.env.RAWG_API_KEY;
+  const endpoint = `https://api.rawg.io/api/games/${slug}?key=${apiKey}`;
+  const res = await fetch(endpoint);
+
+  if (!res.ok) {
+    return { success: false, error: res.statusText};
+  }
+
+  const details = await res.json();
+
+  return details as RawgGameDetails;
 }

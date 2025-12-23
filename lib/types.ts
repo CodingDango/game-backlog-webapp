@@ -18,6 +18,29 @@ export interface UserGame {
   rawg_id: number;
 }
 
+export interface RawgGameDetails {
+  id: number;
+  name: string;
+  description: string;
+  metacritic: number;
+  playtime: number;
+  released: string;
+  background_image: string;
+  background_image_additional: string;
+  platforms: PlatformEntry[]
+}
+
+export interface PlatformEntry {
+  platform: Platform;
+  released_at: string;
+}
+
+export interface Platform {
+  id: number,
+  slug: string,
+  name: string
+}
+
 export type HydratedGame = { user_game: UserGame | undefined, rawg_game: RawgGame };
   
 export interface Genre {
