@@ -8,6 +8,7 @@ import type {
   HydratedGame,
   InsertResponse,
   RawgGameDetails,
+  Screenshot,
   UserGame,
   UserRating,
 } from "./types";
@@ -30,6 +31,9 @@ interface UserLibrarySuccess {
   results: UserGame[];
 }
 
+export type RawgScreenshotResponse =
+  | SuccessResponse<Screenshot>
+  | ErrorResponse;
 export type UserGamesResponse = UserLibrarySuccess | ErrorResponse;
 export type RawgGamesResponse = SuccessResponse<RawgGame> | ErrorResponse;
 
@@ -264,16 +268,34 @@ export async function getHydratedUserLibrary(): Promise<
   };
 }
 
-export async function getRawgGameDetails(slug: string): Promise<ErrorResponse | RawgGameDetails> {
+export async function getRawgGameDetails(
+  slug: string
+): Promise<ErrorResponse | RawgGameDetails> {
   const apiKey = process.env.RAWG_API_KEY;
   const endpoint = `https://api.rawg.io/api/games/${slug}?key=${apiKey}`;
   const res = await fetch(endpoint);
 
   if (!res.ok) {
-    return { success: false, error: res.statusText};
+    return { success: false, error: res.statusText };
   }
 
   const details = await res.json();
 
   return details as RawgGameDetails;
+}
+
+export async function getRawgGameScreenshots(
+  slug: string
+): Promise<RawgScreenshotResponse> {
+  const apiKey = process.env.RAWG_API_KEY;
+  const endpoint = `https://api.rawg.io/api/games/${slug}/screenshots?key=${apiKey}`;
+  const res = await fetch(endpoint);
+
+  if (!res.ok) {
+    return { success: false, error: res.statusText };
+  }
+
+  const details = await res.json();
+
+  return details;
 }

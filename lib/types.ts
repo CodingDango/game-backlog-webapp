@@ -27,7 +27,15 @@ export interface RawgGameDetails {
   released: string;
   background_image: string;
   background_image_additional: string;
-  platforms: PlatformEntry[]
+  platforms: PlatformEntry[];
+  genres: Genre[];
+  developers: Developer[];
+}
+
+export interface Developer {
+  image_background: string;
+  name: string;
+  slug: string;
 }
 
 export interface PlatformEntry {
@@ -41,11 +49,18 @@ export interface Platform {
   name: string
 }
 
+export interface Screenshot {
+  image: string;
+}
+
 export type HydratedGame = { user_game: UserGame | undefined, rawg_game: RawgGame };
   
 export interface Genre {
-  name: string;
+  id: number;
   games_count: number;
+  name: string;
+  slug: string;
+  image_background: string;
 }
 
 export type Category = 'uncategorized' | 'currently playing' | 'completed' | 'played' | 'not played';

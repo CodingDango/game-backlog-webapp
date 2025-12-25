@@ -21,7 +21,20 @@ export function getMetascoreColor(metascore: number): MetascoreColor {
   }
 }
 
-// TODO LEARN THIS CONFUSING GIBBERISH LATER
+export function formatDate(dateString: string): string {
+  if (!dateString) return '';
+
+  const options: Intl.DateTimeFormatOptions = { 
+    month: 'long', 
+    day: 'numeric', 
+    year: 'numeric' 
+  };
+
+  const date = new Date(dateString + 'T00:00:00');
+
+  return date.toLocaleDateString('en-US', options);
+}
+
 export function keyByMap(array: any[], key: string) {
   return array.reduce((map, item) => {
     const keyForMap = item[key];
