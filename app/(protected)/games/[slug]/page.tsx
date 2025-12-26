@@ -1,7 +1,7 @@
 "use client";
 
 import { use, useMemo } from "react";
-import { getRawgGameDetails, getRawgGameScreenshots } from "@/lib/actions";
+import { getRawgGameDetails, getRawgGameScreenshots, getUserGame } from "@/lib/actions";
 import { useQuery } from "@tanstack/react-query";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,14 +13,14 @@ import Image from "next/image";
 import AddToLibrary from "@/components/AddToLibrary";
 import CommaSeparatedList from "@/components/TextList";
 import { AppCarousel } from "@/components/Carousel";
-import { Screenshot } from "@/lib/types";
+import { Screenshot, UserGame } from "@/lib/types";
+import { toast } from "sonner";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
 // TODO: Add playtime card,
-// TODO: add carousel for screeshots,
 // TODO: add minimum requirements at the bottom if it has a PC port.
 
 export default function DetailsPage({ params }: PageProps) {
@@ -29,6 +29,20 @@ export default function DetailsPage({ params }: PageProps) {
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["rawgGames", slug],
     queryFn: () => getRawgGameDetails(slug),
+  });
+
+  const { data: userGame, isLoading: userGameLoading, isError: userGameIsError, error: userGameError } = useQuery({
+    enabled: !isLoading,
+    queryKey: ["userGames", slug],
+    queryFn: async () => {
+      const res = await getUserGame(data.id!);
+
+      if (res.error) {
+        toast.error(res.error);
+      }
+
+      return res as UserGame;
+    },
   });
 
   const { data: screenshotsRes, isLoading: isLoadingScreenshots } = useQuery({
@@ -57,6 +71,7 @@ export default function DetailsPage({ params }: PageProps) {
   if (!data) return <div>No data</div>;
 
   if (isError || "error" in data) return <div>{}</div>;
+
 
   return (
     <div className="flex flex-col gap-12">
@@ -131,9 +146,10 @@ export default function DetailsPage({ params }: PageProps) {
 
         <div className="space-y-8">
           <div className="space-y-4">
-            <AddToLibrary />
-            <Card className="py-2 px-4">
-              <CardContent className="flex justify-between items-center">
+            {/* <AddToLibrary /> */}
+            <AddToLibrary key={userGame?.id ?? "empty"} userGame={userGame} title={data.name} rawgId={data.id}/>
+            <Card className="h-12 p-0 px-4">
+              <CardContent className="my-auto flex justify-between items-center">
                 <span>Metacritic Rating</span>
                 <Badge
                   variant={"secondary"}

@@ -14,7 +14,7 @@ export interface UserGame {
   created_at: string;
   user_id: string;
   category: Category;
-  user_rating: UserRating;
+  user_rating: number;
   rawg_id: number;
 }
 

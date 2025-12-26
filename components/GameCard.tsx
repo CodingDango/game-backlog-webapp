@@ -22,7 +22,7 @@ export default function GameCard({ hydratedGame }: Props) {
   debugger
 
   return (
-    <Card className="pt-0 border-0 relative group">
+    <Card className="p-0 pb-6 pt-0 border-0 relative group">
       <Link
         className="absolute inset-0 rounded-xl cursor-pointer z-10"
         href={`/games/${hydratedGame.rawg_game.slug}`}

@@ -299,3 +299,39 @@ export async function getRawgGameScreenshots(
 
   return details;
 }
+
+export async function getUserGame(rawgId: number) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
+
+  if (authError || !user) {
+    const error = authError?.message || "I don't know, user session is null";
+    console.error(error);
+
+    return {
+      success: false,
+      error: error,
+    };
+  }
+
+  const { data: userGame, error: fetchErr } = await supabase
+    .from("user_games")
+    .select("*")
+    .eq("rawg_id", rawgId)
+    .single();
+    
+  if (fetchErr) {
+    console.error(fetchErr.message);
+    return {
+      success: false,
+      error: fetchErr.message,
+    };
+  }
+
+  return {
+    ...userGame
+  } as UserGame;
+}
