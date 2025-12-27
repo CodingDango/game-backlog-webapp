@@ -7,7 +7,7 @@ interface Props {
 
 export default function GameGrid({ hydratedGames }: Props) {
   return (
-    <div className="w-full grid grid-cols-4 gap-8">
+    <div className="w-full grid grid-cols-5 gap-8">
       {hydratedGames.map((hydrated) => (
         <GameCard
           key={hydrated.rawg_game.id}

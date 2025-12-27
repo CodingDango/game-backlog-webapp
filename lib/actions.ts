@@ -143,8 +143,8 @@ export async function getUserGames(): Promise<UserGamesResponse> {
 export async function addGameToLibrary(
   rawgId: number,
   category: Category = "uncategorized",
-  userRating: UserRating = null
-): Promise<InsertResponse> {
+  userRating: number | null = null
+): Promise<InsertResponse<RawgGame>> {
   const supabase = await createClient();
   const { data: authData, error: authError } = await supabase.auth.getUser();
 
@@ -165,18 +165,17 @@ export async function addGameToLibrary(
       },
       {
         onConflict: "user_id,rawg_id",
-        ignoreDuplicates: true,
       }
     )
-    .select("id")
+    .select("*")
     .single();
 
-  if (insertErr || !insertedData) {
+  if (insertErr) {
     console.log("Error inserting game:", insertErr);
     return { success: false, error: insertErr.message };
   }
 
-  return { success: true };
+  return { success: true, inserted: insertedData };
 }
 
 export async function removeGameFromLibrary(rawgId: number) {

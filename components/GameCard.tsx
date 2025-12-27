@@ -19,52 +19,32 @@ export default function GameCard({ hydratedGame }: Props) {
 
   // TODO: Figure out how to make card more consistent. when game name is more than 2 lines, it ruins the layout and makes the image smaller. i want all images to be the same size across different cards. hmmm..... rawg-io's implementation is different. they embrace the inconsistent layout? rawg io seems to use a grid of 3 columns, then the child being 3 flex boxes acting as the columns. interesting.
 
-  debugger
+  debugger;
 
   return (
-    <Card className="p-0 pb-6 pt-0 border-0 relative group">
-      <Link
-        className="absolute inset-0 rounded-xl cursor-pointer z-10"
-        href={`/games/${hydratedGame.rawg_game.slug}`}
-      ></Link>
-
-      <CardContent className="h-full p-0 flex flex-col gap-4">
-        <div className="flex-1 relative aspect-video">
+    <div>
+      <div className="relative flex flex-col gap-2 pb-2">
+        <Link
+          className="absolute inset-0 rounded-md cursor-pointer z-10"
+          href={`/games/${hydratedGame.rawg_game.slug}`}
+        ></Link>
+        <div className="flex-1 relative aspect-9/16 max-h-[300px]">
           {rawgGame.background_image ? (
             <Image
               src={`${rawgGame.background_image}`}
               fill
-              className="object-cover rounded-t-xl"
+              className="object-cover rounded-md"
               alt={`Picture of game ${rawgGame.name}`}
             />
           ) : (
-            <div className="w-full h-full rounded-t-xl object-cover grid place-items-center">
+            <div className="w-full rounded-t-md object-cover grid place-items-center">
               No image found
             </div>
           )}
         </div>
 
-        <div className="px-4 space-y-2">
-          {/* TODO: Add platforms available  */}
-          {rawgGame.metacritic ? (
-            <Badge
-              className={`rounded-sm bg-transparent ${metascoreColors.borderCol} ${metascoreColors.textCol}`}
-            >
-              {rawgGame.metacritic}
-            </Badge>
-          ) : (
-            <Badge className="rounded-sm" variant={"outline"}>
-              ?
-            </Badge>
-          )}
-          {/* could be card title, not sure. */}
-          <span className="line-clamp-2 text-xl">{rawgGame.name}</span>
-          
-          <div className="relative z-20">
-            <GameCardAction hydratedGame={hydratedGame}/>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+        <span className="line-clamp-2 text-lg ">{rawgGame.name}</span>
+      </div>
+    </div>
   );
 }

@@ -15,19 +15,20 @@ interface Props {
   isLoading: boolean;
 }
 
+//TODO: ADD SKELETONS AS REPLACEMENT WHILE IMAGES ARE LOADING
 export function AppCarousel({ imageUrls, isLoading }: Props) {
   return (
     <Carousel className="relative w-full h-full">
-      <CarouselContent className="h-full rounded-lg!">
+      <CarouselContent className="h-full">
         {isLoading ? (
           <CarouselItem>
             <Skeleton className="w-full h-full"/>
           </CarouselItem>
         ) : (
           imageUrls.map((link, index) => (
-            <CarouselItem key={index} className="rounded-lg">
-              <div className="h-full relative rounded-lg">
-                <Image src={link} fill alt="Image object-cover rounded-lg" />
+            <CarouselItem key={index}>
+              <div className="h-full relative ">
+                <Image src={link} fill alt="Image object-cover rounded-md" />
               </div>
             </CarouselItem>
           ))

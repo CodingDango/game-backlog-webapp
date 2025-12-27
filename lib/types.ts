@@ -67,7 +67,10 @@ export type Category = 'uncategorized' | 'currently playing' | 'completed' | 'pl
 export type LibraryCategory = 'all games' | Category;
 export type UserRating = 'meh' | 'recommended' | 'exceptional' | null | undefined;
 
-export interface InsertResponse {
-  success: boolean;
-  error?: string;
-}
+export type InsertResponse<T> = {
+  success: true;
+  inserted: T
+} | {
+  success: false;
+  error: string;
+};

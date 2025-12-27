@@ -14,8 +14,7 @@ export default function LoadMore({
 }: LoadMoreProps) {
   return (
     <Button
-      variant={"secondary"}
-      size={"lg"}
+      variant={'outline'}
       className="cursor-pointer"
       disabled={isFetchingNextPage || undefined}
       onClick={() => {

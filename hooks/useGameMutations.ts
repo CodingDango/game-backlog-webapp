@@ -9,17 +9,20 @@ import {
   modifyUserGameCategory,
   removeGameFromLibrary,
 } from "@/lib/actions";
+import { CacheEntry } from "next/dist/server/lib/cache-handlers/types";
 
 export function useGameMutation() {
   const queryClient = useQueryClient();
 
-  const handleAddGame = async (rawgGame: RawgGame) => {
-    const { success, error } = await addGameToLibrary(rawgGame.id);
+  const handleAddGame = async (rawgId: number, category?: Category, rating?: number, debugTitle?: string) => {
+    const res = await addGameToLibrary(rawgId, category, rating);
 
-    if (!success) {
-      toast.error(`Could not add game to library: ${error}`);
+    debugger
+
+    if (!res.success) {
+      toast.error(`Could not add game to library: ${res.error}`);
     } else {
-      toast.success(`Successfully added ${rawgGame.name} to the library`);
+      toast.success(`Successfully added ${debugTitle || rawgId} to the library`);
     }
 
     queryClient.invalidateQueries({ queryKey: ["userGames"] });

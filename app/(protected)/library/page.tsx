@@ -1,27 +1,28 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
-import { toast } from "sonner";
-import { getHydratedUserLibrary } from "@/lib/actions";
 import { Spinner } from "@/components/ui/spinner";
 import GameGrid from "@/components/GameGrid";
-import { Input } from "@/components/ui/input";
 import { Category, LibraryCategory } from "@/lib/types";
 import { LibraryCategories } from "@/components/LibraryCategories";
 import { useMemo, useState } from "react";
 import { useHydratedLibrary } from "@/hooks/useGames";
+import { SortLibrary } from "@/components/SortLibrary";
+
+type SortFilter = "newest" | "oldest" | "title-asc" | "title-desc";
 
 export default function UserLibrary() {
   const { data: hydratedLibrary, isLoading } = useHydratedLibrary();
+
   const [category, setCategory] = useState<LibraryCategory>("all games");
+  const [sort, setSort] = useState<SortFilter>("newest");
 
   const games = useMemo(() => {
     if (!hydratedLibrary?.length) return [];
 
     const filtered = hydratedLibrary.filter(
       (game) =>
-        category === "all games"
-        || game.user_game?.category === (category as Category) 
+        category === "all games" ||
+        game.user_game?.category === (category as Category)
     );
 
     filtered.sort(
@@ -37,7 +38,13 @@ export default function UserLibrary() {
     <div className="w-full flex flex-col gap-12">
       <h1 className="text-4xl font-medium">Your Library</h1>
 
-      <LibraryCategories value={category} onValueChange={setCategory} />
+      <div className="flex justify-between gap-8 items-center">
+        <LibraryCategories value={category} onValueChange={setCategory} />
+        <SortLibrary
+          value={sort}
+          onValueChange={(val: string) => setSort(val as SortFilter)}
+        />
+      </div>
 
       {isLoading ? <Spinner /> : <GameGrid hydratedGames={games || []} />}
     </div>
