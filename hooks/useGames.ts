@@ -85,10 +85,14 @@ export function useHydratedLibrary() {
     queryKey: ["userGames", "hydratedUserLibrary"],
     queryFn: async () => {
       const res = await getHydratedUserLibrary();
+      
       if (!res.success) {
         toast.error(res.error);
         throw new Error(res.error);
       }
+
+      console.log('hydrated library response', res);
+
       return res.results;
     },
   });

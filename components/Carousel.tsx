@@ -1,4 +1,3 @@
-import { Card, CardContent } from "@/components/ui/card";
 import {
   Carousel,
   CarouselContent,
@@ -9,6 +8,7 @@ import {
 
 import Image from "next/image";
 import { Skeleton } from "./ui/skeleton";
+import { AppImage } from "./AppImage";
 
 interface Props {
   imageUrls: string[];
@@ -22,26 +22,30 @@ export function AppCarousel({ imageUrls, isLoading }: Props) {
       <CarouselContent className="h-full">
         {isLoading ? (
           <CarouselItem>
-            <Skeleton className="w-full h-full"/>
+            <Skeleton className="w-full h-full" />
           </CarouselItem>
         ) : (
           imageUrls.map((link, index) => (
             <CarouselItem key={index}>
               <div className="h-full relative ">
-                <Image src={link} fill alt="Image object-cover rounded-md" />
+                <AppImage src={link} fill alt="idk image?" wrapperClassName="rounded-md"/>
               </div>
             </CarouselItem>
           ))
         )}
       </CarouselContent>
-      <CarouselPrevious
-        className="absolute left-2 bg-secondary/80"
-        variant={"secondary"}
-      />
-      <CarouselNext
-        className="absolute right-2 bg-secondary/80"
-        variant={"secondary"}
-      />
+      {!isLoading && imageUrls.length > 1 && (
+        <>
+          <CarouselPrevious
+            className="absolute left-2 bg-secondary/80"
+            variant={"secondary"}
+          />
+          <CarouselNext
+            className="absolute right-2 bg-secondary/80"
+            variant={"secondary"}
+          />
+        </>
+      )}
     </Carousel>
   );
 }

@@ -16,6 +16,7 @@ export default function UserLibrary() {
   const [category, setCategory] = useState<LibraryCategory>("all games");
   const [sort, setSort] = useState<SortFilter>("newest");
 
+
   const games = useMemo(() => {
     if (!hydratedLibrary?.length) return [];
 
@@ -25,14 +26,26 @@ export default function UserLibrary() {
         game.user_game?.category === (category as Category)
     );
 
-    filtered.sort(
-      (a, b) =>
-        new Date(b.user_game?.created_at || "").getTime() -
-        new Date(a.user_game?.created_at || "").getTime()
-    );
+    if (sort === "newest") {
+      filtered.sort(
+        (a, b) =>
+          new Date(b.user_game?.created_at || "").getTime() -
+          new Date(a.user_game?.created_at || "").getTime()
+      );
+    } else if (sort === "oldest") {
+      filtered.sort(
+        (a, b) =>
+          new Date(a.user_game?.created_at || "").getTime() -
+          new Date(b.user_game?.created_at || "").getTime()
+      );
+    } else if (sort === "title-asc") {
+      filtered.sort((a, b) => a.rawg_game.name.localeCompare(b.rawg_game.name));
+    } else if (sort === "title-desc") {
+      filtered.sort((a, b) => b.rawg_game.name.localeCompare(a.rawg_game.name));
+    }
 
     return filtered;
-  }, [hydratedLibrary, category]);
+  }, [hydratedLibrary, category, sort]);
 
   return (
     <div className="w-full flex flex-col gap-12">

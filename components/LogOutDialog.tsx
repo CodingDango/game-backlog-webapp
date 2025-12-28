@@ -9,17 +9,17 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { ReactNode } from "react";
 
 interface Props {
-  handleLogOut: () => void;
+  onLogOut: () => void;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
-export function LogOutDialog({ handleLogOut }: Props) {
+export function LogOutDialog({ onLogOut, open, onOpenChange }: Props) {
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button variant={'default'}>Log Out</Button>
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Logout Confirmation</DialogTitle>
@@ -31,7 +31,7 @@ export function LogOutDialog({ handleLogOut }: Props) {
           <DialogClose asChild>
             <Button variant="outline">Cancel</Button>
           </DialogClose>
-          <Button variant={'default'} onClick={handleLogOut}>Log Out</Button>
+          <Button variant={'default'} onClick={onLogOut}>Log Out</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

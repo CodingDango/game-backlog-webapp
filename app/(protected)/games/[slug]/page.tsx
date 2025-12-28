@@ -19,6 +19,7 @@ import CommaSeparatedList from "@/components/TextList";
 import { AppCarousel } from "@/components/Carousel";
 import { Screenshot, UserGame } from "@/lib/types";
 import { toast } from "sonner";
+import { AppImage } from "@/components/AppImage";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -88,16 +89,11 @@ export default function DetailsPage({ params }: PageProps) {
       <div className="grid grid-cols-[3fr_1fr] gap-12">
         <div className="flex flex-col gap-12">
           <div className="grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-8">
-            <div className="relative w-full h-full min-h-[300px] max-h-[400px]">
-              <Image
-                fill
-                alt={`Banner for ${data.name}`}
-                src={data.background_image}
-                className="object-cover rounded-md"
-              />
+            <div className="w-full h-full min-h-[300px] max-h-[400px] border border-accent rounded-md">
+              <AppImage fill src={data.background_image} alt={`Banner for ${data.name}`}/>
             </div>
 
-            <div className="relative w-full aspect-video min-h-[300px] max-h-[400px]">
+            <div className="relative w-full aspect-video min-h-[300px] max-h-[400px] rounded-md border border-accent">
               <AppCarousel
                 imageUrls={screenshotLinks}
                 isLoading={isLoadingScreenshots}

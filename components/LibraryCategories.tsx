@@ -21,11 +21,10 @@ export function LibraryCategories({ value, onValueChange }: Props) {
       {OPTIONS.map((category, idx) => (
         <Label
           key={`category-${idx}`}
-          className="flex items-center gap-3 capitalize"
+          className="flex items-center gap-3 capitalize cursor-pointer"
         >
-          <RadioGroupItem value={category} id={`category-${idx}`} />
+          <RadioGroupItem value={category} id={`category-${idx}`} className="cursor-pointer"/>
           {category}
-          {/* <Label htmlFor={`category-${idx}`}>{category}</Label> */}
         </Label>
       ))}
     </RadioGroup>
