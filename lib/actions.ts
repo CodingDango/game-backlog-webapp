@@ -21,7 +21,7 @@ interface SuccessResponse<T> {
   results: T[];
 }
 
-interface ErrorResponse {
+export interface ErrorResponse {
   success: false;
   error: string;
 }
@@ -299,7 +299,7 @@ export async function getRawgGameScreenshots(
   return details;
 }
 
-export async function getUserGame(rawgId: number) {
+export async function getUserGame(rawgId: number): Promise<UserGame | ErrorResponse> {
   const supabase = await createClient();
   const {
     data: { user },
@@ -319,11 +319,11 @@ export async function getUserGame(rawgId: number) {
   const { data: userGame, error: fetchErr } = await supabase
     .from("user_games")
     .select("*")
+    .eq("user_id", user.id)
     .eq("rawg_id", rawgId)
-    .single();
-    
+    .maybeSingle();
+
   if (fetchErr) {
-    console.error(fetchErr.message);
     return {
       success: false,
       error: fetchErr.message,
@@ -331,6 +331,6 @@ export async function getUserGame(rawgId: number) {
   }
 
   return {
-    ...userGame
+    ...userGame,
   } as UserGame;
 }

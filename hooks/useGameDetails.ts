@@ -1,0 +1,68 @@
+import { useQuery } from "@tanstack/react-query";
+import {
+  getRawgGameDetails,
+  getRawgGameScreenshots,
+  getUserGame,
+} from "@/lib/actions";
+import { useMemo } from "react";
+import { toast } from "sonner";
+
+export function useGameDetails(slug: string) {
+  const gameQuery = useQuery({
+    queryKey: ["rawgGames", slug],
+    queryFn: () => getRawgGameDetails(slug),
+  });
+
+  const gameData = gameQuery.data && !('error' in gameQuery.data) ? gameQuery.data : null;
+
+  const userGameQuery = useQuery({
+    enabled: !!gameData?.id,
+    queryKey: ["userGames", slug],
+    queryFn: async () => {
+      const res = await getUserGame(gameData!.id);
+
+      if (res && 'success' in res) {
+        toast.error(res.error);
+        return null;
+      }
+
+      return res;
+    },
+  });
+
+  const screenshotQuery = useQuery({
+    queryKey: ["rawgGames", slug, "screenshots"],
+    queryFn: () => getRawgGameScreenshots(slug),
+  });
+
+  const descriptionHtml = useMemo(() => {
+    if (!gameData?.description) return '';
+
+    const parts = gameData.description.split("</p>");
+    const englishPart = parts[0] ? parts[0] + '</p>' : gameData.description;
+    const firstParagraph = englishPart.split('<br />')[0] + '</p>';
+
+    return firstParagraph;
+    ;
+  }, [gameData?.description]);
+
+  const screenshotLinks: string[] = useMemo(() => {
+    const data = screenshotQuery.data;
+
+    if (!data || 'error' in data) return [];
+
+    return data.results.map(screenshot => screenshot.image);
+  }, [screenshotQuery]);
+
+  return {
+    game: gameData,
+    gameDescription: descriptionHtml,
+    userGame: userGameQuery.data,
+    screenshots: screenshotLinks,
+    error: gameQuery.error,
+    isLoading: gameQuery.isLoading,
+    isError: gameQuery.isError,
+    isScreenShotsLoading: screenshotQuery.isLoading,
+    isUserGameLoading: userGameQuery.isLoading,
+  };
+}

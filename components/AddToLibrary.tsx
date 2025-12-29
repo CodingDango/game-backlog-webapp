@@ -14,7 +14,7 @@ import LibraryTrigger from "./LibraryTrigger";
 import GameForm from "./GameForm";
 
 interface Props {
-  userGame: UserGame | undefined;
+  userGame: UserGame | null | undefined;
   title: string;
   rawgId: number;
   isLoading: boolean;

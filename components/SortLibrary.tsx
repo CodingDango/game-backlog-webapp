@@ -23,12 +23,12 @@ export function SortLibrary({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="flex gap-8">
+        <Button variant="outline" className="flex justify-between w-50 px-6">
           <span>Sort by {value}</span>
           <ChevronDown/>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-48" align='end'>
+      <DropdownMenuContent className="w-50" align='end'>
         <DropdownMenuRadioGroup value={value} onValueChange={onValueChange}>
           <DropdownMenuRadioItem value="newest">Sort by newest</DropdownMenuRadioItem>
           <DropdownMenuRadioItem value="oldest">Sort by oldest</DropdownMenuRadioItem>

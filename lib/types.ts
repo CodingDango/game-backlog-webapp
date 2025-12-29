@@ -30,6 +30,7 @@ export interface RawgGameDetails {
   platforms: PlatformEntry[];
   genres: Genre[];
   developers: Developer[];
+  stores: StoreEntry[];
 }
 
 export interface Developer {
@@ -66,6 +67,16 @@ export interface Genre {
 export type Category = 'uncategorized' | 'currently playing' | 'completed' | 'played' | 'not played';
 export type LibraryCategory = 'all games' | Category;
 export type UserRating = 'meh' | 'recommended' | 'exceptional' | null | undefined;
+
+export interface Store {
+  domain: string;
+  slug: string;
+  name: string;
+}
+
+export interface StoreEntry {
+  store: Store
+}
 
 export type InsertResponse<T> = {
   success: true;

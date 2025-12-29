@@ -11,12 +11,12 @@ import { Skeleton } from "./ui/skeleton";
 import { AppImage } from "./AppImage";
 
 interface Props {
-  imageUrls: string[];
+  images: string[];
   isLoading: boolean;
 }
 
 //TODO: ADD SKELETONS AS REPLACEMENT WHILE IMAGES ARE LOADING
-export function AppCarousel({ imageUrls, isLoading }: Props) {
+export function AppCarousel({ images, isLoading }: Props) {
   return (
     <Carousel className="relative w-full h-full">
       <CarouselContent className="h-full">
@@ -25,7 +25,7 @@ export function AppCarousel({ imageUrls, isLoading }: Props) {
             <Skeleton className="w-full h-full" />
           </CarouselItem>
         ) : (
-          imageUrls.map((link, index) => (
+          images.map((link, index) => (
             <CarouselItem key={index}>
               <div className="h-full relative ">
                 <AppImage src={link} fill alt="idk image?" wrapperClassName="rounded-md"/>
@@ -34,7 +34,7 @@ export function AppCarousel({ imageUrls, isLoading }: Props) {
           ))
         )}
       </CarouselContent>
-      {!isLoading && imageUrls.length > 1 && (
+      {!isLoading && images.length > 1 && (
         <>
           <CarouselPrevious
             className="absolute left-2 bg-secondary/80"
