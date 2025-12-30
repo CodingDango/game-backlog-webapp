@@ -7,6 +7,7 @@ export interface RawgGame {
   rating: number;
   metacritic: number;
   genres: Genre[];
+  
 }
 
 export interface UserGame {
@@ -31,6 +32,8 @@ export interface RawgGameDetails {
   genres: Genre[];
   developers: Developer[];
   stores: StoreEntry[];
+  reddit_url: string;
+  website: string;
 }
 
 export interface Developer {
@@ -72,7 +75,10 @@ export interface Store {
   domain: string;
   slug: string;
   name: string;
+  url?: string;
 }
+
+export type Social = 'steam' | 'playstation-store' | 'xbox-store' | 'gog' | 'nintendo' | 'reddit';
 
 export interface StoreEntry {
   store: Store

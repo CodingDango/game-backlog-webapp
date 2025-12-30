@@ -15,7 +15,6 @@ interface Props {
   isLoading: boolean;
 }
 
-//TODO: ADD SKELETONS AS REPLACEMENT WHILE IMAGES ARE LOADING
 export function AppCarousel({ images, isLoading }: Props) {
   return (
     <Carousel className="relative w-full h-full">

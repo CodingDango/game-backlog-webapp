@@ -1,26 +1,19 @@
 "use client";
 
-import { use, useMemo } from "react";
-import {
-  getRawgGameDetails,
-  getRawgGameScreenshots,
-  getUserGame,
-} from "@/lib/actions";
-import { useQuery } from "@tanstack/react-query";
-
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { use } from "react";
+import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { formatDate, getStoreUrl } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
 
-import PageSpinner from "@/components/PageSpinner";
-import AddToLibrary from "@/components/AddToLibrary";
-import CommaSeparatedList from "@/components/TextList";
 import { AppCarousel } from "@/components/Carousel";
-import { Screenshot, UserGame } from "@/lib/types";
-import { toast } from "sonner";
 import { AppImage } from "@/components/AppImage";
 import { useGameDetails } from "@/hooks/useGameDetails";
 import { Frown } from "lucide-react";
+
+import SocialIcon from "@/components/SocialIcon";
+import PageSpinner from "@/components/PageSpinner";
+import AddToLibrary from "@/components/AddToLibrary";
+import CommaSeparatedList from "@/components/TextList";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -42,7 +35,10 @@ export default function DetailsPage({ params }: PageProps) {
     isScreenShotsLoading,
     isUserGameLoading,
     userGame,
+    uniqueSocialEntries,
   } = useGameDetails(slug);
+
+  console.log(game);
 
   if (isLoading) return <PageSpinner />;
 
@@ -125,6 +121,16 @@ export default function DetailsPage({ params }: PageProps) {
               <span className="text-muted-foreground">Description</span>
               <div dangerouslySetInnerHTML={{ __html: gameDescription }} />
             </div>
+            
+            <div className="col-span-full">
+              <span className="text-muted-foreground">System Requirements</span>
+              <div className="grid grid-cols-2 gap-8">
+                <div>
+                  <span>Minimum:</span>
+                </div>
+                <div></div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -151,21 +157,23 @@ export default function DetailsPage({ params }: PageProps) {
 
           <div className="bg-accent h-px w-full"></div>
                 
-          {/* TODO: Turn game links to a component */}
-          {/* TODO: Add icons to specific stores */}
-          {/* TODO: Add reddit url and metacritic url */}
+
+          {/* TODO: Use the api to get the store links instead */}
           <div>
             <Card className="py-2 px-4 gap-4">
               <div className="text-muted-foreground">Links</div>
-              <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 flex! flex-wrap">
-                {game.stores.map(({ store }, idx) => (
-                  <a
-                    target="_blank"
-                    href={getStoreUrl(store, game.name)}
-                    key={idx}
-                  >
-                    {store.name}
-                  </a>
+              <div className="grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 grid">
+                {uniqueSocialEntries.map((store, idx) => (
+                  <div key={idx}>
+                    <a target="_blank" href={store.url}>
+                      <div
+                        className="w-8 h-8 grid place-items-center rounded-md"
+                        style={{ background: store.brandColor }}
+                      >
+                        <SocialIcon slug={store.slug} className="w-5 h-5" />
+                      </div>
+                    </a>
+                  </div>
                 ))}
               </div>
             </Card>
