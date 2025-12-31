@@ -14,13 +14,13 @@ import SocialIcon from "@/components/SocialIcon";
 import PageSpinner from "@/components/PageSpinner";
 import AddToLibrary from "@/components/AddToLibrary";
 import CommaSeparatedList from "@/components/TextList";
+import SystemRequirements from "@/components/SystemRequirements";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
 // TODO: Add playtime card,
-// TODO: add minimum requirements at the bottom if it has a PC port.
 
 export default function DetailsPage({ params }: PageProps) {
   const { slug } = use(params);
@@ -36,6 +36,7 @@ export default function DetailsPage({ params }: PageProps) {
     isUserGameLoading,
     userGame,
     uniqueSocialEntries,
+    pcRequirements,
   } = useGameDetails(slug);
 
   console.log(game);
@@ -112,7 +113,6 @@ export default function DetailsPage({ params }: PageProps) {
                   items={game.platforms.map(
                     (platform) => platform.platform.name
                   )}
-                  itemClass="underline"
                 />
               </ul>
             </div>
@@ -121,15 +121,14 @@ export default function DetailsPage({ params }: PageProps) {
               <span className="text-muted-foreground">Description</span>
               <div dangerouslySetInnerHTML={{ __html: gameDescription }} />
             </div>
-            
+
             <div className="col-span-full">
               <span className="text-muted-foreground">System Requirements</span>
-              <div className="grid grid-cols-2 gap-8">
-                <div>
-                  <span>Minimum:</span>
-                </div>
-                <div></div>
-              </div>
+              {pcRequirements ? (
+                <SystemRequirements requirements={pcRequirements}/>
+              ) : (
+                <div>None listed.</div>
+              )}
             </div>
           </div>
         </div>
@@ -156,11 +155,10 @@ export default function DetailsPage({ params }: PageProps) {
           </div>
 
           <div className="bg-accent h-px w-full"></div>
-                
 
           {/* TODO: Use the api to get the store links instead */}
           <div>
-            <Card className="py-2 px-4 gap-4">
+            <Card className="py-4 px-4 gap-4">
               <div className="text-muted-foreground">Links</div>
               <div className="grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 grid">
                 {uniqueSocialEntries.map((store, idx) => (

@@ -6,8 +6,10 @@ import {
 } from "@/lib/actions";
 import { useMemo } from "react";
 import { toast } from "sonner";
-import { getStoreUrl } from "@/lib/utils";
+import { extractRequirements, formatRawRequirements, getStoreUrl, truncateDescription } from "@/lib/utils";
 import { getBrandColor, isSocialInRecords } from "@/components/SocialIcon";
+import { isEmpty } from "lodash";
+import { PCRequirements, SystemRequirements } from "@/lib/types";
 
 export function useGameDetails(slug: string) {
   const gameQuery = useQuery({
@@ -93,9 +95,31 @@ export function useGameDetails(slug: string) {
     return entries;
   }, [gameData?.stores]);
 
+  const pcRequirements = useMemo<PCRequirements | null>(() => {
+    if (!gameData?.platforms) return null;
+
+    const pcPlatform = gameData.platforms.find(
+      ({ platform }) => platform.slug === "pc"
+    );
+
+    if (!pcPlatform || !pcPlatform.requirements || isEmpty(pcPlatform.requirements)) return null;
+
+    const minimum = extractRequirements(pcPlatform.requirements.minimum);
+    const recommended = extractRequirements(
+      pcPlatform.requirements.recommended
+    );
+
+    return { 
+      minimum, 
+      recommended,
+      rawMinimumText: formatRawRequirements(pcPlatform.requirements.minimum),
+      rawRecommendedText: formatRawRequirements(pcPlatform.requirements.recommended)
+    };
+  }, [gameData?.platforms]);
+
   return {
     game: gameData,
-    gameDescription: descriptionHtml,
+    gameDescription: truncateDescription(descriptionHtml),
     userGame: userGameQuery.data,
     screenshots: screenshotLinks,
     error: gameQuery.error,
@@ -104,5 +128,6 @@ export function useGameDetails(slug: string) {
     isScreenShotsLoading: screenshotQuery.isLoading,
     isUserGameLoading: userGameQuery.isLoading,
     uniqueSocialEntries: uniqueSocialEntries,
+    pcRequirements,
   };
 }

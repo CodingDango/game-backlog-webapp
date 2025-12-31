@@ -45,12 +45,34 @@ export interface Developer {
 export interface PlatformEntry {
   platform: Platform;
   released_at: string;
+  requirements?: PlatformRequirements;
 }
 
 export interface Platform {
-  id: number,
-  slug: string,
-  name: string
+  id: number;
+  slug: string;
+  name: string;
+}
+
+interface PlatformRequirements {
+  minimum: string;
+  recommended: string;
+}
+
+export interface PCRequirements {
+  minimum?: SystemRequirements;
+  recommended?: SystemRequirements;
+  rawMinimumText?: string;
+  rawRecommendedText?: string;
+}
+
+export interface SystemRequirements {
+  os: string;
+  processor: string;
+  gpu: string;
+  memory: string;
+  storage: string;
+  soundCard: string;
 }
 
 export interface Screenshot {

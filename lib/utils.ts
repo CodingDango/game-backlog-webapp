@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { Store } from "./types";
+import { Store, SystemRequirements } from "./types";
 
 interface MetascoreColor {
   bgCol: string;
@@ -14,26 +14,38 @@ export function cn(...inputs: ClassValue[]) {
 
 export function getMetascoreColor(metascore: number): MetascoreColor {
   if (metascore >= 75) {
-    return { bgCol: "bg-green-400", textCol: "text-green-400", borderCol: 'border-green-400'};
+    return {
+      bgCol: "bg-green-400",
+      textCol: "text-green-400",
+      borderCol: "border-green-400",
+    };
   } else if (metascore >= 50) {
-    return { bgCol: "bg-yellow-400", textCol: "text-yellow-400", borderCol: 'border-yellow-400'};
+    return {
+      bgCol: "bg-yellow-400",
+      textCol: "text-yellow-400",
+      borderCol: "border-yellow-400",
+    };
   } else {
-    return { bgCol: "bg-red-400", textCol: "text-red-400", borderCol: 'border-red-400'};
+    return {
+      bgCol: "bg-red-400",
+      textCol: "text-red-400",
+      borderCol: "border-red-400",
+    };
   }
 }
 
 export function formatDate(dateString: string): string {
-  if (!dateString) return '';
+  if (!dateString) return "";
 
-  const options: Intl.DateTimeFormatOptions = { 
-    month: 'long', 
-    day: 'numeric', 
-    year: 'numeric' 
+  const options: Intl.DateTimeFormatOptions = {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
   };
 
-  const date = new Date(dateString + 'T00:00:00');
+  const date = new Date(dateString + "T00:00:00");
 
-  return date.toLocaleDateString('en-US', options);
+  return date.toLocaleDateString("en-US", options);
 }
 
 export function keyByMap(array: any[], key: string) {
@@ -66,3 +78,99 @@ export const getStoreUrl = (store: Store, gameName: string) => {
       return `https://www.google.com/search?q=${query}`;
   }
 };
+
+export function extractRequirements(
+  rawString: string
+): SystemRequirements | null {
+  if (!rawString) return null;
+
+  const results: Record<string, string> = {};
+
+  // 1. Remove the annoying "Minimum:" or "Recommended:" prefix at the very start
+  const cleanInput = rawString.replace(/^(Minimum|Recommended):\s*/i, "");
+
+  // 2. Define the "Boundary" words.
+  // We use these to know where one section ends and the next begins.
+  const keywords = [
+    "OS",
+    "Processor",
+    "CPU",
+    "Memory",
+    "RAM",
+    "Graphics",
+    "Video Card",
+    "GPU",
+    "Video Card Memory",
+    "Storage",
+    "Hard Disk Space",
+    "Hard Drive",
+    "Disk Space",
+    "Sound Card",
+    "Sound",
+    "DirectX",
+    "Additional Notes",
+    "Other requirements",
+    "Notes",
+  ];
+
+  // 3. The New Regex:
+  // (Key): Matches one of our keywords followed by a colon
+  // (Value): Captures everything UNTIL it sees another keyword followed by a colon
+  const pattern = new RegExp(
+    `(${keywords.join("|")}):\\s*([\\s\\S]*?)(?=\\s*(?:${keywords.join(
+      "|"
+    )}):|$)`,
+    "gi"
+  );
+
+  const matches = cleanInput.matchAll(pattern);
+
+  for (const match of matches) {
+    const key = match[1].trim();
+    const value = match[2].trim();
+    results[key] = value;
+  }
+
+  try {
+    return {
+      os: (results["OS"] || "").split(",")[0].split("/")[0].trim(),
+      processor: (results["Processor"] || results['CPU'] || "").split("/")[0].trim(),
+      memory: results["Memory"] || "",
+      gpu: (results["Graphics"] || results["GPU"] || results['Video Card'] || "").split("/")[0].trim(),
+      storage: results["Storage"] || results["Hard Disk Space"] || results["Hard Drive"] || results["Disk Space"] || "",
+      soundCard: results["Sound Card"] || results["Sound"] || "",
+    };
+  } catch (err) {
+    return null;
+  }
+}
+
+export function formatRawRequirements(text: string | undefined): string {
+  if (!text) return "";
+
+  return text
+    .replace(/^(Minimum|Recommended):?\s*/i, "")
+    .replace(
+      /(Additional Notes|Other requirements|Partner Requirements|Legal)[\s\S]*/i,
+      ""
+    )
+    .replace(/&amp;/g, "&")
+    .replace(/&quot;/g, '"')
+    .replace(
+      /([a-z0-9])(Processor|Memory|Hard Disk|Graphics|Video Card|Sound|DirectX)/gi,
+      "$1\n$2"
+    )
+    .trim();
+}
+
+export function truncateDescription(text: string, sentenceCount: number = 2): string {
+  if (!text) return '';
+
+  const sentences = text.match(/[^\.!\?]+[\.!\?]+/g);
+
+  if (!sentences || sentences.length <= sentenceCount) {
+    return text;
+  }
+
+  return sentences.slice(0, sentenceCount).join(' ').trim();
+}
