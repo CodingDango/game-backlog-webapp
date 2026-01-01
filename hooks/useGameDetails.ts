@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import { extractRequirements, formatRawRequirements, getStoreUrl, truncateDescription } from "@/lib/utils";
 import { getBrandColor, isSocialInRecords } from "@/components/SocialIcon";
 import { isEmpty } from "lodash";
-import { PCRequirements, SystemRequirements } from "@/lib/types";
+import { PCRequirements } from "@/lib/types";
 
 export function useGameDetails(slug: string) {
   const gameQuery = useQuery({
