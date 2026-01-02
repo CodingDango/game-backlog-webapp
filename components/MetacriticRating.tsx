@@ -8,9 +8,9 @@ interface Props {
 
 export default function MetacriticRating({ game }: Props) {
   return (
-    <Card className="h-12 p-0">
+    <Card className="h-14 p-0">
       <div className="flex justify-between items-center h-full">
-        <span className="pl-4">Metacritic Rating</span>
+        <span className="pl-4">Metacritic</span>
 
         <Badge className="h-full text-base rounded-r-md rounded-l-none bg-muted text-primary px-4">
           {game.metacritic ? `${game.metacritic}%` : "N/A"}

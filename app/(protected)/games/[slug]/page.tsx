@@ -14,7 +14,8 @@ import CommaSeparatedList from "@/components/TextList";
 import SystemRequirements from "@/components/SystemRequirements";
 import GameSocialLinks from "@/components/GameSocialLinks";
 import MetacriticRating from "@/components/MetacriticRating";
-import { RawgGame } from "@/lib/types";
+import CommunityRating from "@/components/CommunityRating";
+import GameTags from "@/components/GameTags";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -37,6 +38,7 @@ export default function DetailsPage({ params }: PageProps) {
     userGame,
     uniqueSocialEntries,
     pcRequirements,
+    tags
   } = useGameDetails(slug);
 
   console.log(game);
@@ -63,31 +65,62 @@ export default function DetailsPage({ params }: PageProps) {
       <div className="flex flex-col gap-12">
         <span className="text-4xl font-medium">{game.name}</span>
 
-        <div className="grid grid-cols-[5fr_2fr] gap-8">
-          <div className="flex flex-col gap-12">
-            <div className="relative w-full aspect-video max-h-[400px] rounded-md border border-accent">
-              <AppCarousel
-                images={screenshots}
-                isLoading={isScreenShotsLoading}
+        <div className="grid grid-cols-[5fr_2fr] grid-rows-[auto_1fr] gap-8">
+          <div className="relative w-full aspect-video max-h-[400px] rounded-md border border-accent">
+            <AppCarousel
+              images={screenshots}
+              isLoading={isScreenShotsLoading}
+            />
+          </div>
+
+          <div className="flex flex-col justify-between gap-8">
+            <div className="w-full h-full max-h-[170px] border border-accent rounded-md">
+              <AppImage
+                fill
+                src={game.background_image}
+                alt={`Banner for ${game.name}`}
               />
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-              <div>
+            <div className="flex flex-col gap-4 ">
+              <AddToLibrary
+                key={userGame?.id ?? "new-" + game.id}
+                isLoading={isUserGameLoading}
+                userGame={userGame}
+                title={game.name}
+                rawgId={game.id}
+              />
+              <MetacriticRating game={game} />
+
+              {/* Community rating */}
+              <div className="flex-1 h-full">
+                <CommunityRating />
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-8">
+            <div className="col-span-full flex flex-col gap-1">
+              <span className="text-xl font-medium">About</span>
+              <div dangerouslySetInnerHTML={{ __html: gameDescription }} />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-6">
+              <div className="flex flex-col gap-1">
                 <span className="text-muted-foreground">Developers</span>
                 <CommaSeparatedList
                   items={game.developers.map((dev) => dev.name)}
                 />
               </div>
 
-              <div>
+              <div className="flex flex-col gap-1">
                 <span className="text-muted-foreground">Release Date</span>
                 <div className="flex flex-wrap gap-1">
                   {formatDate(game.released)}
                 </div>
               </div>
 
-              <div>
+              <div className="flex flex-col gap-1">
                 <span className="text-muted-foreground">Genres</span>
                 <ul className="flex flex-wrap gap-1">
                   <CommaSeparatedList
@@ -97,7 +130,7 @@ export default function DetailsPage({ params }: PageProps) {
                 </ul>
               </div>
 
-              <div className="col-span-full">
+              <div className="col-span-full flex flex-col gap-1">
                 <span className="text-muted-foreground">Platforms</span>
                 <ul className="flex flex-wrap gap-1">
                   <CommaSeparatedList
@@ -107,50 +140,23 @@ export default function DetailsPage({ params }: PageProps) {
                   />
                 </ul>
               </div>
+            </div>
 
-              <div className="col-span-full">
-                <span className="text-muted-foreground">Description</span>
-                <div dangerouslySetInnerHTML={{ __html: gameDescription }} />
-              </div>
-
-              <div className="col-span-full">
-                <span className="text-muted-foreground">
-                  System Requirements
-                </span>
-                {pcRequirements ? (
-                  <SystemRequirements requirements={pcRequirements} />
-                ) : (
-                  <div>None listed.</div>
-                )}
-              </div>
+            <div className="col-span-full flex flex-col gap-2">
+              <span className="text-xl font-medium">System Requirements</span>
+              {pcRequirements ? (
+                <SystemRequirements requirements={pcRequirements} />
+              ) : (
+                <div>None listed.</div>
+              )}
             </div>
           </div>
 
-          <div className="space-y-8">
-            <div className="w-full h-full max-h-[150px] border border-accent rounded-md">
-              <AppImage
-                fill
-                src={game.background_image}
-                alt={`Banner for ${game.name}`}
-              />
-            </div>
-
-            <div className="space-y-4">
-              <AddToLibrary
-                key={userGame?.id ?? "new-" + game.id}
-                isLoading={isUserGameLoading}
-                userGame={userGame}
-                title={game.name}
-                rawgId={game.id}
-              />
-
-              <MetacriticRating game={game} />
-            </div>
-
-            <div className="bg-accent h-px w-full"></div>
-
-            <GameSocialLinks socialEntries={uniqueSocialEntries} />
+          <div className="flex flex-col gap-4">
+            <GameTags tags={tags}/>
+            <GameSocialLinks socialEntries={uniqueSocialEntries}/>
           </div>
+
         </div>
       </div>
       <div>

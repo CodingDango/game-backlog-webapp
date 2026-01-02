@@ -13,7 +13,7 @@ export default function GameSocialLinks({ socialEntries }: Props) {
   return (
     <Card className="py-4 px-4 gap-4">
       <div className="text-muted-foreground">Links</div>
-      <div className="grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 grid">
+      <div className="grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 grid">
         {socialEntries.map((store, idx) => (
           <div key={idx}>
             <a target="_blank" href={store.url}>

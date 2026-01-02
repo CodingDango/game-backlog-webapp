@@ -117,6 +117,13 @@ export function useGameDetails(slug: string) {
     };
   }, [gameData?.platforms]);
 
+  const tags: string[] = useMemo(() => {
+    if (!gameData) return [];
+
+    return gameData.tags.map(tag => tag.name);
+
+  }, [gameData?.tags]);
+
   return {
     game: gameData,
     gameDescription: truncateDescription(descriptionHtml),
@@ -129,5 +136,6 @@ export function useGameDetails(slug: string) {
     isUserGameLoading: userGameQuery.isLoading,
     uniqueSocialEntries: uniqueSocialEntries,
     pcRequirements,
+    tags
   };
 }

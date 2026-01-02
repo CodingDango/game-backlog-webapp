@@ -34,6 +34,13 @@ export interface RawgGameDetails {
   stores: StoreEntry[];
   reddit_url: string;
   website: string;
+  tags: Tag[]
+}
+
+export interface Tag {
+  id: number;
+  name: string;
+  slug: string;
 }
 
 export interface Developer {
