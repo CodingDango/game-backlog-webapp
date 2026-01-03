@@ -36,11 +36,11 @@ export function AppCarousel({ images, isLoading }: Props) {
       {!isLoading && images.length > 1 && (
         <>
           <CarouselPrevious
-            className="absolute left-2 bg-secondary/80"
+            className="absolute left-2 bg-secondary"
             variant={"secondary"}
           />
           <CarouselNext
-            className="absolute right-2 bg-secondary/80"
+            className="absolute right-2 bg-secondary"
             variant={"secondary"}
           />
         </>
