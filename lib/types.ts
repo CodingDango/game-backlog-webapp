@@ -34,7 +34,8 @@ export interface RawgGameDetails {
   stores: StoreEntry[];
   reddit_url: string;
   website: string;
-  tags: Tag[]
+  tags: Tag[];
+  publishers: Publisher[];
 }
 
 export interface Tag {
@@ -84,6 +85,11 @@ export interface SystemRequirements {
 
 export interface Screenshot {
   image: string;
+}
+
+export interface Publisher {
+  name: string;
+  slug: string;
 }
 
 export type HydratedGame = { user_game: UserGame | undefined, rawg_game: RawgGame };

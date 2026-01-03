@@ -16,6 +16,7 @@ import GameSocialLinks from "@/components/GameSocialLinks";
 import MetacriticRating from "@/components/MetacriticRating";
 import CommunityRating from "@/components/CommunityRating";
 import GameTags from "@/components/GameTags";
+import GameMetadata from "@/components/GameMetadata";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -38,7 +39,7 @@ export default function DetailsPage({ params }: PageProps) {
     userGame,
     uniqueSocialEntries,
     pcRequirements,
-    tags
+    tags,
   } = useGameDetails(slug);
 
   console.log(game);
@@ -105,43 +106,6 @@ export default function DetailsPage({ params }: PageProps) {
               <div dangerouslySetInnerHTML={{ __html: gameDescription }} />
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-6">
-              <div className="flex flex-col gap-1">
-                <span className="text-muted-foreground">Developers</span>
-                <CommaSeparatedList
-                  items={game.developers.map((dev) => dev.name)}
-                />
-              </div>
-
-              <div className="flex flex-col gap-1">
-                <span className="text-muted-foreground">Release Date</span>
-                <div className="flex flex-wrap gap-1">
-                  {formatDate(game.released)}
-                </div>
-              </div>
-
-              <div className="flex flex-col gap-1">
-                <span className="text-muted-foreground">Genres</span>
-                <ul className="flex flex-wrap gap-1">
-                  <CommaSeparatedList
-                    items={game.genres.map((genre) => genre.name)}
-                    itemClass="underline"
-                  />
-                </ul>
-              </div>
-
-              <div className="col-span-full flex flex-col gap-1">
-                <span className="text-muted-foreground">Platforms</span>
-                <ul className="flex flex-wrap gap-1">
-                  <CommaSeparatedList
-                    items={game.platforms.map(
-                      (platform) => platform.platform.name
-                    )}
-                  />
-                </ul>
-              </div>
-            </div>
-
             <div className="col-span-full flex flex-col gap-2">
               <span className="text-xl font-medium">System Requirements</span>
               {pcRequirements ? (
@@ -153,10 +117,10 @@ export default function DetailsPage({ params }: PageProps) {
           </div>
 
           <div className="flex flex-col gap-4">
-            <GameTags tags={tags}/>
-            <GameSocialLinks socialEntries={uniqueSocialEntries}/>
+            <GameTags tags={tags} />
+            <GameMetadata game={game}/>
+            <GameSocialLinks socialEntries={uniqueSocialEntries} />
           </div>
-
         </div>
       </div>
       <div>
