@@ -1,19 +1,30 @@
-import { HydratedGame } from "@/lib/types";
+import { RawgGame } from "@/lib/types";
 import GameCard from "./GameCard";
 
 interface Props {
-  hydratedGames: HydratedGame[];
+  rawgGames: RawgGame[];
+  isLoading?: boolean;
 }
 
-export default function GameGrid({ hydratedGames }: Props) {
+export default function GameGrid({ rawgGames, isLoading = false}: Props) {
   return (
     <div className="w-full grid grid-cols-5 gap-8">
-      {hydratedGames.map((hydrated) => (
-        <GameCard
-          key={hydrated.rawg_game.id}
-          hydratedGame={hydrated}
-        />
-      ))}
+      {isLoading ? (
+        Array.from({ length: 20 }).map((_, index) => (
+          <GameCard key={index} isLoading={true}/>
+        ))
+      ) : (
+        rawgGames.map((game) => (
+          <GameCard
+            key={game.id}
+            rawgGame={game}
+          />
+        ))
+      )}
+
+      {!isLoading && !rawgGames.length && (
+        <span>No games found..</span>
+      )}
     </div>
   );
 }

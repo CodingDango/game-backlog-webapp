@@ -7,7 +7,7 @@ interface Props {
 
 export default function CommaSeparatedList({ items, itemClass = '' }: Props) {
   return (
-    <div className="flex flex-wrap gap-1">
+    <div className="flex flex-wrap gap-x-1">
       {items.map((item, idx) => (
         <div key={idx}>
           <span key={idx} className={itemClass}>{item}</span>

@@ -41,7 +41,8 @@ export type RawgGamesResponse = SuccessResponse<RawgGame> | ErrorResponse;
 export async function getRawgGameList(
   page = 1,
   search?: string,
-  ids?: number[]
+  ids?: number[],
+  genres?: string[]
 ): Promise<RawgGamesResponse> {
   const endpoint = `${process.env.RAWG_ENDPOINT}/games`;
   const url = new URL(endpoint);
@@ -57,7 +58,10 @@ export async function getRawgGameList(
     url.searchParams.set("ids", ids.join(","));
   }
 
-  console.log(`Fetching: ${url.toString()}`); // Good for debugging
+  if (genres && genres.length > 0) {
+    url.searchParams.set("genres", genres.join(","));
+  }
+
   const res = await fetch(url.toString());
 
   if (!res.ok) {

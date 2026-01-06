@@ -1,7 +1,6 @@
 "use client";
 
 import { use } from "react";
-import { formatDate } from "@/lib/utils";
 
 import { AppCarousel } from "@/components/Carousel";
 import { AppImage } from "@/components/AppImage";
@@ -10,13 +9,14 @@ import { Frown } from "lucide-react";
 
 import PageSpinner from "@/components/PageSpinner";
 import AddToLibrary from "@/components/AddToLibrary";
-import CommaSeparatedList from "@/components/TextList";
 import SystemRequirements from "@/components/SystemRequirements";
 import GameSocialLinks from "@/components/GameSocialLinks";
 import MetacriticRating from "@/components/MetacriticRating";
 import CommunityRating from "@/components/CommunityRating";
 import GameTags from "@/components/GameTags";
 import GameMetadata from "@/components/GameMetadata";
+import { useRawgGames } from "@/hooks/useGames";
+import GameGrid from "@/components/GameGrid";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -42,7 +42,13 @@ export default function DetailsPage({ params }: PageProps) {
     tags,
   } = useGameDetails(slug);
 
-  console.log(game);
+  const {
+    games: similarGames,
+    isLoading: isLoadingSimilar,
+  } = useRawgGames({
+    enabled: !!game,
+    genres: game?.genres?.map(genre => genre.slug)
+  });
 
   if (isLoading) return <PageSpinner />;
 
@@ -63,10 +69,10 @@ export default function DetailsPage({ params }: PageProps) {
 
   return (
     <div className="flex flex-col gap-20">
-      <div className="flex flex-col gap-12">
+      <div className="flex flex-col gap-16">
         <span className="text-4xl font-medium">{game.name}</span>
 
-        <div className="grid grid-cols-[5fr_2fr] grid-rows-[auto_1fr] gap-8">
+        <div className="grid grid-cols-[5fr_2fr] grid-rows-[auto_1fr] gap-16">
           <div className="relative w-full aspect-video max-h-[400px] rounded-md border border-accent">
             <AppCarousel
               images={screenshots}
@@ -123,8 +129,9 @@ export default function DetailsPage({ params }: PageProps) {
           </div>
         </div>
       </div>
-      <div>
-        <span className="text-3xl">Games like {game.name}</span>
+      <div className="flex flex-col gap-16">
+        <span className="text-4xl font-medium">Games like {game.name}</span>
+        <GameGrid rawgGames={similarGames} isLoading={isLoadingSimilar}/>
       </div>
     </div>
   );

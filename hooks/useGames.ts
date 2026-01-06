@@ -9,19 +9,20 @@ import { useAuth } from "@/components/AuthProvider";
 
 interface GetGamesParams {
   page?: number;
+  enabled?: boolean;
   search?: string;
   ids?: number[];
+  genres?: string[];
 }
 
-export function useRawgGames({ page = 1, search, ids }: GetGamesParams = {}) {
+export function useRawgGames({ page = 1, enabled = true, search, ids, genres }: GetGamesParams = {}) {
   const query = useInfiniteQuery({
-    queryKey: ["rawgGames", search, ids],
+    enabled: enabled,
+    queryKey: ["rawgGames", search, ids, genres],
     initialPageParam: page,
-    queryFn: ({ pageParam = 1 }) => getRawgGameList(pageParam, search, ids),
+    queryFn: ({ pageParam = 1 }) => getRawgGameList(pageParam, search, ids, genres),
     getNextPageParam: (lastPage) => {
       if (!lastPage || !lastPage.success || !lastPage.next) return undefined;
-
-      debugger;
 
       const urlStr = lastPage.next;
       const url = new URL(urlStr);

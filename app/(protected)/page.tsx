@@ -1,38 +1,23 @@
 "use client";
 
-import { useAuth } from "@/components/AuthProvider";
-
-import { useRawgGames, useLibraryMap } from "@/hooks/useGames";
-import { useMemo } from "react";
-import { HydratedGame } from "@/lib/types";
+import { useRawgGames } from "@/hooks/useGames";
 
 import GameGrid from "@/components/GameGrid";
 import LoadMore from "@/components/LoadMore";
 
 export default function Home() {
-  const { session } = useAuth();
-  const { userLibrary } = useLibraryMap(session);
-
   const {
     games: rawgGames,
+    isLoading,
     isFetchingNextPage,
     fetchNextPage,
   } = useRawgGames();
 
-  const hydratedGames: HydratedGame[] = useMemo(() => {
-    const hydrated = rawgGames.map((rawgGame) => ({
-      rawg_game: rawgGame,
-      user_game: userLibrary.get(rawgGame.id),
-    }));
-
-    return hydrated;
-  }, [userLibrary, rawgGames]);
-
   return (
-    <div className="space-y-12">
+    <div className="space-y-16">
       <h2 className="text-4xl font-medium">Games List</h2>
 
-      <GameGrid hydratedGames={hydratedGames} />
+      <GameGrid rawgGames={rawgGames} isLoading={isLoading}/>
 
       <div className="flex justify-center">
         <LoadMore {...{ fetchNextPage, isFetchingNextPage }} />
