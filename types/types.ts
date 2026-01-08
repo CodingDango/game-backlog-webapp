@@ -7,7 +7,6 @@ export interface RawgGame {
   rating: number;
   metacritic: number;
   genres: Genre[];
-  
 }
 
 export interface UserGame {
@@ -68,10 +67,10 @@ interface PlatformRequirements {
 }
 
 export interface PCRequirements {
-  minimum?: SystemRequirements;
-  recommended?: SystemRequirements;
-  rawMinimumText?: string;
-  rawRecommendedText?: string;
+  minimum?: SystemRequirements | null;
+  recommended?: SystemRequirements | null;
+  rawMinimumText?: string | null;
+  rawRecommendedText?: string | null;
 }
 
 export interface SystemRequirements {
@@ -92,8 +91,11 @@ export interface Publisher {
   slug: string;
 }
 
-export type HydratedGame = { user_game: UserGame | undefined, rawg_game: RawgGame };
-  
+export type HydratedGame = {
+  user_game: UserGame | undefined;
+  rawg_game: RawgGame;
+};
+
 export interface Genre {
   id: number;
   games_count: number;
@@ -102,9 +104,19 @@ export interface Genre {
   image_background: string;
 }
 
-export type Category = 'uncategorized' | 'currently playing' | 'completed' | 'played' | 'not played';
-export type LibraryCategory = 'all games' | Category;
-export type UserRating = 'meh' | 'recommended' | 'exceptional' | null | undefined;
+export type Category =
+  | "uncategorized"
+  | "currently playing"
+  | "completed"
+  | "played"
+  | "not played";
+export type LibraryCategory = "all games" | Category;
+export type UserRating =
+  | "meh"
+  | "recommended"
+  | "exceptional"
+  | null
+  | undefined;
 
 export interface Store {
   domain: string;
@@ -113,16 +125,47 @@ export interface Store {
   url?: string;
 }
 
-export type Social = 'steam' | 'playstation-store' | 'xbox-store' | 'gog' | 'nintendo' | 'reddit';
+export type Social =
+  | "steam"
+  | "playstation-store"
+  | "xbox-store"
+  | "gog"
+  | "nintendo"
+  | "reddit";
 
 export interface StoreEntry {
-  store: Store
+  store: Store;
 }
 
-export type InsertResponse<T> = {
+export type InsertResponse<T> =
+  | {
+      success: true;
+      inserted: T;
+    }
+  | {
+      success: false;
+      error: string;
+    };
+
+export interface SuccessResponse<T> {
   success: true;
-  inserted: T
-} | {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: T[];
+}
+
+export interface ErrorResponse {
   success: false;
   error: string;
-};
+}
+
+export type ApiResponse<T> = SuccessResponse<T> | ErrorResponse;
+
+export interface GetGamesParams {
+  page?: number;
+  search?: string;
+  ids?: number[];
+  genres?: string[];
+  ordering?: string;
+}

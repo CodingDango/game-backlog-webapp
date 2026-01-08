@@ -1,20 +1,22 @@
 import { useQuery } from "@tanstack/react-query";
-import {
-  getRawgGameDetails,
-  getRawgGameScreenshots,
-  getUserGame,
-} from "@/lib/actions";
+import { getUserGame } from "@/services/libraryService";
 import { useMemo } from "react";
 import { toast } from "sonner";
-import { extractRequirements, formatRawRequirements, getStoreUrl, truncateDescription } from "@/lib/utils";
+import {
+  extractRequirements,
+  formatRawRequirements,
+  getStoreUrl,
+  truncateDescription,
+} from "@/utils/utils";
 import { getBrandColor, isSocialInRecords } from "@/components/SocialIcon";
 import { isEmpty } from "lodash";
-import { PCRequirements } from "@/lib/types";
+import { PCRequirements, PlatformEntry, StoreEntry } from "@/types/types";
+import { getGameDetails, getScreenshots } from "@/services/rawgServices";
 
 export function useGameDetails(slug: string) {
   const gameQuery = useQuery({
     queryKey: ["rawgGames", slug],
-    queryFn: () => getRawgGameDetails(slug),
+    queryFn: () => getGameDetails(slug),
   });
 
   const gameData =
@@ -37,7 +39,7 @@ export function useGameDetails(slug: string) {
 
   const screenshotQuery = useQuery({
     queryKey: ["rawgGames", slug, "screenshots"],
-    queryFn: () => getRawgGameScreenshots(slug),
+    queryFn: () => getScreenshots(slug),
   });
 
   const descriptionHtml = useMemo(() => {
@@ -59,11 +61,11 @@ export function useGameDetails(slug: string) {
   }, [screenshotQuery]);
 
   const uniqueSocialEntries = useMemo(() => {
-    if (!gameData?.stores) return [];
+    if (!gameData?.stores || !gameData) return [];
 
     const entries: { slug: string; url: string; brandColor: string }[] = [];
 
-    gameData.stores.forEach(({ store }) => {
+    gameData.stores.forEach(({ store }: StoreEntry) => {
       if (isSocialInRecords(store.slug)) {
         entries.push({
           slug: store.slug,
@@ -98,30 +100,34 @@ export function useGameDetails(slug: string) {
   const pcRequirements = useMemo<PCRequirements | null>(() => {
     if (!gameData?.platforms) return null;
 
-    const pcPlatform = gameData.platforms.find(
-      ({ platform }) => platform.slug === "pc"
-    );
+    const pcPlatform = gameData.platforms.find(( { platform }: PlatformEntry ) => platform.slug === "pc");
 
-    if (!pcPlatform || !pcPlatform.requirements || isEmpty(pcPlatform.requirements)) return null;
+    if (
+      !pcPlatform ||
+      !pcPlatform.requirements ||
+      isEmpty(pcPlatform.requirements)
+    )
+      return null;
 
     const minimum = extractRequirements(pcPlatform.requirements.minimum);
     const recommended = extractRequirements(
       pcPlatform.requirements.recommended
     );
 
-    return { 
-      minimum, 
+    return {
+      minimum,
       recommended,
       rawMinimumText: formatRawRequirements(pcPlatform.requirements.minimum),
-      rawRecommendedText: formatRawRequirements(pcPlatform.requirements.recommended)
+      rawRecommendedText: formatRawRequirements(
+        pcPlatform.requirements.recommended
+      ),
     };
   }, [gameData?.platforms]);
 
   const tags: string[] = useMemo(() => {
     if (!gameData) return [];
 
-    return gameData.tags.map(tag => tag.name);
-
+    return gameData.tags.map((tag) => tag.name);
   }, [gameData?.tags]);
 
   return {
@@ -136,6 +142,6 @@ export function useGameDetails(slug: string) {
     isUserGameLoading: userGameQuery.isLoading,
     uniqueSocialEntries: uniqueSocialEntries,
     pcRequirements,
-    tags
+    tags,
   };
 }

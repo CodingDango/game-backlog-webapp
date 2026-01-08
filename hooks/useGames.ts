@@ -1,10 +1,11 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
-import { getHydratedUserLibrary, getRawgGameList } from "@/lib/actions";
+import { getHydratedUserLibrary } from "@/services/libraryService";
+import { getGames } from "@/services/rawgServices";
 import { useMemo } from "react";
 import { toast } from "sonner";
-import { keyByMap } from "@/lib/utils";
-import { UserGame } from "@/lib/types";
-import { getUserGames } from "@/lib/actions";
+import { keyByMap } from "@/utils/utils";
+import { UserGame } from "@/types/types";
+import { getUserGames } from "@/services/libraryService";
 import { useAuth } from "@/components/AuthProvider";
 
 interface GetGamesParams {
@@ -20,7 +21,7 @@ export function useRawgGames({ page = 1, enabled = true, search, ids, genres }: 
     enabled: enabled,
     queryKey: ["rawgGames", search, ids, genres],
     initialPageParam: page,
-    queryFn: ({ pageParam = 1 }) => getRawgGameList(pageParam, search, ids, genres),
+    queryFn: ({ pageParam = 1 }) => getGames({page: pageParam, search, ids, genres}),
     getNextPageParam: (lastPage) => {
       if (!lastPage || !lastPage.success || !lastPage.next) return undefined;
 

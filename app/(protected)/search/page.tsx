@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { useLibraryMap } from "@/hooks/useGames";
 import { useAuth } from "@/components/AuthProvider";
 import { useMemo } from "react";
-import type { HydratedGame } from "@/lib/types";
+import type { HydratedGame } from "@/types/types";
 
 import GameGrid from "@/components/GameGrid";
 import LoadMore from "@/components/LoadMore";

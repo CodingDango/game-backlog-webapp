@@ -1,4 +1,4 @@
-import { PCRequirements } from "@/lib/types";
+import { PCRequirements } from "@/types/types";
 
 export default function SystemRequirements({
   requirements,

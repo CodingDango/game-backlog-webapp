@@ -1,6 +1,6 @@
-import { RawgGameDetails } from "@/lib/types";
+import { RawgGameDetails } from "@/types/types";
 import CommaSeparatedList from "./TextList";
-import { formatDate } from "@/lib/utils";
+import { formatDate } from "@/utils/utils";
 import { Card } from "./ui/card";
 
 export default function GameMetadata({ game }: { game: RawgGameDetails }) {

@@ -7,7 +7,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useGameMutation } from "@/hooks/useGameMutations";
 import { useState } from "react";
-import { UserGame } from "@/lib/types";
+import { UserGame } from "@/types/types";
 import { Spinner } from "./ui/spinner";
 
 import LibraryTrigger from "./LibraryTrigger";

@@ -1,5 +1,5 @@
-import { Category } from "@/lib/types";
-import { HydratedGame } from "@/lib/types";
+import { Category } from "@/types/types";
+import { HydratedGame } from "@/types/types";
 
 import {
   DropdownMenu,
@@ -13,7 +13,7 @@ import {
 import { Button } from "./ui/button";
 import { Check, ChevronDown, Plus } from "lucide-react";
 import { useGameMutation } from "@/hooks/useGameMutations";
-import { CATEGORIES } from "@/lib/constants";
+import { CATEGORIES } from "@/constants/gameConstants";
 
 interface Props {
   hydratedGame: HydratedGame;

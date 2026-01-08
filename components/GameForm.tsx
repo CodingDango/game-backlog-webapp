@@ -1,9 +1,9 @@
 import { MyRadioGroup } from "./MyRadioGroup";
-import { CATEGORIES } from "@/lib/constants";
+import { CATEGORIES } from "@/constants/gameConstants";
 import { Button } from "./ui/button";
 import { DialogHeader, DialogTitle } from "./ui/dialog";
 import { FormEvent, useState } from "react";
-import { Category } from "@/lib/types";
+import { Category } from "@/types/types";
 
 import RatingSelector from "./Rating";
 

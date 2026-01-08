@@ -1,6 +1,6 @@
 import { ChevronDown, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Category } from "@/lib/types";
+import { Category } from "@/types/types";
 import { forwardRef } from "react";
 
 interface Props {

@@ -1,12 +1,13 @@
 "use client";
 
 import { Spinner } from "@/components/ui/spinner";
-import GameGrid from "@/components/GameGrid";
-import { Category, LibraryCategory } from "@/lib/types";
+import { Category, LibraryCategory } from "@/types/types";
 import { LibraryCategories } from "@/components/LibraryCategories";
 import { useMemo, useState } from "react";
 import { useHydratedLibrary } from "@/hooks/useGames";
 import { SortLibrary } from "@/components/SortLibrary";
+
+import GameGrid from "@/components/GameGrid";
 
 type SortFilter = "newest" | "oldest" | "title-asc" | "title-desc";
 
@@ -15,7 +16,6 @@ export default function UserLibrary() {
 
   const [category, setCategory] = useState<LibraryCategory>("all games");
   const [sort, setSort] = useState<SortFilter>("newest");
-
 
   const games = useMemo(() => {
     if (!hydratedLibrary?.length) return [];
@@ -44,7 +44,7 @@ export default function UserLibrary() {
       filtered.sort((a, b) => b.rawg_game.name.localeCompare(a.rawg_game.name));
     }
 
-    return filtered;
+    return filtered.map(game => game.rawg_game);
   }, [hydratedLibrary, category, sort]);
 
   return (
@@ -59,7 +59,7 @@ export default function UserLibrary() {
         />
       </div>
 
-      {isLoading ? <Spinner /> : <GameGrid hydratedGames={games || []} />}
+      {isLoading ? <Spinner /> : <GameGrid rawgGames={games || []} />}
     </div>
   );
 }

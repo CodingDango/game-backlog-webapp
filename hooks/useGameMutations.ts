@@ -1,6 +1,6 @@
 import { toast } from "sonner";
 
-import type { Category, HydratedGame, RawgGame } from "@/lib/types";
+import type { Category, HydratedGame, RawgGame } from "@/types/types";
 
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -8,7 +8,7 @@ import {
   addGameToLibrary,
   modifyUserGameCategory,
   removeGameFromLibrary,
-} from "@/lib/actions";
+} from "@/services/libraryService";
 import { CacheEntry } from "next/dist/server/lib/cache-handlers/types";
 
 export function useGameMutation() {

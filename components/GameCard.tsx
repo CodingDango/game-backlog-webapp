@@ -1,7 +1,7 @@
 import { Skeleton } from "./ui/skeleton";
 import { AppImage } from "./AppImage";
 import { FaSadTear } from "react-icons/fa";
-import { RawgGame } from "@/lib/types";
+import { RawgGame } from "@/types/types";
 
 import Link from "next/link";
 
@@ -16,7 +16,7 @@ export default function GameCard({ rawgGame, isLoading = false }: Props) {
   return (
     <div>
       <div className="relative flex flex-col gap-2 pb-2">
-        {!isLoading && rawgGame && (
+        {rawgGame && (
           <Link
             className="absolute inset-0 rounded-md cursor-pointer z-10"
             href={`/games/${rawgGame.slug}`}

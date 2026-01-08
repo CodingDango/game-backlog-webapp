@@ -1,5 +1,5 @@
 import { Card } from "./ui/card";
-import { RawgGame, RawgGameDetails } from "@/lib/types";
+import { RawgGame, RawgGameDetails } from "@/types/types";
 import { Progress } from "./ui/progress";
 
 interface Props {
@@ -21,7 +21,7 @@ export default function MetacriticRating({ game }: Props) {
             className="w-full h-full"
           />
           <span className="text-sm absolute inset-0 flex justify-center items-center text-primary-foreground font-medium">
-            {metacriticScore ? `${metacriticScore}%` : "N/A"}
+            {metacriticScore ? `${metacriticScore}%` : <span className="text-secondary-foreground">N/A</span>}
           </span>
         </div>
       </div>

@@ -1,8 +1,8 @@
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
-import { CATEGORIES } from "@/lib/constants";
-import { LibraryCategory } from "@/lib/types";
+import { CATEGORIES } from "@/constants/gameConstants";
+import { LibraryCategory } from "@/types/types";
 
 const OPTIONS: LibraryCategory[] = ["all games", ...CATEGORIES];
 

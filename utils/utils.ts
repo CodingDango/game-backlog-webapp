@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { Store, SystemRequirements } from "./types";
+import { Store, SystemRequirements } from "../types/types";
 
 interface MetascoreColor {
   bgCol: string;
@@ -145,7 +145,7 @@ export function extractRequirements(
   }
 }
 
-export function formatRawRequirements(text: string | undefined): string {
+export function formatRawRequirements(text?: string): string {
   if (!text) return "";
 
   return text

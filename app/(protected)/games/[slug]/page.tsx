@@ -17,8 +17,8 @@ import GameTags from "@/components/GameTags";
 import GameMetadata from "@/components/GameMetadata";
 import GameGrid from "@/components/GameGrid";
 import { useQuery } from "@tanstack/react-query";
-import { fetchRelatedGames } from "@/lib/actions";
-import { RawgGame } from "@/lib/types";
+import { RawgGame } from "@/types/types";
+import { getRelatedGames } from "@/services/rawgServices";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -48,7 +48,7 @@ export default function DetailsPage({ params }: PageProps) {
     enabled: !!game?.genres,
     queryKey: ['similarGames', slug], 
     queryFn: async () => {
-      const result = await fetchRelatedGames(game as unknown as RawgGame);
+      const result = await getRelatedGames(game as unknown as RawgGame);
       
       return result || [];
     }
@@ -85,11 +85,12 @@ export default function DetailsPage({ params }: PageProps) {
           </div>
 
           <div className="flex flex-col justify-between gap-8">
-            <div className="w-full h-full max-h-[170px] border border-accent rounded-md">
+            <div className="w-full h-full max-h-[200px] border border-accent rounded-md">
               <AppImage
                 fill
                 src={game.background_image}
                 alt={`Banner for ${game.name}`}
+                className="object-cover w-full h-full"
               />
             </div>
 
