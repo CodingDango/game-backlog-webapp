@@ -15,8 +15,10 @@ import MetacriticRating from "@/components/MetacriticRating";
 import CommunityRating from "@/components/CommunityRating";
 import GameTags from "@/components/GameTags";
 import GameMetadata from "@/components/GameMetadata";
-import { useRawgGames } from "@/hooks/useGames";
 import GameGrid from "@/components/GameGrid";
+import { useQuery } from "@tanstack/react-query";
+import { fetchRelatedGames } from "@/lib/actions";
+import { RawgGame } from "@/lib/types";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -42,12 +44,14 @@ export default function DetailsPage({ params }: PageProps) {
     tags,
   } = useGameDetails(slug);
 
-  const {
-    games: similarGames,
-    isLoading: isLoadingSimilar,
-  } = useRawgGames({
-    enabled: !!game,
-    genres: game?.genres?.map(genre => genre.slug)
+  const { data: similarGames, isLoading: similarGamesLoading } = useQuery({ 
+    enabled: !!game?.genres,
+    queryKey: ['similarGames', slug], 
+    queryFn: async () => {
+      const result = await fetchRelatedGames(game as unknown as RawgGame);
+      
+      return result || [];
+    }
   });
 
   if (isLoading) return <PageSpinner />;
@@ -131,7 +135,7 @@ export default function DetailsPage({ params }: PageProps) {
       </div>
       <div className="flex flex-col gap-16">
         <span className="text-4xl font-medium">Games like {game.name}</span>
-        <GameGrid rawgGames={similarGames} isLoading={isLoadingSimilar}/>
+        <GameGrid rawgGames={similarGames || []} isLoading={similarGamesLoading}/>
       </div>
     </div>
   );

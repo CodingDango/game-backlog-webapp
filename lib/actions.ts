@@ -1,6 +1,6 @@
 "use server";
 
-import { error } from "console";
+import axios from "axios";
 import { createClient } from "./supabase/server";
 import { RawgGame } from "./types";
 import type {
@@ -10,7 +10,6 @@ import type {
   RawgGameDetails,
   Screenshot,
   UserGame,
-  UserRating,
 } from "./types";
 
 interface SuccessResponse<T> {
@@ -303,7 +302,9 @@ export async function getRawgGameScreenshots(
   return details;
 }
 
-export async function getUserGame(rawgId: number): Promise<UserGame | ErrorResponse> {
+export async function getUserGame(
+  rawgId: number
+): Promise<UserGame | ErrorResponse> {
   const supabase = await createClient();
   const {
     data: { user },
@@ -338,3 +339,86 @@ export async function getUserGame(rawgId: number): Promise<UserGame | ErrorRespo
     ...userGame,
   } as UserGame;
 }
+
+// TODO:
+// ILL HAVE A WHILE LOOP THAT WILL KEEP REQUESTING THE NEXT PAGE UNTIL IT REACHES NULL OR NONE
+// IT STOPS WHEN EITHER NEXT IS NULL OR NONE, OR WHEN THE RELATED GAMES IS MAX 15
+// THERE! IT WILL HAVE STRCT INTERSECTION OF GENRES.
+
+export const fetchRelatedGames = async (
+  game: RawgGame
+): Promise<RawgGame[]> => {
+  const DESIRED_COUNT = 15;
+  const MAX_PAGES_TO_SCAN = 5;
+  const MINIMUM_GENRE_MATCH = 1; // Changed to 1 to ensure games with fewer genres can find matches
+  const COMMON_GENRES = new Set(["action", "adventure", "rpg"]);
+
+  // --- Step 1: Find the game's "DNA" ---
+  const allGenres = game.genres.map((g) => g.slug);
+  // We prioritize the genres that are NOT in the common list.
+  let priorityGenres = allGenres.filter((slug) => !COMMON_GENRES.has(slug));
+
+  // If the game is ONLY made of common genres (like a pure Action-RPG),
+  // we have no choice but to use them. This is our fallback.
+  if (priorityGenres.length === 0) {
+    priorityGenres = allGenres;
+  }
+
+  if (priorityGenres.length === 0) {
+    return []; // No genres to search for.
+  }
+
+  // --- Step 2: The Loop ---
+  let accumulatedGames: RawgGame[] = [];
+  let currentPage = 1;
+  let hasMorePages = true;
+
+  while (
+    accumulatedGames.length < DESIRED_COUNT &&
+    currentPage <= MAX_PAGES_TO_SCAN &&
+    hasMorePages
+  ) {
+    try {
+      const { data } = await axios.get("https://api.rawg.io/api/games", {
+        params: {
+          key: process.env.RAWG_API_KEY,
+          // CRITICAL: We search using ONLY the priority genres!
+          genres: priorityGenres.join(","),
+          page: currentPage,
+          ordering: '-rating'
+        },
+      });
+
+      if (!data.next) hasMorePages = false;
+      if (!data.results || data.results.length === 0) break;
+
+      // --- Step 3: The Flexible Filter ---
+      // We check for matches against the ORIGINAL full list of genres
+      const validGames = data.results.filter((relatedGame: RawgGame) => {
+        const matchCount = allGenres.reduce(
+          (count, genre) =>
+            relatedGame.genres.some((g) => g.slug === genre)
+              ? count + 1
+              : count,
+          0
+        );
+
+        return matchCount >= MINIMUM_GENRE_MATCH && relatedGame.slug !== game.slug;
+      });
+
+      accumulatedGames = [...accumulatedGames, ...validGames];
+      currentPage++;
+    } catch (error) {
+      console.error("API call failed:", error);
+      break;
+    }
+  }
+
+  accumulatedGames.sort((a, b) => {
+    const aMatches = a.genres.filter((g) => allGenres.includes(g.slug)).length;
+    const bMatches = b.genres.filter((g) => allGenres.includes(g.slug)).length;
+    return bMatches - aMatches;
+  });
+
+  return accumulatedGames.slice(0, DESIRED_COUNT);
+};

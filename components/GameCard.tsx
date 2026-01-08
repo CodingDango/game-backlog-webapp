@@ -42,7 +42,11 @@ export default function GameCard({ rawgGame, isLoading = false }: Props) {
           )}
         </div>
 
-        <span className="line-clamp-2 text-lg">{rawgGame?.name || ""}</span>
+        {isLoading ? (
+          <Skeleton className="w-32 h-6"></Skeleton>
+        ) : (
+          <span className="line-clamp-2 font-medium">{rawgGame?.name || ""}</span>
+        )}
       </div>
     </div>
   );

@@ -31,7 +31,7 @@ export default function AddToLibrary({ userGame, title, rawgId, isLoading }: Pro
       </Button>
     );
   }
-  const currentCategory = userGame?.category ?? "uncategorized";
+  const currentCategory = userGame?.category;
   const currentRating = userGame?.user_rating ?? 0;
   const isNew = !userGame?.category;
 
@@ -45,7 +45,7 @@ export default function AddToLibrary({ userGame, title, rawgId, isLoading }: Pro
         {isOpen && (
           <GameForm 
             title={title}
-            defaultCategory={currentCategory}
+            defaultCategory={'uncategorized'}
             defaultRating={currentRating}
             isNewEntry={isNew}
             onSave={(cat, rate) => {
