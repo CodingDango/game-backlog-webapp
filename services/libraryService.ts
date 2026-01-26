@@ -1,6 +1,5 @@
 "use server";
 
-import axios from "axios";
 import { createClient } from "../lib/supabase/server";
 import { RawgGame } from "../types/types";
 import type {

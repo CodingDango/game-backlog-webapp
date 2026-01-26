@@ -72,7 +72,7 @@ export default function DetailsPage({ params }: PageProps) {
     );
 
   return (
-    <div className="flex flex-col gap-20">
+    <div className="flex flex-col gap-24">
       <div className="flex flex-col gap-16">
         <span className="text-4xl font-medium">{game.name}</span>
 
@@ -136,7 +136,7 @@ export default function DetailsPage({ params }: PageProps) {
       </div>
       <div className="flex flex-col gap-16">
         <span className="text-4xl font-medium">Games like {game.name}</span>
-        <GameGrid rawgGames={similarGames || []} isLoading={similarGamesLoading}/>
+        <GameGrid rawgGames={similarGames || []} isLoading={similarGamesLoading} length={10}/>
       </div>
     </div>
   );

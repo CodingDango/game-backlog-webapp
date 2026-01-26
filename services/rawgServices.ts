@@ -68,7 +68,7 @@ export const getScreenshots = async (slug: string) => {
 };
 
 export const getRelatedGames = async (game: RawgGame): Promise<RawgGame[]> => {
-  const DESIRED_COUNT = 15;
+  const DESIRED_COUNT = 10;
   const MAX_PAGES_TO_SCAN = 5;
   const MINIMUM_GENRE_MATCH = 1; // Changed to 1 to ensure games with fewer genres can find matches
   const COMMON_GENRES = new Set(["action", "adventure", "rpg"]);

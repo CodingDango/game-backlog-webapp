@@ -4,13 +4,14 @@ import GameCard from "./GameCard";
 interface Props {
   rawgGames: RawgGame[];
   isLoading?: boolean;
+  length: number;
 }
 
-export default function GameGrid({ rawgGames, isLoading = false}: Props) {
+export default function GameGrid({ rawgGames, isLoading = false, length = 15}: Props) {
   return (
     <div className="w-full grid grid-cols-5 gap-8">
       {isLoading ? (
-        Array.from({ length: 15 }).map((_, index) => (
+        Array.from({ length }).map((_, index) => (
           <GameCard key={index} isLoading={true}/>
         ))
       ) : (
