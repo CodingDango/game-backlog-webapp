@@ -74,7 +74,7 @@ export default function DetailsPage({ params }: PageProps) {
   return (
     <div className="flex flex-col gap-24">
       <div className="flex flex-col gap-16">
-        <span className="text-4xl font-medium">{game.name}</span>
+        <span className="text-4xl font-semibold">{game.name}</span>
 
         <div className="grid grid-cols-[5fr_2fr] grid-rows-[auto_1fr] gap-16">
           <div className="relative w-full aspect-video max-h-[400px] rounded-md border border-accent">
@@ -113,12 +113,12 @@ export default function DetailsPage({ params }: PageProps) {
 
           <div className="flex flex-col gap-8">
             <div className="col-span-full flex flex-col gap-1">
-              <span className="text-xl font-medium">About</span>
+              <span className="text-xl font-semibold">About</span>
               <div dangerouslySetInnerHTML={{ __html: gameDescription }} />
             </div>
 
             <div className="col-span-full flex flex-col gap-2">
-              <span className="text-xl font-medium">System Requirements</span>
+              <span className="text-xl font-semibold">System Requirements</span>
               {pcRequirements ? (
                 <SystemRequirements requirements={pcRequirements} />
               ) : (
@@ -135,7 +135,7 @@ export default function DetailsPage({ params }: PageProps) {
         </div>
       </div>
       <div className="flex flex-col gap-16">
-        <span className="text-4xl font-medium">Games like {game.name}</span>
+        <span className="text-4xl font-semibold">Games like {game.name}</span>
         <GameGrid rawgGames={similarGames || []} isLoading={similarGamesLoading} length={10}/>
       </div>
     </div>

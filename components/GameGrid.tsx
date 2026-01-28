@@ -4,7 +4,7 @@ import GameCard from "./GameCard";
 interface Props {
   rawgGames: RawgGame[];
   isLoading?: boolean;
-  length: number;
+  length?: number;
 }
 
 export default function GameGrid({ rawgGames, isLoading = false, length = 15}: Props) {

@@ -21,14 +21,14 @@ import { Button } from "./ui/button";
 
 export default function AppNavbar() {
   const { session, logOut } = useAuth();
-  const [ open, setOpen ] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
 
   return (
     <nav className="px-8 py-3 flex justify-center border-b-accent border-b">
       <div className="max-w-6xl w-full">
         <div className="flex gap-8 justify-between items-center">
           <div className="flex gap-8 items-center flex-1">
-            <Link className="font-medium shrink-0 block" href={"/"}>
+            <Link className="font-semibold shrink-0 block" href={"/"}>
               <Layers2 />
             </Link>
             <div className="w-full max-w-3xs">
@@ -47,15 +47,18 @@ export default function AppNavbar() {
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
-                <Link href={'/library'}>
-                  Library
-                </Link>
+                <Link href={"/library"}>Library</Link>
               </DropdownMenuItem>
-              <DropdownMenuItem variant="destructive" onClick={() => setOpen(prev => !prev)}>Log out</DropdownMenuItem>
+              <DropdownMenuItem
+                variant="destructive"
+                onClick={() => setOpen((prev) => !prev)}
+              >
+                Log out
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <LogOutDialog onLogOut={logOut} open={open} onOpenChange={setOpen}/>
+          <LogOutDialog onLogOut={logOut} open={open} onOpenChange={setOpen} />
         </div>
       </div>
     </nav>

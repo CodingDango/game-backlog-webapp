@@ -16,25 +16,27 @@ export function AppImage({
   wrapperClassName,
   ...props
 }: AppImageProps) {
-  // TODO #1: Create a state variable called 'isLoading'.
-  const [isLoading, setLoading] = useState(true);
+  const [isLoading, setLoading] = useState(false);
+  const handleLoadingComplete = () => setLoading(false);
 
   return (
-    <div className={cn("relative overflow-hidden w-full h-full", wrapperClassName)}>
+    <div
+      className={cn("relative overflow-hidden w-full h-full", wrapperClassName)}
+    >
       {isLoading && (
-        <Skeleton className="absolute inset-0 z-10 h-full w-full" />
+        <Skeleton className="absolute inset-0 z-5 h-full w-full" />
       )}
 
       <Image
+        {...props}
         src={src}
         alt={alt}
-        {...props}
+        onLoadingComplete={handleLoadingComplete}
         className={cn(
           className,
           "transition-all duration-300 w-full h-full object-cover rounded-md",
-          isLoading ? "opacity-0" : "opacity-100"
+          isLoading ? "opacity-0" : "opacity-100",
         )}
-        onLoadingComplete={() => setLoading(false)}
       />
     </div>
   );

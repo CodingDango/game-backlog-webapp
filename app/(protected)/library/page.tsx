@@ -23,20 +23,20 @@ export default function UserLibrary() {
     const filtered = hydratedLibrary.filter(
       (game) =>
         category === "all games" ||
-        game.user_game?.category === (category as Category)
+        game.user_game?.category === (category as Category),
     );
 
     if (sort === "newest") {
       filtered.sort(
         (a, b) =>
           new Date(b.user_game?.created_at || "").getTime() -
-          new Date(a.user_game?.created_at || "").getTime()
+          new Date(a.user_game?.created_at || "").getTime(),
       );
     } else if (sort === "oldest") {
       filtered.sort(
         (a, b) =>
           new Date(a.user_game?.created_at || "").getTime() -
-          new Date(b.user_game?.created_at || "").getTime()
+          new Date(b.user_game?.created_at || "").getTime(),
       );
     } else if (sort === "title-asc") {
       filtered.sort((a, b) => a.rawg_game.name.localeCompare(b.rawg_game.name));
@@ -44,12 +44,12 @@ export default function UserLibrary() {
       filtered.sort((a, b) => b.rawg_game.name.localeCompare(a.rawg_game.name));
     }
 
-    return filtered.map(game => game.rawg_game);
+    return filtered.map((game) => game.rawg_game);
   }, [hydratedLibrary, category, sort]);
 
   return (
     <div className="w-full flex flex-col gap-12">
-      <h1 className="text-4xl font-medium">Your Library</h1>
+      <h1 className="text-4xl font-semibold">Your Library</h1>
 
       <div className="flex justify-between gap-8 items-center">
         <LibraryCategories value={category} onValueChange={setCategory} />

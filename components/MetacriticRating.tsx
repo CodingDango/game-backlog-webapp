@@ -12,7 +12,7 @@ export default function MetacriticRating({ game }: Props) {
   return (
     <Card className="h-13 px-4">
       <div className="flex justify-between items-center h-full">
-        <span className="font-medium">Metacritic</span>
+        <span className="font-semibold">Metacritic</span>
 
         <div className="relative w-full max-w-32 h-4">
           <Progress
@@ -20,8 +20,12 @@ export default function MetacriticRating({ game }: Props) {
             max={100}
             className="w-full h-full"
           />
-          <span className="text-sm absolute inset-0 flex justify-center items-center text-primary-foreground font-medium">
-            {metacriticScore ? `${metacriticScore}%` : <span className="text-secondary-foreground">N/A</span>}
+          <span className="text-sm absolute inset-0 flex justify-center items-center text-primary-foreground font-semibold">
+            {metacriticScore ? (
+              `${metacriticScore}%`
+            ) : (
+              <span className="text-secondary-foreground">N/A</span>
+            )}
           </span>
         </div>
       </div>

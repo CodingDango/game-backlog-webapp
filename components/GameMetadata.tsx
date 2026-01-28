@@ -6,7 +6,7 @@ import { Card } from "./ui/card";
 export default function GameMetadata({ game }: { game: RawgGameDetails }) {
   return (
     <Card className="flex flex-col gap-4">
-      <span className="text-muted-foreground font-medium">Details</span>
+      <span className="text-muted-foreground font-semibold">Details</span>
       <div className="flex flex-col gap-2">
         <div className="flex gap-2 text-sm">
           <span className="text-muted-foreground">Genre:</span>
