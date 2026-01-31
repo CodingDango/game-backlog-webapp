@@ -4,6 +4,8 @@ import { useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/utils/utils";
 import Image, { ImageProps } from "next/image"; // We extend standard Next Image props
+import NotFoundCard from "./NotFoundCard";
+
 
 interface AppImageProps extends ImageProps {
   wrapperClassName?: string;
@@ -27,17 +29,22 @@ export function AppImage({
         <Skeleton className="absolute inset-0 z-5 h-full w-full" />
       )}
 
-      <Image
-        {...props}
-        src={src}
-        alt={alt}
-        onLoadingComplete={handleLoadingComplete}
-        className={cn(
-          className,
-          "transition-all duration-300 w-full h-full object-cover rounded-md",
-          isLoading ? "opacity-0" : "opacity-100",
-        )}
-      />
+      {!!src ? (
+        <Image
+          {...props}
+          src={src}
+          alt={alt}
+          onLoadingComplete={handleLoadingComplete}
+          className={cn(
+            className,
+            "transition-all duration-300 w-full h-full object-cover rounded-md",
+            isLoading ? "opacity-0" : "opacity-100",
+          )}
+        />
+      ) : (
+        <NotFoundCard/>
+      )}
+
     </div>
   );
 }

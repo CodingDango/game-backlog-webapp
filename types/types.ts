@@ -168,4 +168,7 @@ export interface GetGamesParams {
   ids?: number[];
   genres?: string[];
   ordering?: string;
+  dates?: string[];
+  page_size?: number;
+  metacritic?: number[];
 }

@@ -93,8 +93,6 @@ export function useHydratedLibrary() {
         throw new Error(res.error);
       }
 
-      console.log('hydrated library response', res);
-
       return res.results;
     },
   });

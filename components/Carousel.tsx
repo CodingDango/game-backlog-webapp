@@ -6,9 +6,9 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 
-import Image from "next/image";
 import { Skeleton } from "./ui/skeleton";
 import { AppImage } from "./AppImage";
+import NotFoundCard from "./NotFoundCard";
 
 interface Props {
   images: string[];
@@ -16,6 +16,8 @@ interface Props {
 }
 
 export function AppCarousel({ images, isLoading }: Props) {
+  if (images.length == 0   && !isLoading) return <NotFoundCard />;
+
   return (
     <Carousel className="relative w-full h-full">
       <CarouselContent className="h-full">
@@ -27,7 +29,13 @@ export function AppCarousel({ images, isLoading }: Props) {
           images.map((link, index) => (
             <CarouselItem key={index}>
               <div className="h-full relative ">
-                <AppImage src={link} fill alt="idk image?" wrapperClassName="rounded-md"/>
+                <AppImage
+                  className="object-cover"
+                  src={link}
+                  fill
+                  alt="idk image?"
+                  wrapperClassName="rounded-md"
+                />
               </div>
             </CarouselItem>
           ))

@@ -61,7 +61,6 @@ export async function addGameToLibrary(
   const { data: authData, error: authError } = await supabase.auth.getUser();
 
   if (authError) {
-    console.log("Error getting user for inserting:", authError);
     return { success: false, error: authError.message };
   }
 
@@ -83,7 +82,6 @@ export async function addGameToLibrary(
     .single();
 
   if (insertErr) {
-    console.log("Error inserting game:", insertErr);
     return { success: false, error: insertErr.message };
   }
 
@@ -95,7 +93,6 @@ export async function removeGameFromLibrary(rawgId: number) {
   const { data: authData, error: authError } = await supabase.auth.getUser();
 
   if (authError) {
-    console.log("Error getting user for removing:", authError);
     return { success: false, error: authError.message };
   }
 
@@ -107,7 +104,6 @@ export async function removeGameFromLibrary(rawgId: number) {
     .eq("rawg_id", rawgId);
 
   if (removeErr) {
-    console.log("Error removing game:", removeErr);
     return { success: false, error: removeErr.message };
   }
 
@@ -119,7 +115,6 @@ export async function modifyUserGameCategory(id: number, category: Category) {
   const { data: authData, error: authError } = await supabase.auth.getUser();
 
   if (authError) {
-    console.log("Error getting user for modifying:", authError);
     return { success: false, error: authError.message };
   }
 
@@ -131,7 +126,6 @@ export async function modifyUserGameCategory(id: number, category: Category) {
     .eq("id", id);
 
   if (removeErr) {
-    console.log("Error removing game:", removeErr);
     return { success: false, error: removeErr.message };
   }
 

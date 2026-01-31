@@ -13,7 +13,7 @@ const BASE_URL = process.env.RAWG_ENDPOINT || "https://api.rawg.io/api";
 
 async function rawgFetch<T>(
   endpoint: string,
-  params: Record<string, string | number | undefined> = {}
+  params: Record<string, string | number | undefined> = {},
 ): Promise<ApiResponse<T>> {
   const url = new URL(`${BASE_URL}${endpoint}`);
   url.searchParams.append("key", API_KEY);
@@ -44,16 +44,22 @@ async function rawgFetch<T>(
 export const getGames = async ({
   page = 1,
   search,
+  page_size,
   ids,
   genres,
   ordering,
+  dates,
+  metacritic
 }: GetGamesParams) => {
   return rawgFetch<RawgGame>("/games", {
     page,
+    page_size,
     search,
+    ordering,
+    dates: dates?.join(","),
     ids: ids?.join(","),
     genres: genres?.join(","),
-    ordering
+    metacritic: metacritic?.join(',')
   });
 };
 
@@ -65,6 +71,57 @@ export const getGameDetails = async (slug: string) => {
 
 export const getScreenshots = async (slug: string) => {
   return rawgFetch<Screenshot>(`/games/${slug}/screenshots`);
+};
+
+export const getPopularGames = async (count = 10) => {
+  const today = new Date();
+  const lastMonth = new Date();
+
+  lastMonth.setDate(lastMonth.getDate() - 30);
+
+  const end = today.toISOString().split("T")[0]!;
+  const start = lastMonth.toISOString().split("T")[0]!;
+
+  return getGames({
+    ordering: "-added",
+    dates: [start, end],
+    page_size: count,
+  });
+};
+
+export const getAnticipatedGames = async (count: number = 10) => {
+  const today = new Date();
+
+  // 1. Calculate One Year in the Future
+  const nextYear = new Date();
+  nextYear.setFullYear(today.getFullYear() + 1);
+
+  // 2. Format Dates (YYYY-MM-DD)
+  const start = today.toISOString().split("T")[0];
+  const end = nextYear.toISOString().split("T")[0];
+
+  return getGames({
+    dates: [start, end],
+    ordering: "-added", // Highest hype
+  });
+};
+
+export const getRecentGames = async (count: number = 10) => {
+  const today = new Date();
+  const yesterday = new Date();
+  yesterday.setDate(today.getDate() - 1); // <--- Key change
+
+  const lastMonth = new Date();
+  lastMonth.setDate(today.getDate() - 30);
+
+  const end = yesterday.toISOString().split('T')[0]; // Ends YESTERDAY
+  const start = lastMonth.toISOString().split('T')[0];
+
+  return getGames({
+    dates: [start, end],
+    ordering: '-released', // Sort by Newest first
+    page_size: count,
+  });
 };
 
 export const getRelatedGames = async (game: RawgGame): Promise<RawgGame[]> => {
@@ -119,7 +176,7 @@ export const getRelatedGames = async (game: RawgGame): Promise<RawgGame[]> => {
             relatedGame.genres.some((g) => g.slug === genre)
               ? count + 1
               : count,
-          0
+          0,
         );
 
         return (

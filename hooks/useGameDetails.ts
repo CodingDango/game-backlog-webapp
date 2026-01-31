@@ -47,9 +47,8 @@ export function useGameDetails(slug: string) {
 
     const parts = gameData.description.split("</p>");
     const englishPart = parts[0] ? parts[0] + "</p>" : gameData.description;
-    const firstParagraph = englishPart.split("<br />")[0] + "</p>";
-
-    return firstParagraph;
+    
+    return englishPart;
   }, [gameData?.description]);
 
   const screenshotLinks: string[] = useMemo(() => {
