@@ -13,7 +13,7 @@ export default function ProtectedLayout({ children }: Props) {
       <AuthProvider>
         <div className="w-full min-h-dvh flex flex-col">
           <AppNavbar />
-          <div className="px-8 pt-16 pb-24 flex justify-center">
+          <div className="px-4 md:px-8 pt-16 pb-24 flex justify-center">
             <main className="max-w-6xl w-full relative">{children}</main>
           </div>
         </div>

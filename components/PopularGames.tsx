@@ -31,7 +31,7 @@ export default function PopularGames() {
         <Carousel className="relative">
           <CarouselContent className="-ml-6">
             {popularGames.map((game, idx) => (
-              <CarouselItem key={idx} className="sm:basis-1/2 md:basis-1/4 lg:basis-1/5 pl-6">
+              <CarouselItem key={idx} className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 pl-6">
                 <GameCard rawgGame={game} isLoading={isLoadingPopular}/>
               </CarouselItem>
             ))}

@@ -5,6 +5,7 @@ import { AppImage } from "./AppImage";
 import { getAnticipatedGames } from "@/services/rawgServices";
 
 import Link from "next/link";
+import { Skeleton } from "./ui/skeleton";
 
 export default function AnticipatedGames() {
   const { data: anticipatedGames, isLoading: isLoadingAnticipated } = useQuery({
@@ -20,8 +21,8 @@ export default function AnticipatedGames() {
   return (
     <div className="space-y-8">
       <h2 className="text-4xl font-semibold">Most Anticipated </h2>
-      <div className="grid grid-cols-2 gap-8">
-        {anticipatedGames &&
+      <div className="grid md:grid-cols-2 gap-8">
+        {anticipatedGames ?
           anticipatedGames.map((game, idx) => (
             <div
               key={`anticipated-${idx}`}
@@ -46,7 +47,14 @@ export default function AnticipatedGames() {
                 <div>Releases on {formatDate(game.released)}</div>
               </div>
             </div>
-          ))}
+          )) : (
+            <>
+              <Skeleton className="rounded-xl h-48"/>
+              <Skeleton className="rounded-xl h-48"/>
+              <Skeleton className="rounded-xl h-48"/>
+              <Skeleton className="rounded-xl h-48"/>
+            </>
+          )}
       </div>
     </div>
   );
