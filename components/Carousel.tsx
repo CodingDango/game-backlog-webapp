@@ -15,8 +15,8 @@ interface Props {
   isLoading: boolean;
 }
 
-export function AppCarousel({ images, isLoading }: Props) {
-  if (images.length == 0   && !isLoading) return <NotFoundCard />;
+export function AppImageCarousel({ images, isLoading }: Props) {
+  if (images.length == 0 && !isLoading) return <NotFoundCard />;
 
   return (
     <Carousel className="relative w-full h-full">
@@ -28,7 +28,7 @@ export function AppCarousel({ images, isLoading }: Props) {
         ) : (
           images.map((link, index) => (
             <CarouselItem key={index}>
-              <div className="h-full relative ">
+              <div className="h-full relative border rounded-md border-accent">
                 <AppImage
                   className="object-cover"
                   src={link}
@@ -43,14 +43,8 @@ export function AppCarousel({ images, isLoading }: Props) {
       </CarouselContent>
       {!isLoading && images.length > 1 && (
         <>
-          <CarouselPrevious
-            className="absolute left-2 bg-secondary"
-            variant={"secondary"}
-          />
-          <CarouselNext
-            className="absolute right-2 bg-secondary"
-            variant={"secondary"}
-          />
+          <CarouselPrevious className="absolute -left-4" />
+          <CarouselNext className="absolute -right-4" />
         </>
       )}
     </Carousel>

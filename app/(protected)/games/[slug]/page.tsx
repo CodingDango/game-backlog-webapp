@@ -2,7 +2,7 @@
 
 import { use } from "react";
 
-import { AppCarousel } from "@/components/Carousel";
+import { AppImageCarousel } from "@/components/Carousel";
 import { AppImage } from "@/components/AppImage";
 import { useGameDetails } from "@/hooks/useGameDetails";
 import { Frown } from "lucide-react";
@@ -77,15 +77,15 @@ export default function DetailsPage({ params }: PageProps) {
         <span className="text-4xl font-semibold">{game.name}</span>
 
         <div className="grid grid-cols-[5fr_2fr] grid-rows-[auto_1fr] gap-16">
-          <div className="relative w-full aspect-video max-h-[400px] rounded-md border border-accent">
-            <AppCarousel
+          <div className="relative w-full aspect-video max-h-[400px] rounded-md ">
+            <AppImageCarousel
               images={screenshots}
               isLoading={isScreenShotsLoading}
             />
           </div>
 
           <div className="flex flex-col justify-between gap-8">
-            <div className="w-full h-full max-h-[200px] border border-accent rounded-md">
+            <div className="w-full h-full max-h-[200px]  rounded-md">
               <AppImage
                 fill
                 src={game.background_image}
