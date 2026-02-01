@@ -174,3 +174,7 @@ export function truncateDescription(text: string, sentenceCount: number = 2): st
 
   return sentences.slice(0, sentenceCount).join(' ').trim();
 }
+
+export function toFormattedISO(date: Date): string {
+  return date.toISOString().split('T')[0];
+}

@@ -1,5 +1,6 @@
 "use server";
 
+import { toFormattedISO } from "@/utils/utils";
 import {
   RawgGame,
   RawgGameDetails,
@@ -76,49 +77,34 @@ export const getScreenshots = async (slug: string) => {
 export const getPopularGames = async (count = 10) => {
   const today = new Date();
   const lastMonth = new Date();
-
   lastMonth.setDate(lastMonth.getDate() - 30);
-
-  const end = today.toISOString().split("T")[0]!;
-  const start = lastMonth.toISOString().split("T")[0]!;
 
   return getGames({
     ordering: "-added",
-    dates: [start, end],
+    dates: [toFormattedISO(lastMonth), toFormattedISO(today)],
     page_size: count,
   });
 };
 
 export const getAnticipatedGames = async (count: number = 10) => {
   const today = new Date();
-
-  // 1. Calculate One Year in the Future
   const nextYear = new Date();
   nextYear.setFullYear(today.getFullYear() + 1);
 
-  // 2. Format Dates (YYYY-MM-DD)
-  const start = today.toISOString().split("T")[0];
-  const end = nextYear.toISOString().split("T")[0];
-
   return getGames({
-    dates: [start, end],
+    dates: [toFormattedISO(today), toFormattedISO(nextYear)],
     ordering: "-added", // Highest hype
+    page_size: count
   });
 };
 
 export const getRecentGames = async (count: number = 10) => {
-  const today = new Date();
   const yesterday = new Date();
-  yesterday.setDate(today.getDate() - 1); // <--- Key change
-
   const lastMonth = new Date();
-  lastMonth.setDate(today.getDate() - 30);
-
-  const end = yesterday.toISOString().split('T')[0]; // Ends YESTERDAY
-  const start = lastMonth.toISOString().split('T')[0];
+  lastMonth.setDate(lastMonth.getDate() - 30);
 
   return getGames({
-    dates: [start, end],
+    dates: [toFormattedISO(lastMonth), toFormattedISO(yesterday)],
     ordering: '-released', // Sort by Newest first
     page_size: count,
   });
