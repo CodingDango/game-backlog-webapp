@@ -22,17 +22,12 @@ export default function AnticipatedGames() {
     <div className="space-y-8">
       <h2 className="text-4xl font-semibold">Most Anticipated </h2>
       <div className="grid md:grid-cols-2 gap-8">
-        {anticipatedGames ?
+        {anticipatedGames ? (
           anticipatedGames.map((game, idx) => (
             <div
               key={`anticipated-${idx}`}
               className="relative rounded-xl h-48"
             >
-              <Link
-                className="absolute inset-0"
-                href={`/games/${game.slug}`}
-              ></Link>
-
               <div className="absolute inset-0">
                 <AppImage
                   src={game.background_image}
@@ -40,6 +35,11 @@ export default function AnticipatedGames() {
                   fill
                 />
                 <div className="bg-linear-to-l from-black/10 to-black/70 absolute inset-0"></div>
+                <Link
+                  className="absolute inset-0 rounded-md z-2  "
+                  href={`/games/${game.slug}`}
+                ></Link>
+
               </div>
 
               <div className="p-6 z-1 relative">
@@ -47,14 +47,15 @@ export default function AnticipatedGames() {
                 <div>Releases on {formatDate(game.released)}</div>
               </div>
             </div>
-          )) : (
-            <>
-              <Skeleton className="rounded-xl h-48"/>
-              <Skeleton className="rounded-xl h-48"/>
-              <Skeleton className="rounded-xl h-48"/>
-              <Skeleton className="rounded-xl h-48"/>
-            </>
-          )}
+          ))
+        ) : (
+          <>
+            <Skeleton className="rounded-xl h-48" />
+            <Skeleton className="rounded-xl h-48" />
+            <Skeleton className="rounded-xl h-48" />
+            <Skeleton className="rounded-xl h-48" />
+          </>
+        )}
       </div>
     </div>
   );

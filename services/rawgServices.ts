@@ -44,13 +44,14 @@ async function rawgFetch<T>(
 
 export const getGames = async ({
   page = 1,
+  tags,
   search,
   page_size,
   ids,
   genres,
   ordering,
   dates,
-  metacritic
+  metacritic,
 }: GetGamesParams) => {
   return rawgFetch<RawgGame>("/games", {
     page,
@@ -60,7 +61,8 @@ export const getGames = async ({
     dates: dates?.join(","),
     ids: ids?.join(","),
     genres: genres?.join(","),
-    metacritic: metacritic?.join(',')
+    metacritic: metacritic?.join(","),
+    tags: tags?.join(","),
   });
 };
 
@@ -94,7 +96,7 @@ export const getAnticipatedGames = async (count: number = 10) => {
   return getGames({
     dates: [toFormattedISO(today), toFormattedISO(nextYear)],
     ordering: "-added", // Highest hype
-    page_size: count
+    page_size: count,
   });
 };
 
@@ -105,7 +107,7 @@ export const getRecentGames = async (count: number = 10) => {
 
   return getGames({
     dates: [toFormattedISO(lastMonth), toFormattedISO(yesterday)],
-    ordering: '-released', // Sort by Newest first
+    ordering: "-released", // Sort by Newest first
     page_size: count,
   });
 };
@@ -115,27 +117,22 @@ export const getRelatedGames = async (game: RawgGame): Promise<RawgGame[]> => {
   const MAX_PAGES_TO_SCAN = 5;
   const MINIMUM_GENRE_MATCH = 1; // Changed to 1 to ensure games with fewer genres can find matches
   const COMMON_GENRES = new Set(["action", "adventure", "rpg"]);
-
   // --- Step 1: Find the game's "DNA" ---
   const allGenres = game.genres.map((g) => g.slug);
   // We prioritize the genres that are NOT in the common list.
   let priorityGenres = allGenres.filter((slug) => !COMMON_GENRES.has(slug));
-
   // If the game is ONLY made of common genres (like a pure Action-RPG),
   // we have no choice but to use them. This is our fallback.
   if (priorityGenres.length === 0) {
     priorityGenres = allGenres;
   }
-
   if (priorityGenres.length === 0) {
     return []; // No genres to search for.
   }
-
   // --- Step 2: The Loop ---
   let accumulatedGames: RawgGame[] = [];
   let currentPage = 1;
   let hasMorePages = true;
-
   while (
     accumulatedGames.length < DESIRED_COUNT &&
     currentPage <= MAX_PAGES_TO_SCAN &&
@@ -144,7 +141,7 @@ export const getRelatedGames = async (game: RawgGame): Promise<RawgGame[]> => {
     try {
       const res = await getGames({
         genres: priorityGenres,
-        ordering: "-rating",
+        ordering: "-added",
       });
 
       if (!res.success) {
@@ -177,12 +174,10 @@ export const getRelatedGames = async (game: RawgGame): Promise<RawgGame[]> => {
       break;
     }
   }
-
   accumulatedGames.sort((a, b) => {
     const aMatches = a.genres.filter((g) => allGenres.includes(g.slug)).length;
     const bMatches = b.genres.filter((g) => allGenres.includes(g.slug)).length;
     return bMatches - aMatches;
   });
-
   return accumulatedGames.slice(0, DESIRED_COUNT);
 };

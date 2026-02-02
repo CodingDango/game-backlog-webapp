@@ -12,13 +12,11 @@ export default function GameCardAlt({
   game: RawgGame | null;
   isLoading: boolean;
 }) {
-  if (isLoading || !game) return <GameCardAltSkeleton/>
+  if (isLoading || !game) return <GameCardAltSkeleton />;
 
   return (
-    <div className="grid grid-cols-[auto_1fr] rounded-xl gap-6">
+    <div className="grid grid-cols-[auto_1fr] rounded-xl gap-6 relative">
       <div className="relative h-40 w-32">
-        <Link className="absolute inset-0" href={`/games/${game.slug}`}></Link>
-
         <div className="absolute inset-0">
           <AppImage src={game.background_image} alt="image of game" fill />
         </div>
@@ -30,6 +28,8 @@ export default function GameCardAlt({
           {formatDate(game.released)}
         </div>
       </div>
+
+      <Link className="absolute inset-0 " href={`/games/${game.slug}`}></Link>
     </div>
   );
 }

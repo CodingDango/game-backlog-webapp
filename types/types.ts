@@ -7,6 +7,7 @@ export interface RawgGame {
   rating: number;
   metacritic: number;
   genres: Genre[];
+  tags: Tag[];
 }
 
 export interface UserGame {
@@ -171,4 +172,5 @@ export interface GetGamesParams {
   dates?: string[];
   page_size?: number;
   metacritic?: number[];
+  tags?: string[];
 }
