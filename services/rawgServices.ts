@@ -1,6 +1,6 @@
 "use server";
 
-import { toFormattedISO } from "@/utils/utils";
+import { toFormattedISO } from "@/lib/utils";
 import {
   RawgGame,
   RawgGameDetails,
@@ -129,6 +129,7 @@ export const getRelatedGames = async (game: RawgGame): Promise<RawgGame[]> => {
   if (priorityGenres.length === 0) {
     return []; // No genres to search for.
   }
+
   // --- Step 2: The Loop ---
   let accumulatedGames: RawgGame[] = [];
   let currentPage = 1;

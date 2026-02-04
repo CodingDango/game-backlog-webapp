@@ -1,4 +1,4 @@
-import { formatDate } from "@/utils/utils";
+import { formatDate } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { AppImage } from "./AppImage";

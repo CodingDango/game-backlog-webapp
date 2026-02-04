@@ -7,7 +7,7 @@ import {
   formatRawRequirements,
   getStoreUrl,
   truncateDescription,
-} from "@/utils/utils";
+} from "@/lib/utils";
 import { getBrandColor, isSocialInRecords } from "@/components/SocialIcon";
 import { isEmpty } from "lodash";
 import { PCRequirements, PlatformEntry, StoreEntry } from "@/types/types";

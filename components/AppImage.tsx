@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { cn } from "@/utils/utils";
+import { cn } from "@/lib/utils";
 import Image, { ImageProps } from "next/image"; // We extend standard Next Image props
 import NotFoundCard from "./NotFoundCard";
 

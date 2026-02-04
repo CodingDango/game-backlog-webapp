@@ -174,3 +174,8 @@ export interface GetGamesParams {
   metacritic?: number[];
   tags?: string[];
 }
+
+export interface Page {
+  link: string;
+  pageNumber: number;
+}

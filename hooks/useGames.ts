@@ -3,25 +3,23 @@ import { getHydratedUserLibrary } from "@/services/libraryService";
 import { getGames } from "@/services/rawgServices";
 import { useMemo } from "react";
 import { toast } from "sonner";
-import { keyByMap } from "@/utils/utils";
-import { UserGame } from "@/types/types";
+import { keyByMap } from "@/lib/utils";
+import { GetGamesParams, UserGame } from "@/types/types";
 import { getUserGames } from "@/services/libraryService";
 import { useAuth } from "@/components/AuthProvider";
 
-interface GetGamesParams {
-  page?: number;
-  enabled?: boolean;
-  search?: string;
-  ids?: number[];
-  genres?: string[];
-}
-
-export function useRawgGames({ page = 1, enabled = true, search, ids, genres }: GetGamesParams = {}) {
+export function useRawgGames({
+  page = 1,
+  search,
+  ids,
+  genres,
+  ordering,
+}: GetGamesParams = {}) {
   const query = useInfiniteQuery({
-    enabled: enabled,
-    queryKey: ["rawgGames", search, ids, genres],
+    queryKey: ["rawgGames", search, ids, genres, page],
     initialPageParam: page,
-    queryFn: ({ pageParam = 1 }) => getGames({page: pageParam, search, ids, genres}),
+    queryFn: ({ pageParam = 1 }) =>
+      getGames({ page: pageParam, search, ids, genres, ordering }),
     getNextPageParam: (lastPage) => {
       if (!lastPage || !lastPage.success || !lastPage.next) return undefined;
 
@@ -40,8 +38,11 @@ export function useRawgGames({ page = 1, enabled = true, search, ids, genres }: 
     );
   }, [query.data]);
 
+  const gamesCount = query.data?.pages[0]?.success ? query.data?.pages[0].count : 0;
+
   return {
     games,
+    gamesCount,
     ...query,
   };
 }
@@ -87,7 +88,7 @@ export function useHydratedLibrary() {
     queryKey: ["userGames", "hydratedUserLibrary"],
     queryFn: async () => {
       const res = await getHydratedUserLibrary();
-      
+
       if (!res.success) {
         toast.error(res.error);
         throw new Error(res.error);

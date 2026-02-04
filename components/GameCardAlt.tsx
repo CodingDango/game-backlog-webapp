@@ -1,4 +1,4 @@
-import { formatDate } from "@/utils/utils";
+import { formatDate } from "@/lib/utils";
 import { AppImage } from "./AppImage";
 import { RawgGame } from "@/types/types";
 
