@@ -1,6 +1,10 @@
 import { useState } from "react";
 import AppDropdown from "./AppDropdown";
 
+// TODO: Add date filters using shadcn calendar component
+// TODO: add better ordering. like alphabetical, reversed alphhabetical, rating, etc. there is too many!
+
+
 export default function SearchFilters() {
   const orderingFields = [
     "name",
