@@ -34,7 +34,7 @@ export function AppImage({
           {...props}
           src={src}
           alt={alt}
-          onLoadingComplete={handleLoadingComplete}
+          onLoad={handleLoadingComplete}
           className={cn(
             className,
             "transition-all duration-300 w-full h-full object-cover rounded-md",

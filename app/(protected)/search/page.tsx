@@ -6,8 +6,7 @@ import { useCallback, useMemo } from "react";
 
 import GameGrid from "@/components/GameGrid";
 import AppPagination from "@/components/AppPagination";
-import { Page } from "@/types/types";
-import { link } from "fs";
+import SearchFilters from "@/components/SearchFilters";
 
 const pageSize = 20;
 const pagesToShow = 5;
@@ -75,7 +74,10 @@ export default function SearchPage() {
       <h2 className="text-4xl font-semibold">
         Results for &quot;{query}&quot;
       </h2>
-      <GameGrid rawgGames={rawgGames} isLoading={isLoading} length={20} />
+
+      <SearchFilters/>
+
+      <GameGrid rawgGames={rawgGames} isLoading={isLoading} length={20}/>
       <AppPagination
         activePageNumber={page}
         {...{ pages, previousLink, nextLink, showEndEllipsis }}

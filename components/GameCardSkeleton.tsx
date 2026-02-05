@@ -1,13 +1,16 @@
 import { Skeleton } from "./ui/skeleton";
 
-export default function GameCardSkeleton() {
+interface SkeletonProps {
+  imageSkeletonCLass?: string;
+  textSkeletonClass?: string;
+}
+
+export default function GameCardSkeleton({ imageSkeletonCLass, textSkeletonClass }: SkeletonProps) {
   return (
     <div>
       <div className="relative flex flex-col gap-2 pb-2">
-        <div className="flex-1 aspect-9/16 max-h-[300px]">
-          <Skeleton className="w-full h-full object-cover rounded-md" />
-        </div>
-        <Skeleton className="w-32 h-6"></Skeleton>
+          <Skeleton className={`w-full h-full rounded-md flex-1 aspect-9/16 max-h-[260px] ${imageSkeletonCLass}`}/>
+        <Skeleton className={`w-32 h-6 ${textSkeletonClass}`}/>
       </div>
     </div>
   );

@@ -5,15 +5,14 @@ import { Category, LibraryCategory } from "@/types/types";
 import { LibraryCategories } from "@/components/LibraryCategories";
 import { useMemo, useState } from "react";
 import { useHydratedLibrary } from "@/hooks/useGames";
-import { SortLibrary } from "@/components/SortLibrary";
 
 import GameGrid from "@/components/GameGrid";
+import AppDropdown from "@/components/AppDropdown";
 
 type SortFilter = "newest" | "oldest" | "title-asc" | "title-desc";
 
 export default function UserLibrary() {
   const { data: hydratedLibrary, isLoading } = useHydratedLibrary();
-
   const [category, setCategory] = useState<LibraryCategory>("all games");
   const [sort, setSort] = useState<SortFilter>("newest");
 
@@ -47,19 +46,27 @@ export default function UserLibrary() {
     return filtered.map((game) => game.rawg_game);
   }, [hydratedLibrary, category, sort]);
 
+  const sortDropdownItems = [
+    { text: "newest", value: "newest" },
+    { text: "oldest", value: "oldest" },
+    { text: "title (asc)", value: "title-asc" },
+    { text: "title (desc)", value: "title-desc" },
+  ];
+
   return (
     <div className="w-full flex flex-col gap-12">
       <h1 className="text-4xl font-semibold">Your Library</h1>
 
       <div className="flex justify-between gap-8 items-center">
         <LibraryCategories value={category} onValueChange={setCategory} />
-        <SortLibrary
+        <AppDropdown
           value={sort}
           onValueChange={(val: string) => setSort(val as SortFilter)}
+          items={sortDropdownItems}
         />
       </div>
 
-      {isLoading ? <Spinner /> : <GameGrid rawgGames={games || []} />}
-    </div>
+      <GameGrid isLoading={isLoading} rawgGames={games}/>
+    </div>  
   );
 }

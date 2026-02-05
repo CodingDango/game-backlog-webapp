@@ -30,7 +30,7 @@ export default function GameCardAction({ hydratedGame }: Props) {
         <Button
           size={"icon-sm"}
           variant={"secondary"}
-          onClick={() => handleAddGame(rawgGame)}
+          onClick={() => handleAddGame(rawgGame.id)}
         >
           <Plus />
         </Button>
