@@ -77,7 +77,7 @@ export default function SearchPage() {
 
       <SearchFilters/>
 
-      <GameGrid rawgGames={rawgGames} isLoading={isLoading} length={20}/>
+      <GameGrid rawgGames={rawgGames} isLoading={isLoading} length={20} />
       <AppPagination
         activePageNumber={page}
         {...{ pages, previousLink, nextLink, showEndEllipsis }}

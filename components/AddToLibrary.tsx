@@ -53,7 +53,7 @@ export default function AddToLibrary({ userGame, title, rawgId, isLoading }: Pro
               setIsOpen(false); // Close modal on save
             }}
           />
-        )}
+        )}  
       </DialogContent>
     </Dialog>
   );

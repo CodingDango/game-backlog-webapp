@@ -26,29 +26,31 @@ export default function AppPagination({
 }: PaginationParams) {
   return (
     <Pagination>
-      <PaginationContent>
+      <PaginationContent className="gap-4">
         {previousLink && (
           <PaginationItem>
-            <PaginationPrevious href={previousLink} />
+            <PaginationPrevious href={previousLink} size={"icon-lg"} />
           </PaginationItem>
         )}
 
-        {pages.map(({ link, pageNumber }) => (
-          <PaginationItem key={`page-${pageNumber}`}>
-            <PaginationLink
-              isActive={activePageNumber == pageNumber}
-              href={link}
-            >
-              {pageNumber}
-            </PaginationLink>
-          </PaginationItem>
-        ))}
+        <div className="flex">
+          {pages.map(({ link, pageNumber }) => (
+            <PaginationItem key={`page-${pageNumber}`}>
+              <PaginationLink
+                isActive={activePageNumber == pageNumber}
+                href={link}
+              >
+                {pageNumber}
+              </PaginationLink>
+            </PaginationItem>
+          ))}
 
-        {showEndEllipsis && <PaginationEllipsis />}
+          {showEndEllipsis && <PaginationEllipsis />}
+        </div>
 
         {nextLink && (
           <PaginationItem>
-            <PaginationNext href={nextLink} />
+            <PaginationNext href={nextLink} size={"icon-lg"} />
           </PaginationItem>
         )}
       </PaginationContent>
