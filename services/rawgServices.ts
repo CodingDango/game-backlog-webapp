@@ -7,6 +7,7 @@ import {
   Screenshot,
   ApiResponse,
   GetGamesParams,
+  Genre,
 } from "../types/types";
 
 const API_KEY = process.env.RAWG_API_KEY!;
@@ -182,3 +183,7 @@ export const getRelatedGames = async (game: RawgGame): Promise<RawgGame[]> => {
   });
   return accumulatedGames.slice(0, DESIRED_COUNT);
 };
+
+export const getGenres = async () => {
+  return await rawgFetch<Genre>('/genres');
+}

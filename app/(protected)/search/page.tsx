@@ -2,11 +2,12 @@
 
 import { useRawgGames } from "@/hooks/useGames";
 import { useSearchParams } from "next/navigation";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import GameGrid from "@/components/GameGrid";
 import AppPagination from "@/components/AppPagination";
 import SearchFilters from "@/components/SearchFilters";
+
 
 const pageSize = 20;
 const pagesToShow = 5;
@@ -69,13 +70,15 @@ export default function SearchPage() {
     };
   }, [gamesCount, page, createPageUrl]);
 
+  
+
   return (
     <div className="flex flex-col gap-16">
       <h2 className="text-4xl font-semibold">
         Results for &quot;{query}&quot;
       </h2>
 
-      <SearchFilters/>
+      <SearchFilters />
 
       <GameGrid rawgGames={rawgGames} isLoading={isLoading} length={20} />
       <AppPagination

@@ -7,6 +7,7 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
+  DropdownMenuGroup,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { ChevronDown } from "lucide-react";
@@ -40,15 +41,18 @@ export default function AppDropdown({ value, onValueChange, items }: Props) {
         </Button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent className="w-50" align="end">
-        <DropdownMenuRadioGroup value={value} onValueChange={onValueChange}>
-          {items.map(({ value, text }, idx) => (
-            <DropdownMenuRadioItem key={`${value}-${idx}`} value={value}>
-              {text}
-            </DropdownMenuRadioItem>
-          ))}
-        </DropdownMenuRadioGroup>
+      <DropdownMenuContent className="w-50" align="start">
+        <DropdownMenuGroup>
+          <DropdownMenuRadioGroup value={value} onValueChange={onValueChange}>
+            {items.map(({ value, text }, idx) => (
+              <DropdownMenuRadioItem key={`${value}-${idx}`} value={value}>
+                {text}
+              </DropdownMenuRadioItem>
+            ))}
+          </DropdownMenuRadioGroup>
+        </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
+
   );
 }
