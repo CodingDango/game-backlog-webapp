@@ -4,7 +4,7 @@ import { Button } from "./ui/button";
 
 import AppDropdown from "./AppDropdown";
 import GenresDialog from "./GenresDialog";
-import { Badge } from "./ui/badge";
+
 
 // TODO: Add date filters using shadcn calendar component
 // TODO: add better ordering. like alphabetical, reversed alphhabetical, rating, etc. there is too many!

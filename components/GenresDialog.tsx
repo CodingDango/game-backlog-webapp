@@ -1,3 +1,4 @@
+import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { ScrollArea } from "./ui/scroll-area";
 import { toast } from "sonner";
@@ -58,7 +59,7 @@ export default function GenresDialog({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant={"outline"}>Genres ({activeGenres.size})</Button>
+        <Button variant={"outline"} className='flex gap-2'>Genres <Badge variant='secondary'>{activeGenres.size}</Badge></Button>
       </DialogTrigger>
       <DialogContent className="flex flex-col gap-8">
         <DialogHeader>
