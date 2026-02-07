@@ -1,9 +1,10 @@
 import { useMemo, useState } from "react";
-import { Genre } from "@/types/types";
+import { RefreshCcw } from 'lucide-react';
 import { Button } from "./ui/button";
 
 import AppDropdown from "./AppDropdown";
-import GenresDialog from "./GenresDialog";
+import GenresFilterDialog from "./GenresDialog";
+import PlatformFilterDialog from "./PlatformFilterDialog";
 
 
 // TODO: Add date filters using shadcn calendar component
@@ -11,6 +12,7 @@ import GenresDialog from "./GenresDialog";
 
 export default function SearchFilters() {
   const orderingFields = ["relevance", "release date", "name"];
+
   const orderingDropdownItems = orderingFields.map((field) => ({
     value: field,
     text: field,
@@ -21,15 +23,18 @@ export default function SearchFilters() {
   });
 
   const [activeGenres, setActiveGenres] = useState<Set<string>>(new Set<string>([]));
+  const [activePlatforms, setActivePlatforms] = useState<Set<string>>(new Set<string>([]));
   
   return (
     <div className="flex justify-between gap-6">
       <div className="flex flex-col gap-6 max-w-[400px]">
         <div className="flex gap-4">
-          <Button variant={"outline"}>Platforms</Button>
-          <GenresDialog {...{ activeGenres, setActiveGenres }} />
-          <Button variant={"outline"}>Apply</Button>
-          <Button variant={"outline"}>Reset</Button>
+          <PlatformFilterDialog {...{activePlatforms, setActivePlatforms}}/>
+          <GenresFilterDialog {...{activeGenres, setActiveGenres}}/>
+          <Button>Apply</Button>
+          <Button variant={'secondary'} size='icon'>
+            <RefreshCcw/>
+          </Button>
         </div>
       </div>
 

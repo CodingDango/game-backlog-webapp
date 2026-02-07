@@ -187,3 +187,7 @@ export const getRelatedGames = async (game: RawgGame): Promise<RawgGame[]> => {
 export const getGenres = async () => {
   return await rawgFetch<Genre>('/genres');
 }
+
+export const getPlatforms = async () => {
+  return await rawgFetch<Genre>('/platforms');
+}
