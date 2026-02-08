@@ -173,6 +173,7 @@ export interface GetGamesParams {
   page_size?: number;
   metacritic?: number[];
   tags?: string[];
+  platforms?: string[];
 }
 
 export interface Page {

@@ -14,34 +14,33 @@ export function useRawgGames({
   ids,
   genres,
   ordering,
+  platforms,
 }: GetGamesParams = {}) {
-  const query = useInfiniteQuery({
-    queryKey: ["rawgGames", search, ids, genres, page],
-    initialPageParam: page,
-    queryFn: ({ pageParam = 1 }) =>
-      getGames({ page: pageParam, search, ids, genres, ordering }),
-    getNextPageParam: (lastPage) => {
-      if (!lastPage || !lastPage.success || !lastPage.next) return undefined;
+  const query = useQuery({
+    queryKey: ["rawgGames", search, ids, genres, page, ordering, platforms],
+    queryFn: async () => {
+      const result = await getGames({
+        page,
+        search,
+        ids,
+        genres,
+        ordering,
+        platforms,
+      });
 
-      const urlStr = lastPage.next;
-      const url = new URL(urlStr);
-      const nextPage = url.searchParams.get("page");
+      if (!result.success) {
+        toast.error("Could't fetch games");
+        return null;
+      }
 
-      return nextPage ? parseInt(nextPage) : undefined;
+      return result;
     },
   });
 
-  const games = useMemo(() => {
-    return (
-      query.data?.pages.flatMap((page) => (page.success ? page.results : [])) ??
-      []
-    );
-  }, [query.data]);
-
-  const gamesCount = query.data?.pages[0]?.success ? query.data?.pages[0].count : 0;
+  const gamesCount = query.data?.count;
 
   return {
-    games,
+    games: query.data?.results || [],
     gamesCount,
     ...query,
   };

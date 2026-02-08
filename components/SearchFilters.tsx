@@ -1,16 +1,28 @@
-import { useMemo, useState } from "react";
-import { RefreshCcw } from 'lucide-react';
+import { Dispatch, SetStateAction, useMemo, useState } from "react";
+import { RefreshCcw } from "lucide-react";
 import { Button } from "./ui/button";
+import Link from "next/link";
 
 import AppDropdown from "./AppDropdown";
 import GenresFilterDialog from "./GenresDialog";
 import PlatformFilterDialog from "./PlatformFilterDialog";
 
-
 // TODO: Add date filters using shadcn calendar component
 // TODO: add better ordering. like alphabetical, reversed alphhabetical, rating, etc. there is too many!
 
-export default function SearchFilters() {
+export type Filter = "genres" | "platforms";
+
+interface SearchFiltersProps {
+  activeFilters: Record<Filter, Set<string>>;
+  setActiveFilters: Dispatch<SetStateAction<Record<Filter, Set<string>>>>;
+  onApply: () => void;
+}
+
+export default function SearchFilters({
+  activeFilters,
+  setActiveFilters,
+  onApply
+}: SearchFiltersProps) {
   const orderingFields = ["relevance", "release date", "name"];
 
   const orderingDropdownItems = orderingFields.map((field) => ({
@@ -22,29 +34,32 @@ export default function SearchFilters() {
     ordering: "relevance",
   });
 
-  const [activeGenres, setActiveGenres] = useState<Set<string>>(new Set<string>([]));
-  const [activePlatforms, setActivePlatforms] = useState<Set<string>>(new Set<string>([]));
-  
+  const { platforms, genres } = activeFilters;
+
   return (
     <div className="flex justify-between gap-6">
       <div className="flex flex-col gap-6 max-w-[400px]">
         <div className="flex gap-4">
-          <PlatformFilterDialog {...{activePlatforms, setActivePlatforms}}/>
-          <GenresFilterDialog {...{activeGenres, setActiveGenres}}/>
-          <Button>Apply</Button>
-          <Button variant={'secondary'} size='icon'>
-            <RefreshCcw/>
+          <PlatformFilterDialog {...{ platforms, setActiveFilters }} />
+          <GenresFilterDialog {...{ genres, setActiveFilters }} />
+          <Button onClick={onApply} >
+            Apply Filters
+          </Button>
+          <Button variant={"secondary"} size="icon">
+            <RefreshCcw />
           </Button>
         </div>
       </div>
 
-      <div>
+      <div className="flex gap-4 items-center">
+        <span className="text-muted-foreground">Sort by:</span>
         <AppDropdown
+        widthClass="w-40"
+          items={orderingDropdownItems}
           value={filters.ordering}
           onValueChange={(val: string) =>
             setFilters((prev) => ({ ...prev, ordering: val }))
           }
-          items={orderingDropdownItems}
         />
       </div>
     </div>

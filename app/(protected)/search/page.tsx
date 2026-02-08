@@ -1,21 +1,28 @@
 "use client";
 
 import { useRawgGames } from "@/hooks/useGames";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useMemo, useState } from "react";
 
 import GameGrid from "@/components/GameGrid";
 import AppPagination from "@/components/AppPagination";
 import SearchFilters from "@/components/SearchFilters";
 
-
 const pageSize = 20;
 const pagesToShow = 5;
 
 export default function SearchPage() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const query = searchParams.get("q") || "";
   const page = Number(searchParams.get("p")) || 1;
+  const genres = searchParams.get('genres') || '';
+  const platforms = searchParams.get('platforms') || '';
+
+  const genresArr = genres.length > 0 ? genres.split(',') : [];
+  const platformsArr = platforms.length > 0 ? platforms.split(',') : [];
+
+  console.log('platforms arr', platformsArr);
 
   const createPageUrl = useCallback(
     (newPage: number) => {
@@ -32,11 +39,17 @@ export default function SearchPage() {
     gamesCount,
   } = useRawgGames({
     search: query,
-    ordering: "-added",
     page,
     page_size: 20,
+    genres: genresArr.length > 0 ? genresArr : undefined,
+    platforms: platformsArr.length > 0 ? platformsArr : undefined
   });
 
+  const [activeFilters, setActiveFilters] = useState({
+    genres: new Set<string>(genresArr),
+    platforms: new Set<string>(platformsArr),
+  });
+  
   const { pages, previousLink, nextLink, showEndEllipsis } = useMemo(() => {
     if (!gamesCount) return {};
 
@@ -55,7 +68,7 @@ export default function SearchPage() {
       endPage = totalPages;
       startPage = Math.max(1, totalPages - pagesToShow + 1);
     }
-
+    
     const pages = [];
 
     for (let i = startPage; i <= endPage; i++) {
@@ -70,7 +83,32 @@ export default function SearchPage() {
     };
   }, [gamesCount, page, createPageUrl]);
 
-  
+  const filterParams = useMemo(() => {
+
+    const params = new URLSearchParams(searchParams.toString());
+    const { genres, platforms } = activeFilters;
+    
+    if (genres.size > 0) {
+      params.set('genres', Array.from(genres).join(','));
+    } else {
+      params.delete('genres');
+    }
+
+    if (platforms.size > 0) {
+      params.set('platforms', Array.from(platforms).join(','));
+    } else {
+      params.delete('platforms')
+    }
+
+    return params.toString()
+  }, [searchParams, activeFilters, page]);
+
+
+  const onApply = useCallback(() => {
+    router.push(`/search?${filterParams}`)
+  }, [filterParams, router])
+
+  console.log(activeFilters);
 
   return (
     <div className="flex flex-col gap-16">
@@ -78,9 +116,10 @@ export default function SearchPage() {
         Results for &quot;{query}&quot;
       </h2>
 
-      <SearchFilters />
+      <SearchFilters {...{activeFilters, setActiveFilters, onApply }} />
 
       <GameGrid rawgGames={rawgGames} isLoading={isLoading} length={20} />
+
       <AppPagination
         activePageNumber={page}
         {...{ pages, previousLink, nextLink, showEndEllipsis }}

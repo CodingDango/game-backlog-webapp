@@ -1,27 +1,28 @@
 import { Dispatch, SetStateAction } from "react";
-import { getGenres, getPlatforms } from "@/services/rawgServices";
-import { Genre, Platform } from "@/types/types";
+import { getPlatforms } from "@/services/rawgServices";
+import { Filter } from "./SearchFilters";
 
 import DialogFilter from "./DialogFilter";
 
 interface PlatformFilterDialog {
-  activePlatforms: Set<string>; // slugs
-  setActivePlatforms: Dispatch<SetStateAction<Set<string>>>;
+  platforms: Set<string>; // slugs
+  setActiveFilters: Dispatch<SetStateAction<Record<Filter, Set<string>>>>;  
 }
 
 export default function PlatformFilterDialog({
-  activePlatforms,
-  setActivePlatforms,
+  platforms,
+  setActiveFilters,
 }: PlatformFilterDialog) {
   return (
     <DialogFilter
       filterName='platforms'
-      activeSlugs={activePlatforms}
-      setActiveSlugs={setActivePlatforms}
+      activeSlugs={platforms}
+      setActiveFilters={setActiveFilters}
       queryFn={getPlatforms}
       queryKey={['platforms']}
-      getSlug={(item: Platform) => item.slug}
-      getName={(item: Platform) => item.name}
+      getSlug={(item) => item.slug}
+      getName={(item) => item.name}
+      getId={(item) => item.id.toString()}
     />
   )
-}
+} 

@@ -20,11 +20,16 @@ async function rawgFetch<T>(
   const url = new URL(`${BASE_URL}${endpoint}`);
   url.searchParams.append("key", API_KEY);
 
+  console.log('params', params);
+ 
   Object.entries(params).forEach(([key, value]) => {
     if (value !== undefined && value !== null) {
       url.searchParams.append(key, String(value));
     }
   });
+
+
+  console.log('rawg str', url.toString());
 
   try {
     const res = await fetch(url.toString());
@@ -53,6 +58,7 @@ export const getGames = async ({
   ordering,
   dates,
   metacritic,
+  platforms
 }: GetGamesParams) => {
   return rawgFetch<RawgGame>("/games", {
     page,
@@ -64,6 +70,7 @@ export const getGames = async ({
     genres: genres?.join(","),
     metacritic: metacritic?.join(","),
     tags: tags?.join(","),
+    platforms: platforms?.join(',')
   });
 };
 

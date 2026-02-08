@@ -18,25 +18,28 @@ import { Spinner } from "./ui/spinner";
 import { ApiResponse } from "@/types/types";
 
 import SearchInput from "./SearchInput";
+import { Filter } from "./SearchFilters";
 
 interface DialogFilterProps<T> {
-  filterName: string;
+  filterName: Filter;
   activeSlugs: Set<string>; // slugs
-  setActiveSlugs: Dispatch<SetStateAction<Set<string>>>;
+  setActiveFilters: Dispatch<SetStateAction<Record<Filter, Set<string>>>>;
   queryFn: () => Promise<ApiResponse<T>>;
   queryKey: string[];
   getSlug: (item: T) => string;
   getName: (item: T) => string;
+  getId: (item: T) => string;
 }
 
 export default function DialogFilter<T>({
   filterName,
   activeSlugs,
-  setActiveSlugs,
+  setActiveFilters,
   queryFn,
   queryKey,
   getSlug,
-  getName
+  getName,
+  getId,
 }: DialogFilterProps<T>) {
   const [query, setQuery] = useState("");
 
@@ -91,7 +94,7 @@ export default function DialogFilter<T>({
             <div className="flex flex-col gap-3">
               {itemsToDisplay &&
                 itemsToDisplay.map((item) => {
-                  const isSelected = activeSlugs.has(getSlug(item));
+                  const isSelected = activeSlugs.has(getId(item));
 
                   return (
                     <Label
@@ -102,16 +105,17 @@ export default function DialogFilter<T>({
                         value={getSlug(item)}
                         checked={isSelected}
                         onCheckedChange={(checked) => {
-                          setActiveSlugs((prev) => {
-                            const next = new Set(prev);
+                          setActiveFilters((prev) => {
+                            const filters = prev[filterName] ?? new Set<string>();
+                            const next = new Set(filters);
 
                             if (checked) {
-                              next.add(getSlug(item));
+                              next.add(getId(item));
                             } else {
-                              next.delete(getSlug(item));
+                              next.delete(getId(item));
                             }
 
-                            return next;
+                            return { ...prev, [filterName]: next };
                           });
                         }}
                       />

@@ -17,6 +17,8 @@ interface Props {
   value: string;
   onValueChange: (val: string) => void;
   items: DropdownItem[];
+  text?: string;
+  widthClass?: string;
 }
 
 interface DropdownItem {
@@ -24,14 +26,19 @@ interface DropdownItem {
   text: string;
 }
 
-export default function AppDropdown({ value, onValueChange, items }: Props) {
+const DEFAULT_WIDTH = 'w-50';
+
+export default function AppDropdown({ value, onValueChange, items, text, widthClass}: Props) {
   const [isOpen, setOpen] = useState(false);
 
   return (
     <DropdownMenu onOpenChange={setOpen} open={isOpen}>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="flex justify-between w-50 px-6">
-          <span>Sort by {value}</span>
+        <Button variant="outline" className={cn(
+          'flex justify-between px-6',
+          widthClass || DEFAULT_WIDTH
+        )}>
+          <span>{text} <span className="capitalize">{value}</span></span>
           <ChevronDown
             className={cn(
               "transition-all duration-300",
@@ -41,11 +48,11 @@ export default function AppDropdown({ value, onValueChange, items }: Props) {
         </Button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent className="w-50" align="start">
+      <DropdownMenuContent className={cn(widthClass || DEFAULT_WIDTH)} align="start">
         <DropdownMenuGroup>
           <DropdownMenuRadioGroup value={value} onValueChange={onValueChange}>
             {items.map(({ value, text }, idx) => (
-              <DropdownMenuRadioItem key={`${value}-${idx}`} value={value}>
+              <DropdownMenuRadioItem className="capitalize" key={`${value}-${idx}`} value={value}>
                 {text}
               </DropdownMenuRadioItem>
             ))}
