@@ -20,16 +20,12 @@ async function rawgFetch<T>(
   const url = new URL(`${BASE_URL}${endpoint}`);
   url.searchParams.append("key", API_KEY);
 
-  console.log('params', params);
- 
   Object.entries(params).forEach(([key, value]) => {
     if (value !== undefined && value !== null) {
       url.searchParams.append(key, String(value));
     }
   });
 
-
-  console.log('rawg str', url.toString());
 
   try {
     const res = await fetch(url.toString());

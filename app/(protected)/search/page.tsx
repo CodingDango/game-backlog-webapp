@@ -22,8 +22,6 @@ export default function SearchPage() {
   const genresArr = genres.length > 0 ? genres.split(',') : [];
   const platformsArr = platforms.length > 0 ? platforms.split(',') : [];
 
-  console.log('platforms arr', platformsArr);
-
   const createPageUrl = useCallback(
     (newPage: number) => {
       const params = new URLSearchParams(searchParams.toString());
@@ -107,8 +105,6 @@ export default function SearchPage() {
   const onApply = useCallback(() => {
     router.push(`/search?${filterParams}`)
   }, [filterParams, router])
-
-  console.log(activeFilters);
 
   return (
     <div className="flex flex-col gap-16">
