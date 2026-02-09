@@ -16,11 +16,13 @@ export default function SearchPage() {
   const router = useRouter();
   const query = searchParams.get("q") || "";
   const page = Number(searchParams.get("p")) || 1;
-  const genres = searchParams.get('genres') || '';
-  const platforms = searchParams.get('platforms') || '';
+  const genres = searchParams.get("genres") || "";
+  const platforms = searchParams.get("platforms") || "";
 
-  const genresArr = genres.length > 0 ? genres.split(',') : [];
-  const platformsArr = platforms.length > 0 ? platforms.split(',') : [];
+  const genresArr = genres.length > 0 ? genres.split(",") : [];
+  const platformsArr = platforms.length > 0 ? platforms.split(",") : [];
+
+  const [ordering, setOrdering] = useState(searchParams.get('ordering') ?? '-released');
 
   const createPageUrl = useCallback(
     (newPage: number) => {
@@ -40,14 +42,17 @@ export default function SearchPage() {
     page,
     page_size: 20,
     genres: genresArr.length > 0 ? genresArr : undefined,
-    platforms: platformsArr.length > 0 ? platformsArr : undefined
+    platforms: platformsArr.length > 0 ? platformsArr : undefined,
+    ordering
   });
 
   const [activeFilters, setActiveFilters] = useState({
     genres: new Set<string>(genresArr),
     platforms: new Set<string>(platformsArr),
   });
+
   
+
   const { pages, previousLink, nextLink, showEndEllipsis } = useMemo(() => {
     if (!gamesCount) return {};
 
@@ -66,7 +71,7 @@ export default function SearchPage() {
       endPage = totalPages;
       startPage = Math.max(1, totalPages - pagesToShow + 1);
     }
-    
+
     const pages = [];
 
     for (let i = startPage; i <= endPage; i++) {
@@ -81,30 +86,30 @@ export default function SearchPage() {
     };
   }, [gamesCount, page, createPageUrl]);
 
-  const filterParams = useMemo(() => {
-
+  const queryParams = useMemo(() => {
     const params = new URLSearchParams(searchParams.toString());
     const { genres, platforms } = activeFilters;
-    
+
     if (genres.size > 0) {
-      params.set('genres', Array.from(genres).join(','));
+      params.set("genres", Array.from(genres).join(","));
     } else {
-      params.delete('genres');
+      params.delete("genres");
     }
 
     if (platforms.size > 0) {
-      params.set('platforms', Array.from(platforms).join(','));
+      params.set("platforms", Array.from(platforms).join(","));
     } else {
-      params.delete('platforms')
+      params.delete("platforms");
     }
 
-    return params.toString()
-  }, [searchParams, activeFilters, page]);
+    params.set("ordering", ordering);
 
+    return params.toString();
+  }, [searchParams, activeFilters, ordering]);
 
   const onApply = useCallback(() => {
-    router.push(`/search?${filterParams}`)
-  }, [filterParams, router])
+    router.push(`/search?${queryParams}`);
+  }, [queryParams, router]);
 
   return (
     <div className="flex flex-col gap-16">
@@ -112,7 +117,9 @@ export default function SearchPage() {
         Results for &quot;{query}&quot;
       </h2>
 
-      <SearchFilters {...{activeFilters, setActiveFilters, onApply }} />
+      <SearchFilters
+        {...{ activeFilters, setActiveFilters, ordering, setOrdering, onApply }}
+      />
 
       <GameGrid rawgGames={rawgGames} isLoading={isLoading} length={20} />
 

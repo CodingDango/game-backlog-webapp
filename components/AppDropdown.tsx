@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { ChevronDown } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 interface Props {
   value: string;
@@ -21,24 +21,39 @@ interface Props {
   widthClass?: string;
 }
 
-interface DropdownItem {
+export interface DropdownItem {
   value: string;
   text: string;
 }
 
-const DEFAULT_WIDTH = 'w-50';
+const DEFAULT_WIDTH = "w-50";
 
-export default function AppDropdown({ value, onValueChange, items, text, widthClass}: Props) {
+export default function AppDropdown({
+  value,
+  onValueChange,
+  items,
+  text,
+  widthClass,
+}: Props) {
   const [isOpen, setOpen] = useState(false);
+  const activeItem = useMemo(
+    () => items.find((item) => item.value == value),
+    [value, items],
+  );
 
   return (
     <DropdownMenu onOpenChange={setOpen} open={isOpen}>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className={cn(
-          'flex justify-between px-6',
-          widthClass || DEFAULT_WIDTH
-        )}>
-          <span>{text} <span className="capitalize">{value}</span></span>
+        <Button
+          variant="outline"
+          className={cn(
+            "flex justify-between px-6",
+            widthClass || DEFAULT_WIDTH,
+          )}
+        >
+          <span>
+            {text} <span className="capitalize">{activeItem?.text}</span>
+          </span>
           <ChevronDown
             className={cn(
               "transition-all duration-300",
@@ -48,11 +63,18 @@ export default function AppDropdown({ value, onValueChange, items, text, widthCl
         </Button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent className={cn(widthClass || DEFAULT_WIDTH)} align="start">
+      <DropdownMenuContent
+        className={cn(widthClass || DEFAULT_WIDTH)}
+        align="start"
+      >
         <DropdownMenuGroup>
           <DropdownMenuRadioGroup value={value} onValueChange={onValueChange}>
             {items.map(({ value, text }, idx) => (
-              <DropdownMenuRadioItem className="capitalize" key={`${value}-${idx}`} value={value}>
+              <DropdownMenuRadioItem
+                className="capitalize"
+                key={`${value}-${idx}`}
+                value={value}
+              >
                 {text}
               </DropdownMenuRadioItem>
             ))}
@@ -60,6 +82,5 @@ export default function AppDropdown({ value, onValueChange, items, text, widthCl
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
-
   );
 }
