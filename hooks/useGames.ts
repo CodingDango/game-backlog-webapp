@@ -37,7 +37,7 @@ export function useRawgGames({
     },
   });
 
-  const gamesCount = query.data?.count;
+  const gamesCount = query.data?.count ?? 0;
 
   return {
     games: query.data?.results || [],
