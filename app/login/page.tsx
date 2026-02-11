@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { FormEvent, FormEventHandler, useState } from "react";
 
 import {
   InputOTP,
@@ -11,16 +11,20 @@ import { createClient } from "@/lib/supabase/client";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import Link from "next/link";
+import { FaGithub } from "react-icons/fa";
+
+type FormSubmitEvent = FormEvent<HTMLFormElement>;
 
 export default function LoginPage() {
-  const [otpValue, setOtpValue] = useState("");
-  const [email, setEmail] = useState("");
   const supabase = createClient();
   const router = useRouter();
 
+  const [otpValue, setOtpValue] = useState("");
+  const [email, setEmail] = useState("");
+  const [isOtpVerify, setIsOtpVerify] = useState(false);
+
   // TODO: Refactor to use useMutation
-  const handleOtpRequest = async (e) => {
+  const handleOtpRequest = async (e: FormSubmitEvent) => {
     e.preventDefault();
 
     // TODO: Add a loading spinner to `Send OTP` Button
@@ -37,9 +41,11 @@ export default function LoginPage() {
     } else {
       toast.error(`Error, ${error}`);
     }
+
+    setIsOtpVerify(true);
   };
 
-  const handleOtpVerify = async (e) => {
+  const handleOtpVerify = async (e: FormSubmitEvent) => {
     e.preventDefault();
 
     const {
@@ -55,10 +61,19 @@ export default function LoginPage() {
     router.push("/");
   };
 
+  const handleGithubLogin = async (e: FormSubmitEvent) => {
+    e.preventDefault();
+    toast.info("Coming soon");
+  };
+
   return (
-    <div className="min-h-dvh flex justify-center py-12 px-8">
-      <div className="space-y-12">
-        <form className="space-y-6" onSubmit={handleOtpRequest}>
+    <div className="min-h-dvh flex justify-center items-center py-12 px-8">
+      <div className="flex flex-col gap-8 w-80">
+        <h1 className="text-center text-3xl font-semibold">
+          Log in to Backlog
+        </h1>
+
+        <form className="flex flex-col gap-4" onSubmit={handleOtpRequest}>
           <Input
             placeholder="Email"
             name="email"
@@ -66,40 +81,46 @@ export default function LoginPage() {
             required
             onChange={(e) => setEmail(e.target.value)}
             value={email}
+            className="py-6"
           />
-          <div className="flex justify-between gap-6">
-            <Button>Send OTP</Button>
-            <Link
-              target="_blank"
-              href={"https://mail.google.com/mail/"}
-              className="text-muted-foreground underline"
-            >
-              Mail Redirect
-            </Link>
-          </div>
+          <Button className="py-6" type="submit">
+            Continue with Email
+          </Button>
         </form>
 
-        <form className="space-y-6" onSubmit={handleOtpVerify}>
-          <InputOTP
-            maxLength={8}
-            value={otpValue}
-            onChange={(value) => setOtpValue(value)}
-            required
+        <div className="h-px bg-accent"></div>
+
+        <form className="flex w-full" onSubmit={handleGithubLogin}>
+          <Button
+            variant={"outline"}
+            className="py-6 flex gap-4 w-full"
+            type="submit"
           >
-            <InputOTPGroup>
-              <InputOTPSlot index={0} />
-              <InputOTPSlot index={1} />
-              <InputOTPSlot index={2} />
-              <InputOTPSlot index={3} />
-              <InputOTPSlot index={4} />
-              <InputOTPSlot index={5} />
-              <InputOTPSlot index={6} />
-              <InputOTPSlot index={7} />
-            </InputOTPGroup>
-          </InputOTP>
-          <Button>Verify OTP</Button>
+            <FaGithub className="size-6" /> Continue with GitHub
+          </Button>
         </form>
       </div>
+
+      <form className="space-y-6" onSubmit={handleOtpVerify}>
+        <InputOTP
+          maxLength={8}
+          value={otpValue}
+          onChange={(value) => setOtpValue(value)}
+          required
+        >
+          <InputOTPGroup>
+            <InputOTPSlot index={0} />
+            <InputOTPSlot index={1} />
+            <InputOTPSlot index={2} />
+            <InputOTPSlot index={3} />
+            <InputOTPSlot index={4} />
+            <InputOTPSlot index={5} />
+            <InputOTPSlot index={6} />
+            <InputOTPSlot index={7} />
+          </InputOTPGroup>
+        </InputOTP>
+        <Button>Verify OTP</Button>
+      </form>
     </div>
   );
 }
