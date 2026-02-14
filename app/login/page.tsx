@@ -6,12 +6,22 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { FaGithub } from "react-icons/fa";
+import { Spinner } from "@/components/ui/spinner";
 
 type FormSubmitEvent = FormEvent<HTMLFormElement>;
 
@@ -21,28 +31,28 @@ export default function LoginPage() {
 
   const [otpValue, setOtpValue] = useState("");
   const [email, setEmail] = useState("");
-  const [isOtpVerify, setIsOtpVerify] = useState(false);
+  const [openOtpDialog, setOpenOtpDialog] = useState(false);
+  const [isSendingOtp, setIsSendingOtp] = useState(false);
 
   // TODO: Refactor to use useMutation
-  const handleOtpRequest = async (e: FormSubmitEvent) => {
+  const handleEmailLogin = async (e: FormSubmitEvent) => {
     e.preventDefault();
 
-    // TODO: Add a loading spinner to `Send OTP` Button
+    setIsSendingOtp(true);
+
     const { data, error } = await supabase.auth.signInWithOtp({
       email: email,
-      options: {
-        // set this to false if you do not want the user to be automatically signed up
-        shouldCreateUser: true,
-      },
+      options: { shouldCreateUser: false },
     });
+
+    setIsSendingOtp(false);
 
     if (!error) {
       toast.success("OTP Sent");
+      setOpenOtpDialog(true);
     } else {
-      toast.error(`Error, ${error}`);
+      toast.error(error.message);
     }
-
-    setIsOtpVerify(true);
   };
 
   const handleOtpVerify = async (e: FormSubmitEvent) => {
@@ -57,8 +67,12 @@ export default function LoginPage() {
       type: "email",
     });
 
-    router.refresh();
-    router.push("/");
+    if (error) {
+      toast.error(error.message);
+    } else {
+      router.refresh();
+      router.push("/");
+    }
   };
 
   const handleGithubLogin = async (e: FormSubmitEvent) => {
@@ -73,7 +87,7 @@ export default function LoginPage() {
           Log in to Backlog
         </h1>
 
-        <form className="flex flex-col gap-4" onSubmit={handleOtpRequest}>
+        <form className="flex flex-col gap-4" onSubmit={handleEmailLogin}>
           <Input
             placeholder="Email"
             name="email"
@@ -83,7 +97,8 @@ export default function LoginPage() {
             value={email}
             className="py-6"
           />
-          <Button className="py-6" type="submit">
+          <Button className="py-6" type="submit" disabled={isSendingOtp}>
+            {isSendingOtp && <Spinner />}
             Continue with Email
           </Button>
         </form>
@@ -99,28 +114,36 @@ export default function LoginPage() {
             <FaGithub className="size-6" /> Continue with GitHub
           </Button>
         </form>
-      </div>
 
-      <form className="space-y-6" onSubmit={handleOtpVerify}>
-        <InputOTP
-          maxLength={8}
-          value={otpValue}
-          onChange={(value) => setOtpValue(value)}
-          required
-        >
-          <InputOTPGroup>
-            <InputOTPSlot index={0} />
-            <InputOTPSlot index={1} />
-            <InputOTPSlot index={2} />
-            <InputOTPSlot index={3} />
-            <InputOTPSlot index={4} />
-            <InputOTPSlot index={5} />
-            <InputOTPSlot index={6} />
-            <InputOTPSlot index={7} />
-          </InputOTPGroup>
-        </InputOTP>
-        <Button>Verify OTP</Button>
-      </form>
+        <Dialog open={openOtpDialog} onOpenChange={setOpenOtpDialog}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Verify OTP</DialogTitle>
+            </DialogHeader>
+
+            <form className="space-y-6" onSubmit={handleOtpVerify}>
+              <InputOTP
+                maxLength={8}
+                value={otpValue}
+                onChange={(value) => setOtpValue(value)}
+                required
+              >
+                <InputOTPGroup>
+                  <InputOTPSlot index={0} />
+                  <InputOTPSlot index={1} />
+                  <InputOTPSlot index={2} />
+                  <InputOTPSlot index={3} />
+                  <InputOTPSlot index={4} />
+                  <InputOTPSlot index={5} />
+                  <InputOTPSlot index={6} />
+                  <InputOTPSlot index={7} />
+                </InputOTPGroup>
+              </InputOTP>
+              <Button>Verify OTP</Button>
+            </form>
+          </DialogContent>
+        </Dialog>
+      </div>
     </div>
   );
 }
