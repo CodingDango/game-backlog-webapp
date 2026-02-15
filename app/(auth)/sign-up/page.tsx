@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import AuthVerifyOTP from "@/components/AuthOTPDialog";
 import AuthForm from "@/components/AuthForm";
 
-export default function LoginPage() {
+export default function SignUpPage() {
   const supabase = createClient();
   const router = useRouter();
 
@@ -17,13 +17,15 @@ export default function LoginPage() {
   const [isVerifying, setIsVerifying] = useState(false);
   const [isSendingOtp, setIsSendingOtp] = useState(false);
 
-  const handleEmailLogin = async (email: string) => {
+  const handleEmailSignUp = async (email: string) => {
     setIsSendingOtp(true);
 
-    const { error } = await supabase.auth.signInWithOtp({
+    const { error, data } = await supabase.auth.signInWithOtp({
       email: email,
-      options: { shouldCreateUser: false },
+      options: { shouldCreateUser: true },
     });
+
+    console.log(data)
 
     setIsSendingOtp(false);
 
@@ -59,13 +61,13 @@ export default function LoginPage() {
       <AuthForm
         setEmail={setEmail}
         email={email}
-        handleEmailSubmit={handleEmailLogin}
+        handleEmailSubmit={handleEmailSignUp}
         isEmailSubmitting={isSendingOtp}
-        headerText="Log in to Game Backlog"
-        spanText="Don't have an account?"
-        redirectText="Sign up."
-        redirectHref="/sign-up"
-        emailButtonText="Log In"
+        headerText="Create an Account"
+        spanText="Already have an account?"
+        redirectText="Log in."
+        redirectHref="/login"
+        emailButtonText='Create Account'
       />
 
       <AuthVerifyOTP

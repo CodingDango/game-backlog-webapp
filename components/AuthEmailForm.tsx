@@ -1,13 +1,14 @@
 import { ChangeEvent, FormEvent } from "react";
-import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { Spinner } from "./ui/spinner";
+import { Mail } from "lucide-react";
+import AppButton from "./AppButton";
 
 interface AuthEmailFormProps {
   onSubmit: (e: FormEvent<HTMLFormElement>) => void;
   onEmailChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  email: string;
   isSubmitting: boolean;
+  emailButtonText: string;
+  email: string;
 }
 
 export default function AuthEmailForm({
@@ -15,6 +16,7 @@ export default function AuthEmailForm({
   onEmailChange,
   email,
   isSubmitting,
+  emailButtonText,
 }: AuthEmailFormProps) {
   return (
     <form className="flex flex-col gap-4" onSubmit={onSubmit}>
@@ -27,10 +29,9 @@ export default function AuthEmailForm({
         value={email}
         className="py-6"
       />
-      <Button className="py-6" type="submit" disabled={isSubmitting}>
-        {isSubmitting && <Spinner />}
-        Log in with Email
-      </Button>
+      <AppButton className="py-6" type="submit" isLoading={isSubmitting}>
+        {emailButtonText}
+      </AppButton>
     </form>
   );
 }

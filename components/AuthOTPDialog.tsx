@@ -13,13 +13,14 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useState } from "react";
-import { Button } from "./ui/button";
+import AppButton from "./AppButton";
 
 interface AuthVerifyOTPProps {
   openDialog: boolean;
   onOpenChange: (open: boolean) => void;
-  email: string;
   handleVerify: (otpValue: string) => void;
+  email: string;
+  isVerifying: boolean;
 }
 
 export default function AuthVerifyOTP({
@@ -27,6 +28,7 @@ export default function AuthVerifyOTP({
   handleVerify,
   openDialog,
   email,
+  isVerifying,
 }: AuthVerifyOTPProps) {
   const [otpValue, setOtpValue] = useState("");
 
@@ -70,7 +72,9 @@ export default function AuthVerifyOTP({
               <InputOTPSlot index={7} />
             </InputOTPGroup>
           </InputOTP>
-          <Button className="w-full">Verify OTP</Button>
+          <AppButton className="w-full" type="submit" disabled={isVerifying}>
+            Verify OTP
+          </AppButton>
         </form>
       </DialogContent>
     </Dialog>

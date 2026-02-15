@@ -9,7 +9,7 @@ export default function AuthLayout({ children }: Props) {
     <div>
       <Toaster />
       <div className="min-h-dvh flex justify-center lg:items-center py-12 px-8">
-        { children }
+        <div className="max-w-100 w-full">{children}</div>
       </div>
     </div>
   );
