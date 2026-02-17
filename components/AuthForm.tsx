@@ -1,12 +1,13 @@
 import { toast } from "sonner";
-import { FormEvent } from "react";
+import { FormEvent, useState } from "react";
 import { FaGithub } from "react-icons/fa";
+import { createClient } from "@/lib/supabase/client";
+import { useRouter } from "next/navigation";
 
 import Link from "next/link";
 import BrandLogo from "@/components/BrandLogo";
 import AuthEmailForm from "@/components/AuthEmailForm";
 import AppButton from "@/components/AppButton";
-
 interface AuthFormProps {
   setEmail: (email: string) => void;
   handleEmailSubmit: (email: string) => void;
@@ -28,11 +29,28 @@ export default function AuthForm({
   spanText,
   redirectText,
   redirectHref,
-  emailButtonText
+  emailButtonText,
 }: AuthFormProps) {
+  const supabase = createClient();
+  const router = useRouter();
+
+  const [githubLoading, setGithubLoading] = useState(false);
+
   const handleGithubLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    toast.info("Coming soon");
+    setGithubLoading(true);
+
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: "github",
+    });
+
+    setGithubLoading(false);
+
+    if (!error) {
+      router.push("/");
+    } else {
+      toast.error(`Could not sign in through github: ${error}`);
+    }
   };
 
   return (
@@ -73,6 +91,7 @@ export default function AuthForm({
           variant={"outline"}
           className="py-6 flex gap-4 w-full"
           type="submit"
+          isLoading={githubLoading}
         >
           <FaGithub className="size-6" /> Continue with GitHub
         </AppButton>
