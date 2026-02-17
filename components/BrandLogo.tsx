@@ -1,15 +1,28 @@
 import { Card } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 import Image from "next/image";
 
-export default function BrandLogo() {
+interface BrandLogoProps {
+  cardClass?: string;
+  iconClass?: string;
+  iconWidth?: number;
+  iconHeight?: number;
+}
+
+export default function BrandLogo({
+  cardClass,
+  iconClass,
+  iconWidth,
+  iconHeight,
+}: BrandLogoProps) {
   return (
-    <Card className="rounded-xl">
+    <Card className={cn("rounded-xl", cardClass)}>
       <Image
         src={"/brand-icon.svg"}
-        width={20}
-        height={20}
+        width={iconWidth ?? 20}
+        height={iconHeight ?? 20}
         alt="brand icon"
-        className="scale-250"
+        className={cn("scale-250", iconClass)}
       />
     </Card>
   );
