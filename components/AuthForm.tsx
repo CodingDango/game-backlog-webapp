@@ -46,9 +46,7 @@ export default function AuthForm({
 
     setGithubLoading(false);
 
-    if (!error) {
-      router.push("/");
-    } else {
+    if (error) {
       toast.error(`Could not sign in through github: ${error}`);
     }
   };

@@ -1,27 +1,15 @@
 "use client";
 
-import { LogOutDialog } from "./LogOutDialog";
 import { useAuth } from "./AuthProvider";
 import { Layers2 } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useState } from "react";
-
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { Button } from "./ui/button";
 
 import Link from "next/link";
 import AppSearch from "./AppSearch";
-import { Button } from "./ui/button";
+import AvatarMenu from "./AvatarMenu";
 
 export default function AppNavbar() {
   const { session, logOut } = useAuth();
-  const [open, setOpen] = useState<boolean>(false);
 
   return (
     <nav className="px-4 md:px-8 py-3 flex justify-center border-b-accent border-b">
@@ -36,29 +24,18 @@ export default function AppNavbar() {
             </div>
           </div>
 
-          <DropdownMenu>
-            <DropdownMenuTrigger className="cursor-pointer">
-              <Avatar>
-                <AvatarImage src="https://github.com/shadcn.png" />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <Link href={"/library"}>Library</Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                variant="destructive"
-                onClick={() => setOpen((prev) => !prev)}
-              >
-                Log out
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          <LogOutDialog onLogOut={logOut} open={open} onOpenChange={setOpen} />
+          {session ? (
+            <AvatarMenu logOut={logOut} />
+          ) : (
+            <div className="flex gap-4">
+              <Button variant={'outline'}>
+                <Link href={'/sign-up'}>Sign Up</Link>
+              </Button>
+              <Button variant={'default'} asChild>
+                <Link href={'/login'}>Log In</Link>
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     </nav>

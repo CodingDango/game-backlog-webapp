@@ -5,7 +5,7 @@ import { use } from "react";
 import { AppImageCarousel } from "@/components/Carousel";
 import { AppImage } from "@/components/AppImage";
 import { useGameDetails } from "@/hooks/useGameDetails";
-import { Frown } from "lucide-react";
+import { Frown, Link, Plus } from "lucide-react";
 
 import PageSpinner from "@/components/PageSpinner";
 import AddToLibrary from "@/components/AddToLibrary";
@@ -19,6 +19,9 @@ import GameGrid from "@/components/GameGrid";
 import { useQuery } from "@tanstack/react-query";
 import { RawgGame } from "@/types/types";
 import { getRelatedGames } from "@/services/rawgServices";
+import { useAuth } from "@/components/AuthProvider";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -28,6 +31,8 @@ interface PageProps {
 
 export default function DetailsPage({ params }: PageProps) {
   const { slug } = use(params);
+  const { session } = useAuth();
+  const router = useRouter();
 
   const {
     isLoading,
@@ -44,14 +49,14 @@ export default function DetailsPage({ params }: PageProps) {
     tags,
   } = useGameDetails(slug);
 
-  const { data: similarGames, isLoading: similarGamesLoading } = useQuery({ 
+  const { data: similarGames, isLoading: similarGamesLoading } = useQuery({
     enabled: !!game?.genres,
-    queryKey: ['similarGames', slug], 
+    queryKey: ["similarGames", slug],
     queryFn: async () => {
       const result = await getRelatedGames(game as unknown as RawgGame);
-      
+
       return result || [];
-    }
+    },
   });
 
   if (isLoading) return <PageSpinner />;
@@ -94,14 +99,21 @@ export default function DetailsPage({ params }: PageProps) {
               />
             </div>
 
-            <div className="flex flex-col gap-4 ">
-              <AddToLibrary
-                key={userGame?.id ?? "new-" + game.id}
-                isLoading={isUserGameLoading}
-                userGame={userGame}
-                title={game.name}
-                rawgId={game.id}
-              />
+            <div className="flex flex-col gap-4">
+              {session ? (
+                <AddToLibrary
+                  key={userGame?.id ?? "new-" + game.id}
+                  isLoading={isUserGameLoading}
+                  userGame={userGame ?? null}
+                  title={game.name}
+                  rawgId={game.id}
+                />
+              ) : (
+                <Button onClick={() => router.push("/login")}>
+                  <Plus /> Add to library
+                </Button>
+              )}
+
               <MetacriticRating game={game} />
 
               {/* Community rating */}
@@ -129,14 +141,18 @@ export default function DetailsPage({ params }: PageProps) {
 
           <div className="flex flex-col gap-4">
             <GameTags tags={tags} />
-            <GameMetadata game={game}/>
+            <GameMetadata game={game} />
             <GameSocialLinks socialEntries={uniqueSocialEntries} />
           </div>
         </div>
       </div>
       <div className="flex flex-col gap-16">
         <span className="text-4xl font-semibold">Games like {game.name}</span>
-        <GameGrid rawgGames={similarGames || []} isLoading={similarGamesLoading} length={10}/>
+        <GameGrid
+          rawgGames={similarGames || []}
+          isLoading={similarGamesLoading}
+          length={10}
+        />
       </div>
     </div>
   );

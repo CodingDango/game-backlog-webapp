@@ -1,10 +1,11 @@
 import { ChevronDown, Plus } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button, ButtonProps } from "@/components/ui/button";
 import { Category } from "@/types/types";
 import { forwardRef } from "react";
 
-interface Props {
-  gameCategory: Category | undefined;
+interface Props extends ButtonProps {
+  gameCategory?: Category;
+
 }
 
 const LibraryTrigger = forwardRef<HTMLButtonElement, Props>(
@@ -14,7 +15,6 @@ const LibraryTrigger = forwardRef<HTMLButtonElement, Props>(
         <Button
           {...props}
           ref={ref}
-          size={"lg"}
           className="w-full flex justify-start"
         >
           <Plus /> Add to library
@@ -23,14 +23,13 @@ const LibraryTrigger = forwardRef<HTMLButtonElement, Props>(
         <Button
           {...props}
           ref={ref}
-          size={"lg"}
           className="w-full flex justify-start capitalize"
         >
           <ChevronDown /> {gameCategory}
         </Button>
       )}
     </>
-  )
+  ),
 );
 
 LibraryTrigger.displayName = "LibraryTrigger";

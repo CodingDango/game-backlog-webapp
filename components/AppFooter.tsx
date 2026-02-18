@@ -5,7 +5,7 @@ export default function AppFooter() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="px-4 md:px-8 py-6 flex border-t border-t-accent justify-center">
+    <footer className="px-4 md:px-8 py-8 flex border-t border-t-accent justify-center">
       <div className="max-w-6xl w-full">
         <div className="flex w-full justify-between items-center flex-col sm:flex-row gap-4">
           <div className="flex gap-4 items-center">

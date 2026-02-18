@@ -10,7 +10,12 @@ import {
 } from "@/lib/utils";
 import { getBrandColor, isSocialInRecords } from "@/components/SocialIcon";
 import { isEmpty } from "lodash";
-import { PCRequirements, PlatformEntry, StoreEntry } from "@/types/types";
+import {
+  PCRequirements,
+  PlatformEntry,
+  StoreEntry,
+  UserGame,
+} from "@/types/types";
 import { getGameDetails, getScreenshots } from "@/services/rawgServices";
 
 export function useGameDetails(slug: string) {
@@ -28,12 +33,11 @@ export function useGameDetails(slug: string) {
     queryFn: async () => {
       const res = await getUserGame(gameData!.id);
 
-      if (res && "success" in res) {
-        toast.error(res.error);
+      if (res && "success" in res && !res["success"]) {
         return null;
       }
 
-      return res;
+      return res as UserGame;
     },
   });
 
@@ -47,7 +51,7 @@ export function useGameDetails(slug: string) {
 
     const parts = gameData.description.split("</p>");
     const englishPart = parts[0] ? parts[0] + "</p>" : gameData.description;
-    
+
     return englishPart;
   }, [gameData?.description]);
 
@@ -99,7 +103,9 @@ export function useGameDetails(slug: string) {
   const pcRequirements = useMemo<PCRequirements | null>(() => {
     if (!gameData?.platforms) return null;
 
-    const pcPlatform = gameData.platforms.find(( { platform }: PlatformEntry ) => platform.slug === "pc");
+    const pcPlatform = gameData.platforms.find(
+      ({ platform }: PlatformEntry) => platform.slug === "pc",
+    );
 
     if (
       !pcPlatform ||
@@ -110,7 +116,7 @@ export function useGameDetails(slug: string) {
 
     const minimum = extractRequirements(pcPlatform.requirements.minimum);
     const recommended = extractRequirements(
-      pcPlatform.requirements.recommended
+      pcPlatform.requirements.recommended,
     );
 
     return {
@@ -118,7 +124,7 @@ export function useGameDetails(slug: string) {
       recommended,
       rawMinimumText: formatRawRequirements(pcPlatform.requirements.minimum),
       rawRecommendedText: formatRawRequirements(
-        pcPlatform.requirements.recommended
+        pcPlatform.requirements.recommended,
       ),
     };
   }, [gameData?.platforms]);

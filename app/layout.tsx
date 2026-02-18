@@ -19,7 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} antialiased bg-black dark font-sans`}>
-        <div>{children}</div>
+        {children}
       </body>
     </html>
   );

@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import AppButton from "./AppButton";
 import {
   Dialog,
   DialogClose,
@@ -7,17 +8,21 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
-import { ReactNode } from "react";
 
 interface Props {
   onLogOut: () => void;
-  open: boolean;
   onOpenChange: (open: boolean) => void;
+  open: boolean;
+  isLoggingOut: boolean;
 }
 
-export function LogOutDialog({ onLogOut, open, onOpenChange }: Props) {
+export function LogOutDialog({
+  onLogOut,
+  open,
+  onOpenChange,
+  isLoggingOut,
+}: Props) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
@@ -31,7 +36,14 @@ export function LogOutDialog({ onLogOut, open, onOpenChange }: Props) {
           <DialogClose asChild>
             <Button variant="outline">Cancel</Button>
           </DialogClose>
-          <Button variant={'default'} onClick={onLogOut}>Log Out</Button>
+          <AppButton
+            variant={"default"}
+            onClick={onLogOut}
+            isLoading={isLoggingOut}
+            loadingText="Log Out"
+          >
+            Log Out
+          </AppButton>
         </DialogFooter>
       </DialogContent>
     </Dialog>

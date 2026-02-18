@@ -80,7 +80,7 @@ export const AuthProvider = ({ children }: Props) => {
 
   return (
     <AuthContext.Provider value={value}>
-      {isLoading || !session ? <PageSpinner /> : children}
+      {isLoading ? <PageSpinner /> : children}
     </AuthContext.Provider>
   );
 };
