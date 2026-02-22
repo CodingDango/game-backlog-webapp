@@ -5,7 +5,7 @@ interface UsePaginationProps {
   page: number;
   createPageUrl: (page: number) => string;
   gamesPerPage: number;
-  pageWindowSize: number;
+  pageWindowSize?: number;
 }
 
 export function usePagination({
@@ -13,7 +13,7 @@ export function usePagination({
   page,
   createPageUrl,
   gamesPerPage,
-  pageWindowSize,
+  pageWindowSize = 5,
 }: UsePaginationProps) {
   return useMemo(() => {
     if (!gamesCount) return {};

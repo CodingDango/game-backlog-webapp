@@ -10,12 +10,7 @@ export default function AppFooter() {
         <div className="flex w-full justify-between items-center flex-col sm:flex-row gap-4">
           <div className="flex gap-4 items-center">
             <Link href="/">
-              <BrandLogo
-                cardClass="p-0! border-none"
-                iconClass="scale-225 opacity-50"
-                iconHeight={16}
-                iconWidth={16}
-              />
+              <BrandLogo className="opacity-50 size-5" />
             </Link>
             <span className="text-muted-foreground text-xs">
               © {year} Game Backlog
@@ -23,7 +18,13 @@ export default function AppFooter() {
           </div>
           <span className="text-muted-foreground text-xs">
             Game data provided by
-            <a className="underline ml-1" href="https://api.rawg.io/docs/" target="_blank">RAWG</a>
+            <a
+              className="underline ml-1"
+              href="https://api.rawg.io/docs/"
+              target="_blank"
+            >
+              RAWG
+            </a>
           </span>
         </div>
       </div>

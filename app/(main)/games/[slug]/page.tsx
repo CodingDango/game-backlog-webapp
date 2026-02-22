@@ -5,7 +5,7 @@ import { use } from "react";
 import { AppImageCarousel } from "@/components/Carousel";
 import { AppImage } from "@/components/AppImage";
 import { useGameDetails } from "@/hooks/useGameDetails";
-import { Frown, Link, Plus } from "lucide-react";
+import { Frown, Plus } from "lucide-react";
 
 import PageSpinner from "@/components/PageSpinner";
 import AddToLibrary from "@/components/AddToLibrary";
@@ -16,21 +16,18 @@ import CommunityRating from "@/components/CommunityRating";
 import GameTags from "@/components/GameTags";
 import GameMetadata from "@/components/GameMetadata";
 import GameGrid from "@/components/GameGrid";
+
 import { useQuery } from "@tanstack/react-query";
 import { RawgGame } from "@/types/types";
 import { getRelatedGames } from "@/services/rawgServices";
 import { useAuth } from "@/components/AuthProvider";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
-
-interface PageProps {
-  params: Promise<{ slug: string }>;
-}
+import { useParams, useRouter } from "next/navigation";
 
 // TODO: Add playtime card,
 
-export default function DetailsPage({ params }: PageProps) {
-  const { slug } = use(params);
+export default function DetailsPage() {
+  const { slug } = useParams<{ slug: string }>();
   const { session } = useAuth();
   const router = useRouter();
 
@@ -77,8 +74,8 @@ export default function DetailsPage({ params }: PageProps) {
     );
 
   return (
-    <div className="flex flex-col gap-24">
-      <div className="flex flex-col gap-16">
+    <div className="flex flex-col gap-40  ">
+      <div className="flex flex-col gap-12">
         <span className="text-4xl font-semibold">{game.name}</span>
 
         <div className="grid grid-cols-[5fr_2fr] grid-rows-[auto_1fr] gap-16">
@@ -146,7 +143,7 @@ export default function DetailsPage({ params }: PageProps) {
           </div>
         </div>
       </div>
-      <div className="flex flex-col gap-16">
+      <div className="flex flex-col gap-12">
         <span className="text-4xl font-semibold">Games like {game.name}</span>
         <GameGrid
           rawgGames={similarGames || []}

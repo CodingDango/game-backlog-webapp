@@ -1,9 +1,15 @@
 import { RawgGameDetails } from "@/types/types";
-import CommaSeparatedList from "./TextList";
 import { formatDate } from "@/lib/utils";
 import { Card } from "./ui/card";
+import CommaSeparatedList from "./TextList";
+import Link from "next/link";
 
 export default function GameMetadata({ game }: { game: RawgGameDetails }) {
+  const genres = game.genres;
+  const releaseDateFormatted = formatDate(game.released);
+  const developers = game.developers;
+  const publishers = game.publishers;
+
   return (
     <Card className="flex flex-col gap-4">
       <span className="text-muted-foreground font-semibold">Details</span>
@@ -13,22 +19,24 @@ export default function GameMetadata({ game }: { game: RawgGameDetails }) {
           <CommaSeparatedList
             items={game.genres.map((genre) => genre.name)}
             itemClass="underline"
+            parentCallbackOverride={(_, idx, children) => (
+              <Link href={`/games/genres/${genres[idx].slug}`}>{children}</Link>
+            )}
           />
+        </div>
+        <div className="flex gap-2 text-sm">
+          <span className="text-muted-foreground">Release Date:</span>
+          <span>{releaseDateFormatted}</span>
         </div>
 
         <div className="flex gap-2 text-sm">
           <span className="text-muted-foreground">Developers:</span>
-          <CommaSeparatedList items={game.developers.map((dev) => dev.name)} />
+          <CommaSeparatedList items={developers.map(dev => dev.name)} />
         </div>
 
         <div className="flex gap-2 text-sm">
           <span className="text-muted-foreground">Publishers:</span>
-          <CommaSeparatedList items={game.publishers.map((dev) => dev.name)} />
-        </div>
-
-        <div className="flex gap-2 text-sm">
-          <span className="text-muted-foreground">Release Date:</span>
-          <span>{formatDate(game.released)}</span>
+          <CommaSeparatedList items={publishers.map(pub => pub.name)} />
         </div>
       </div>
     </Card>

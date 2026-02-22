@@ -1,12 +1,12 @@
 "use client";
 
 import { useAuth } from "./AuthProvider";
-import { Layers2 } from "lucide-react";
 import { Button } from "./ui/button";
 
 import Link from "next/link";
 import AppSearch from "./AppSearch";
 import AvatarMenu from "./AvatarMenu";
+import BrandLogo from "./BrandLogo";
 
 export default function AppNavbar() {
   const { session, logOut } = useAuth();
@@ -17,7 +17,7 @@ export default function AppNavbar() {
         <div className="flex gap-8 justify-between items-center">
           <div className="flex gap-8 items-center flex-1">
             <Link className="font-semibold shrink-0 block" href={"/"}>
-              <Layers2 />
+              <BrandLogo/>
             </Link>
             <div className="w-full max-w-3xs">
               <AppSearch />

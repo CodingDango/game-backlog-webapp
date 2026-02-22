@@ -2,12 +2,13 @@ import { toast } from "sonner";
 import { FormEvent, useState } from "react";
 import { FaGithub } from "react-icons/fa";
 import { createClient } from "@/lib/supabase/client";
-import { useRouter } from "next/navigation";
+import { Card } from "./ui/card";
 
 import Link from "next/link";
 import BrandLogo from "@/components/BrandLogo";
 import AuthEmailForm from "@/components/AuthEmailForm";
 import AppButton from "@/components/AppButton";
+
 interface AuthFormProps {
   setEmail: (email: string) => void;
   handleEmailSubmit: (email: string) => void;
@@ -32,7 +33,6 @@ export default function AuthForm({
   emailButtonText,
 }: AuthFormProps) {
   const supabase = createClient();
-  const router = useRouter();
 
   const [githubLoading, setGithubLoading] = useState(false);
 
@@ -54,9 +54,10 @@ export default function AuthForm({
   return (
     <div className="flex flex-col gap-8 ">
       <div className="flex justify-center">
-        <BrandLogo />
+        <Card className="rounded-lg">
+          <BrandLogo className="size-7"/>
+        </Card>
       </div>
-
       <div className="text-center space-y-2">
         <h1 className="text-center text-3xl font-semibold">{headerText}</h1>
         <span className="text-sm text-muted-foreground">
