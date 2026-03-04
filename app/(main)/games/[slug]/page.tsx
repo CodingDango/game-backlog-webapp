@@ -100,7 +100,7 @@ export default function DetailsPage() {
               {session ? (
                 <AddToLibrary
                   key={userGame?.id ?? "new-" + game.id}
-                  isLoading={isUserGameLoading}
+                  isSessionLoading={isUserGameLoading}
                   userGame={userGame ?? null}
                   title={game.name}
                   rawgId={game.id}

@@ -20,7 +20,7 @@ export default function MetacriticRating({ game }: Props) {
             max={100}
             className="w-full h-full"
           />
-          <span className="text-sm absolute inset-0 flex justify-center items-center text-primary-foreground font-semibold">
+          <span className="text-xs absolute inset-0 flex justify-center items-center text-primary-foreground font-semibold">
             {metacriticScore ? (
               `${metacriticScore}%`
             ) : (

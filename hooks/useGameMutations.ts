@@ -1,67 +1,31 @@
-import { toast } from "sonner";
-
 import type { Category, HydratedGame, RawgGame } from "@/types/types";
-
 import { useQueryClient } from "@tanstack/react-query";
 
 import {
   addGameToLibrary,
-  modifyUserGameCategory,
   removeGameFromLibrary,
 } from "@/services/libraryService";
-import { CacheEntry } from "next/dist/server/lib/cache-handlers/types";
 
 export function useGameMutation() {
   const queryClient = useQueryClient();
 
-  const handleAddGame = async (rawgId: number, category?: Category, rating?: number, debugTitle?: string) => {
+  const handleAddGame = async (
+    rawgId: number,
+    category?: Category,
+    rating?: number,
+  ) => {
     const res = await addGameToLibrary(rawgId, category, rating);
-
-    debugger
-
-    if (!res.success) {
-      toast.error(`Could not add game to library: ${res.error}`);
-    } else {
-      toast.success(`Successfully added ${debugTitle || rawgId} to the library`);
-    }
-
     queryClient.invalidateQueries({ queryKey: ["userGames"] });
+
+    return res;
   };
 
-  const handleRemoveGame = async (hydratedGame: HydratedGame) => {
-    const { rawg_game: rawgGame } = hydratedGame;
-    const { success, error } = await removeGameFromLibrary(rawgGame.id);
-
-    if (!success) {
-      toast.error(`Could not remove game from library: ${error}`);
-    } else {
-      toast.success(`Successfully removed ${rawgGame.name} from library`);
-    }
-
+  const handleRemoveGame = async (rawgId: number) => {
+    const res = await removeGameFromLibrary(rawgId);
     queryClient.invalidateQueries({ queryKey: ["userGames"] });
+
+    return res;
   };
 
-  const handleModifyCategory = async (hydratedGame: HydratedGame, newCategory: Category) => {
-    const { rawg_game: rawgGame, user_game: userGame} = hydratedGame;
-
-    if (!userGame) {
-      toast.error('Cannot change category if not in library ');
-      return;
-    }
-
-    const { success, error } = await modifyUserGameCategory(
-      userGame.id,
-      newCategory
-    );
-
-    if (!success) {
-      toast.error(`Could not change games category: ${error}`);
-    } else {
-      toast.success(`Successfully changed category for ${rawgGame.name}`);
-    }
-
-    queryClient.invalidateQueries({ queryKey: ["userGames"] });
-  };
-
-  return { handleAddGame, handleModifyCategory, handleRemoveGame };
+  return { handleAddGame, handleRemoveGame };
 }

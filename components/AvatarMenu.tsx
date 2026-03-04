@@ -1,4 +1,4 @@
-import { LogOutDialog } from "./LogOutDialog";
+import { ConfirmationBox } from "./ConfirmationBox";
 
 import {
   DropdownMenu,
@@ -11,6 +11,7 @@ import {
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useCallback, useState } from "react";
+import { Dialog, DialogContent } from "./ui/dialog";
 import Link from "next/link";
 
 interface AvatarMenuProps {
@@ -51,12 +52,17 @@ export default function AvatarMenu({ logOut }: AvatarMenuProps) {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <LogOutDialog
-        onLogOut={onLogOut}
-        onOpenChange={setOpenLogout}
-        open={openLogout}
-        isLoggingOut={isLoggingOut}
-      />
+      <Dialog open={openLogout} onOpenChange={setOpenLogout}>
+        <DialogContent className="max-w-32 w-full">
+          <ConfirmationBox
+            onAccept={onLogOut}
+            isLoading={isLoggingOut}
+            title="Logout Confirmation"
+            description="Are you sure you want to log out?"
+            buttonText="Log out"
+          />
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

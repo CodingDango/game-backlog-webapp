@@ -9,7 +9,7 @@ import type {
   UserGame,
   SuccessResponse,
   ErrorResponse,
-  ApiResponse
+  ApiResponse,
 } from "../types/types";
 import { getGames } from "./rawgServices";
 
@@ -55,7 +55,7 @@ export async function getUserGames(): Promise<ApiResponse<UserGame>> {
 export async function addGameToLibrary(
   rawgId: number,
   category: Category = "uncategorized",
-  userRating: number | null = null
+  userRating: number | null = null,
 ): Promise<InsertResponse<RawgGame>> {
   const supabase = await createClient();
   const { data: authData, error: authError } = await supabase.auth.getUser();
@@ -76,7 +76,7 @@ export async function addGameToLibrary(
       },
       {
         onConflict: "user_id,rawg_id",
-      }
+      },
     )
     .select("*")
     .single();
@@ -90,43 +90,30 @@ export async function addGameToLibrary(
 
 export async function removeGameFromLibrary(rawgId: number) {
   const supabase = await createClient();
-  const { data: authData, error: authError } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  if (authError) {
-    return { success: false, error: authError.message };
+  if (!user) return { success: false, error: "No user" };
+
+  const { data: checkData, error: checkError } = await supabase
+    .from("user_games")
+    .select("id")
+    .eq("user_id", user.id)
+    .eq("rawg_id", rawgId)
+    .maybeSingle();
+
+  if (!checkData) {
+    return { success: false, error: "Game not found or permission denied" };
   }
 
-  const userId = authData.user.id;
-  const { error: removeErr } = await supabase
+  const { error, count } = await supabase
     .from("user_games")
     .delete()
-    .eq("user_id", userId)
-    .eq("rawg_id", rawgId);
+    .eq("id", checkData.id);
 
-  if (removeErr) {
-    return { success: false, error: removeErr.message };
-  }
-
-  return { success: true };
-}
-
-export async function modifyUserGameCategory(id: number, category: Category) {
-  const supabase = await createClient();
-  const { data: authData, error: authError } = await supabase.auth.getUser();
-
-  if (authError) {
-    return { success: false, error: authError.message };
-  }
-
-  const userId = authData.user.id;
-  const { error: removeErr } = await supabase
-    .from("user_games")
-    .update({ category })
-    .eq("user_id", userId)
-    .eq("id", id);
-
-  if (removeErr) {
-    return { success: false, error: removeErr.message };
+  if (error) {
+    return { success: false, error: error.message };
   }
 
   return { success: true };
@@ -142,7 +129,7 @@ export async function getHydratedUserLibrary(): Promise<
   }
 
   const userGameRawgIds = userGamesRes.results.map(
-    (userGame) => userGame.rawg_id
+    (userGame) => userGame.rawg_id,
   );
   const rawgGamesRes = await getGames({ ids: userGameRawgIds });
 
@@ -151,7 +138,7 @@ export async function getHydratedUserLibrary(): Promise<
   }
 
   const userGamesMap = new Map(
-    userGamesRes.results.map((entry) => [entry.rawg_id, entry])
+    userGamesRes.results.map((entry) => [entry.rawg_id, entry]),
   );
 
   const hydrated = rawgGamesRes.results.map((rawgGame) => {
@@ -172,7 +159,7 @@ export async function getHydratedUserLibrary(): Promise<
   };
 }
 export async function getUserGame(
-  rawgId: number
+  rawgId: number,
 ): Promise<UserGame | ErrorResponse> {
   const supabase = await createClient();
   const {

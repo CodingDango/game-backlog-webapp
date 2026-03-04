@@ -17,8 +17,8 @@ export default function AppNavbar() {
         <div className="flex gap-8 justify-between items-center">
           <div className="flex gap-8 items-center flex-1">
             <Link className="font-semibold shrink-0 block" href={"/"}>
-              <BrandLogo/>
-            </Link>
+              <BrandLogo className="size-6 text-secondary-foreground" />
+              </Link>
             <div className="w-full max-w-3xs">
               <AppSearch />
             </div>
