@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { keyByMap } from "@/lib/utils";
 import { GetGamesParams, UserGame } from "@/types/types";
 import { getUserGames } from "@/services/libraryService";
-import { useAuth } from "@/components/AuthProvider";
+import { useAuth } from "@/components/auth/AuthProvider";
 
 export function useRawgGames({
   page = 1,

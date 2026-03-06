@@ -1,7 +1,7 @@
 "use client";
 
-import AppPagination from "@/components/AppPagination";
-import GameGrid from "@/components/GameGrid";
+import AppPagination from "@/components/common/AppPagination";
+import GameGrid from "@/components/game/GameGrid";
 import { useRawgGames } from "@/hooks/useGames";
 import { usePagination } from "@/hooks/usePagination";
 import { useParams, useSearchParams } from "next/navigation";

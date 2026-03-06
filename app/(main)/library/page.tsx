@@ -2,12 +2,12 @@
 
 import { Spinner } from "@/components/ui/spinner";
 import { Category, LibraryCategory } from "@/types/types";
-import { LibraryCategories } from "@/components/LibraryCategories";
+import { LibraryCategories } from "@/components/library/LibraryCategories";
 import { useMemo, useState } from "react";
 import { useHydratedLibrary } from "@/hooks/useGames";
 
-import GameGrid from "@/components/GameGrid";
-import AppDropdown from "@/components/AppDropdown";
+import GameGrid from "@/components/game/GameGrid";
+import AppDropdown from "@/components/common/AppDropdown";
 
 type SortFilter = "newest" | "oldest" | "title-asc" | "title-desc";
 

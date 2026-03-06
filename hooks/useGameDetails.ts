@@ -8,7 +8,10 @@ import {
   getStoreUrl,
   truncateDescription,
 } from "@/lib/utils";
-import { getBrandColor, isSocialInRecords } from "@/components/SocialIcon";
+import {
+  getBrandColor,
+  isSocialInRecords,
+} from "@/components/common/SocialIcon";
 import { isEmpty } from "lodash";
 import {
   PCRequirements,

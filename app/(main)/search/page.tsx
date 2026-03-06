@@ -4,9 +4,9 @@ import { useRawgGames } from "@/hooks/useGames";
 import { useGameSearch } from "@/hooks/useGameSearch";
 import { usePagination } from "@/hooks/usePagination";
 
-import GameGrid from "@/components/GameGrid";
-import AppPagination from "@/components/AppPagination";
-import SearchFilters from "@/components/SearchFilters";
+import GameGrid from "@/components/game/GameGrid";
+import AppPagination from "@/components/common/AppPagination";
+import SearchFilters from "@/components/search/SearchFilters";
 
 const gamesPerPage = 20;
 const pageWindowSize = 5;

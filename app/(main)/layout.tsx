@@ -1,9 +1,9 @@
 import { Toaster } from "@/components/ui/sonner";
-import { AuthProvider } from "@/components/AuthProvider";
+import { AuthProvider } from "@/components/auth/AuthProvider";
 
-import AppFooter from "@/components/AppFooter";
-import QueryProvider from "@/components/QueryProvider";
-import AppNavbar from "@/components/AppNavbar";
+import AppFooter from "@/components/layout/AppFooter";
+import QueryProvider from "@/components/common/QueryProvider";
+import AppNavbar from "@/components/layout/AppNavbar";
 
 interface Props {
   children: React.ReactNode;

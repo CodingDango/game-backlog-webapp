@@ -5,8 +5,8 @@ import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-import AuthVerifyOTP from "@/components/AuthOTPDialog";
-import AuthForm from "@/components/AuthForm";
+import AuthVerifyOTP from "@/components/auth/AuthOTPDialog";
+import AuthForm from "@/components/auth/AuthForm";
 
 export default function SignUpPage() {
   const supabase = createClient();

@@ -2,25 +2,25 @@
 
 import { use } from "react";
 
-import { AppImageCarousel } from "@/components/Carousel";
-import { AppImage } from "@/components/AppImage";
+import { AppImageCarousel } from "@/components/common/AppImageCarousel";
+import { AppImage } from "@/components/common/AppImage";
 import { useGameDetails } from "@/hooks/useGameDetails";
 import { Frown, Plus } from "lucide-react";
 
-import PageSpinner from "@/components/PageSpinner";
-import AddToLibrary from "@/components/AddToLibrary";
-import SystemRequirements from "@/components/SystemRequirements";
-import GameSocialLinks from "@/components/GameSocialLinks";
-import MetacriticRating from "@/components/MetacriticRating";
-import CommunityRating from "@/components/CommunityRating";
-import GameTags from "@/components/GameTags";
-import GameMetadata from "@/components/GameMetadata";
-import GameGrid from "@/components/GameGrid";
+import PageSpinner from "@/components/layout/PageSpinner";
+import GameLibraryAction from "@/components/library/GameLibraryAction";
+import GameSystemRequirements from "@/components/game/GameSystemRequirements";
+import GameSocialLinks from "@/components/game/GameSocialLinks";
+import GameMetacriticRating from "@/components/game/GameMetacriticRating";
+import GameCommunityRating from "@/components/game/GameCommunityRating";
+import GameTags from "@/components/game/GameTags";
+import GameDetails from "@/components/game/GameDetails";
+import GameGrid from "@/components/game/GameGrid";
 
 import { useQuery } from "@tanstack/react-query";
 import { RawgGame } from "@/types/types";
 import { getRelatedGames } from "@/services/rawgServices";
-import { useAuth } from "@/components/AuthProvider";
+import { useAuth } from "@/components/auth/AuthProvider";
 import { Button } from "@/components/ui/button";
 import { useParams, useRouter } from "next/navigation";
 
@@ -98,7 +98,7 @@ export default function DetailsPage() {
 
             <div className="flex flex-col gap-4">
               {session ? (
-                <AddToLibrary
+                <GameLibraryAction
                   key={userGame?.id ?? "new-" + game.id}
                   isSessionLoading={isUserGameLoading}
                   userGame={userGame ?? null}
@@ -111,11 +111,11 @@ export default function DetailsPage() {
                 </Button>
               )}
 
-              <MetacriticRating game={game} />
+              <GameMetacriticRating game={game} />
 
               {/* Community rating */}
               <div className="flex-1 h-full">
-                <CommunityRating />
+                <GameCommunityRating />
               </div>
             </div>
           </div>
@@ -129,7 +129,7 @@ export default function DetailsPage() {
             <div className="col-span-full flex flex-col gap-2">
               <span className="text-xl font-semibold">System Requirements</span>
               {pcRequirements ? (
-                <SystemRequirements requirements={pcRequirements} />
+                <GameSystemRequirements requirements={pcRequirements} />
               ) : (
                 <div>None listed.</div>
               )}
@@ -138,7 +138,7 @@ export default function DetailsPage() {
 
           <div className="flex flex-col gap-4">
             <GameTags tags={tags} />
-            <GameMetadata game={game} />
+            <GameDetails game={game} />
             <GameSocialLinks socialEntries={uniqueSocialEntries} />
           </div>
         </div>
