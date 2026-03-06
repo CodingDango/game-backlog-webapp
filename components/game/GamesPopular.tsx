@@ -33,7 +33,7 @@ export default function GamesPopular() {
             {popularGames.map((game, idx) => (
               <CarouselItem
                 key={idx}
-                className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 pl-6"
+                className="xs:basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 pl-6"
               >
                 <GameCard rawgGame={game} isLoading={isLoadingPopular} />
               </CarouselItem>
