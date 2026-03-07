@@ -24,13 +24,11 @@ import { useAuth } from "@/components/auth/AuthProvider";
 import { Button } from "@/components/ui/button";
 import { useParams, useRouter } from "next/navigation";
 
-// TODO: Add playtime card,
-
 export default function DetailsPage() {
+  const router = useRouter();
   const { slug } = useParams<{ slug: string }>();
   const { session } = useAuth();
-  const router = useRouter();
-
+  
   const {
     isLoading,
     game,
@@ -79,7 +77,7 @@ export default function DetailsPage() {
         <span className="text-4xl font-semibold">{game.name}</span>
 
         <div className="grid grid-cols-1 md:grid-cols-12 gap-16 md:gap-8 xl:gap-12 w-full">
-          <div className="md:order-2 md:col-span-5 xl:col-span-4 min-w-0 flex flex-col gap-8 ">
+          <div className="md:order-2 md:col-span-5 lg:col-span-4 min-w-0 flex flex-col gap-8 ">
             {/* Sidebar Banner Image */}
             <div className="relative w-full h-48 lg:h-36 rounded-md overflow-hidden">
               <AppImage
@@ -123,16 +121,16 @@ export default function DetailsPage() {
                   <GameTags tags={tags} />
                 </div>
                 <div className="h-full col-span-1 md:col-span-2">
-                <GameSocialLinks socialEntries={uniqueSocialEntries} />
+                  <GameSocialLinks socialEntries={uniqueSocialEntries} />
                 </div>
               </div>
             </div>
           </div>
 
           {/* LEFT COLUMN (Carousel & About) - Takes 7/12 or 8/12 of the space */}
-          <div className="md:order-1 md:col-span-7 xl:col-span-8 min-w-0 flex flex-col gap-8">
+          <div className="md:order-1 md:col-span-7 lg:col-span-8 min-w-0 flex flex-col gap-8">
             {/* Carousel Container */}
-            <div className="relative w-full aspect-video max-h-[500px] rounded-md overflow-hidden bg-neutral-900">
+            <div className="relative max-h-[500px]">
               <AppImageCarousel
                 images={screenshots}
                 isLoading={isScreenShotsLoading}
@@ -143,7 +141,7 @@ export default function DetailsPage() {
             <div className="flex flex-col gap-2">
               <span className="text-xl font-semibold">About</span>
               <div
-                className="prose prose-invert max-w-none break-words overflow-hidden text-muted-foreground"
+                className="prose max-w-none overflow-hidden text-muted-foreground"
                 dangerouslySetInnerHTML={{ __html: gameDescription }}
               />
             </div>
@@ -154,7 +152,7 @@ export default function DetailsPage() {
               {pcRequirements ? (
                 <GameSystemRequirements requirements={pcRequirements} />
               ) : (
-                <div>None listed.</div>
+                <div className="text-muted-foreground">None listed.</div>
               )}
             </div>
           </div>
