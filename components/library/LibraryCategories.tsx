@@ -11,11 +11,11 @@ interface Props {
   onValueChange: (value: LibraryCategory) => void;
 }
 
-export function LibraryCategories({ value, onValueChange }: Props) {
+export default function LibraryCategories({ value, onValueChange }: Props) {
   return (
     <RadioGroup
       defaultValue={value}
-      className="flex gap-8"
+      className="flex-col gap-4"
       onValueChange={(val: string) => onValueChange(val as LibraryCategory)}
     >
       {OPTIONS.map((category, idx) => (

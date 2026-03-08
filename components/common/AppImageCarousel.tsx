@@ -37,7 +37,7 @@ export function AppImageCarousel({ images, isLoading }: Props) {
 
   if (images.length === 0 && !isLoading) return <NotFoundCard />;
 
-  return (
+  return (  
     <Carousel
       onMouseEnter={() => api?.plugins().autoplay.stop()}
       onMouseLeave={() => api?.plugins().autoplay.play()}

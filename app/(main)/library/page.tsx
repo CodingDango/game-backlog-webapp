@@ -1,13 +1,24 @@
 "use client";
 
-import { Spinner } from "@/components/ui/spinner";
 import { Category, LibraryCategory } from "@/types/types";
-import { LibraryCategories } from "@/components/library/LibraryCategories";
 import { useMemo, useState } from "react";
 import { useHydratedLibrary } from "@/hooks/useGames";
+import { Button } from "@/components/ui/button";
+import { Filter } from "lucide-react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverDescription,
+  PopoverHeader,
+  PopoverTitle,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
+import LibraryCategories from "@/components/library/LibraryCategories";
 import GameGrid from "@/components/game/GameGrid";
 import AppDropdown from "@/components/common/AppDropdown";
+import AppSearch from "@/components/search/AppSearch";
+import SearchInput from "@/components/search/SearchInput";
 
 type SortFilter = "newest" | "oldest" | "title-asc" | "title-desc";
 
@@ -47,8 +58,8 @@ export default function UserLibrary() {
   }, [hydratedLibrary, category, sort]);
 
   const sortDropdownItems = [
-    { text: "newest", value: "newest" },
-    { text: "oldest", value: "oldest" },
+    { text: "newest added", value: "newest" },
+    { text: "oldest added", value: "oldest" },
     { text: "title (asc)", value: "title-asc" },
     { text: "title (desc)", value: "title-desc" },
   ];
@@ -58,12 +69,36 @@ export default function UserLibrary() {
       <h1 className="text-4xl font-semibold">Your Library</h1>
 
       <div className="flex justify-between gap-8 items-center">
-        <LibraryCategories value={category} onValueChange={setCategory} />
-        <AppDropdown
-          value={sort}
-          onValueChange={(val: string) => setSort(val as SortFilter)}
-          items={sortDropdownItems}
-        />
+        <div className="flex-1 flex gap-4">
+          <div className="max-w-80 w-full">
+            <SearchInput placeholder="Filter games by name"/>
+          </div>
+
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant={"outline"} size={"icon"}>
+                <Filter />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent align="start" className="flex flex-col gap-4 max-w-56">
+              <PopoverHeader>
+                <PopoverTitle className="text-muted-foreground">Filter by categories</PopoverTitle>
+              </PopoverHeader>
+              <LibraryCategories value={category} onValueChange={setCategory}/>
+            </PopoverContent>
+          </Popover>
+        </div>
+
+        <div className="flex gap-3 items-center">
+          <span className="text-muted-foreground">Sort by:</span>
+          <AppDropdown
+            value={sort}
+            onValueChange={(val: string) => setSort(val as SortFilter)}
+            items={sortDropdownItems}
+          />
+        </div>
+
+        {/* <LibraryCategories value={category} onValueChange={setCategory} /> */}
       </div>
 
       <GameGrid isLoading={isLoading} rawgGames={games} length={15} />
