@@ -1,5 +1,5 @@
 import type { Category, HydratedGame, RawgGame } from "@/types/types";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import {
   addGameToLibrary,
@@ -9,23 +9,30 @@ import {
 export function useGameMutation() {
   const queryClient = useQueryClient();
 
-  const handleAddGame = async (
-    rawgId: number,
-    category?: Category,
-    rating?: number,
-  ) => {
-    const res = await addGameToLibrary(rawgId, category, rating);
-    queryClient.invalidateQueries({ queryKey: ["userGames"] });
+  const addMutation = useMutation({
+    mutationFn: ({
+      rawgId,
+      category,
+      rating,
+    }: {
+      rawgId: number;
+      category?: any;
+      rating?: number;
+    }) => addGameToLibrary(rawgId, category, rating),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["userGames"] });
+    },
+  });
 
-    return res;
+  const removeMutation = useMutation({
+    mutationFn: (rawgId: number) => removeGameFromLibrary(rawgId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["userGames"] });
+    },
+  });
+
+  return {
+    handleAddGame: addMutation.mutateAsync,
+    handleRemoveGame: removeMutation.mutateAsync,
   };
-
-  const handleRemoveGame = async (rawgId: number) => {
-    const res = await removeGameFromLibrary(rawgId);
-    queryClient.invalidateQueries({ queryKey: ["userGames"] });
-
-    return res;
-  };
-
-  return { handleAddGame, handleRemoveGame };
 }

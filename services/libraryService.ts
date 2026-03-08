@@ -55,7 +55,7 @@ export async function getUserGames(): Promise<ApiResponse<UserGame>> {
 export async function addGameToLibrary(
   rawgId: number,
   category: Category = "uncategorized",
-  userRating: number | null = null,
+  userRating: number | null = 0,
 ): Promise<InsertResponse<RawgGame>> {
   const supabase = await createClient();
   const { data: authData, error: authError } = await supabase.auth.getUser();
@@ -122,26 +122,36 @@ export async function removeGameFromLibrary(rawgId: number) {
 export async function getHydratedUserLibrary(): Promise<
   SuccessResponse<HydratedGame> | ErrorResponse
 > {
+  const page_size = 20;
   const userGamesRes = await getUserGames();
 
   if (!userGamesRes.success) {
     return { success: false, error: userGamesRes.error };
   }
 
-  const userGameRawgIds = userGamesRes.results.map(
-    (userGame) => userGame.rawg_id,
-  );
-  const rawgGamesRes = await getGames({ ids: userGameRawgIds });
+  const userGameIds = userGamesRes.results.map((userGame) => userGame.rawg_id);
+  const promises = [];
 
-  if (!rawgGamesRes.success) {
-    return { success: false, error: rawgGamesRes.error };
+  for (let i = 0; i < userGameIds.length; i += page_size) {
+    const ids = userGameIds.slice(i, i + page_size);
+    promises.push(getGames({ ids }));
+  }
+
+  const rawgGamesRes = await Promise.all(promises);
+
+  const allRawgGames = rawgGamesRes
+    .filter((res) => res.success)
+    .flatMap((res) => res.results);
+
+  if (allRawgGames.length === 0) {
+    return { success: false, error: "Failed to load any games from RAWG" };
   }
 
   const userGamesMap = new Map(
     userGamesRes.results.map((entry) => [entry.rawg_id, entry]),
   );
 
-  const hydrated = rawgGamesRes.results.map((rawgGame) => {
+  const hydrated = allRawgGames.map((rawgGame) => {
     const userGame = userGamesMap.get(rawgGame.id);
 
     return {

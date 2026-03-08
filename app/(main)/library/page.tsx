@@ -66,7 +66,7 @@ export default function UserLibrary() {
         />
       </div>
 
-      <GameGrid isLoading={isLoading} rawgGames={games}/>
-    </div>  
+      <GameGrid isLoading={isLoading} rawgGames={games} length={15} />
+    </div>
   );
 }

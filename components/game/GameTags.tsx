@@ -3,6 +3,7 @@ import { ScrollArea } from "../ui/scroll-area";
 import { Badge } from "../ui/badge";
 import { Card } from "../ui/card";
 import { Tag } from "@/types/types";
+import { Frown } from "lucide-react";
 
 export default function GameTags({ tags }: { tags: Tag[] }) {
   return (
@@ -10,7 +11,7 @@ export default function GameTags({ tags }: { tags: Tag[] }) {
       <Card className="border-0">
         <div className="text-muted-foreground font-semibold">Tags</div>
         {!tags.length ? (
-          <span className="text-muted-foreground">No tags</span>
+          <span className="text-muted-foreground flex gap-4">No tags provided <Frown/></span>
         ) : (
           <div className="flex flex-wrap gap-2">
             {tags.map(({ id, name }, key) => (

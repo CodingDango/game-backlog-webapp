@@ -84,6 +84,8 @@ export function useHydratedLibrary() {
 
   const query = useQuery({
     enabled: !!userId,
+    refetchOnWindowFocus: true,
+    staleTime: 0,
     queryKey: ["userGames", "hydratedUserLibrary"],
     queryFn: async () => {
       const res = await getHydratedUserLibrary();

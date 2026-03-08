@@ -54,7 +54,7 @@ export default function DetailsPage() {
     );
 
   return (
-    <div className="flex flex-col gap-40 ">
+  <div className="flex flex-col gap-32">
       <div className="flex flex-col gap-12">
         <span className="text-4xl font-semibold">{game.name}</span>
 

@@ -24,12 +24,10 @@ interface Props {
 export function AppImageCarousel({ images, isLoading }: Props) {
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
-  const [count, setCount] = useState(images.length);
 
   useEffect(() => {
     if (!api) return;
 
-    setCount(api.scrollSnapList().length);
     setCurrent(api.selectedScrollSnap());
 
     api.on("select", () => {

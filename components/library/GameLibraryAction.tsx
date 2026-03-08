@@ -31,7 +31,7 @@ export default function GameLibraryAction({
 
   const onSave = async (newCategory: Category, newRating: number) => {
     setIsAdding(true);
-    const res = await handleAddGame(rawgId, newCategory, newRating);
+    const res = await handleAddGame({ rawgId, category: newCategory, rating: newRating });
 
     if (isNew) {
       if (!res.success) {
