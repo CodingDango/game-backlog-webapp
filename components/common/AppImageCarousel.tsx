@@ -62,12 +62,12 @@ export function AppImageCarousel({ images, isLoading }: Props) {
         </div>
 
         <div className="ml-auto flex gap-2">
-          {Array.from({ length: count }).map((_, i) => (
+          {Array.from({ length: images.length }).map((_, i) => (
             <button
               key={i}
               onClick={() => api?.scrollTo(i)}
               className={cn(
-                "h-4 w-4 rounded-full transition-all duration-300 border-4 bg-background",
+                "cursor-pointer h-4 w-4 rounded-full transition-all duration-300 border-4 bg-background",
                 current === i ? "border-primary" : "border-secondary ",
               )}
               aria-label={`Go to slide ${i + 1}`}

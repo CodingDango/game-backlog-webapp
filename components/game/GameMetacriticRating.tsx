@@ -3,12 +3,10 @@ import { RawgGame, RawgGameDetails } from "@/types/types";
 import { Progress } from "../ui/progress";
 
 interface Props {
-  game: RawgGame | RawgGameDetails;
+  metacriticScore?: number
 }
 
-export default function GameMetacriticRating({ game }: Props) {
-  const metacriticScore = game.metacritic ?? 0;
-
+export default function GameMetacriticRating({ metacriticScore = 0}: Props) {
   return (
     <Card className="h-13 px-4">
       <div className="flex justify-between items-center h-full">

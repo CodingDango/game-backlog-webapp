@@ -66,7 +66,7 @@ export function useGameDetails(slug: string) {
     return data.results.map((screenshot) => screenshot.image);
   }, [screenshotQuery]);
 
-  const uniqueSocialEntries = useMemo(() => {
+  const socialEntryLinks = useMemo(() => {
     if (!gameData?.stores || !gameData) return [];
 
     const entries: { slug: string; url: string; brandColor: string }[] = [];
@@ -132,24 +132,17 @@ export function useGameDetails(slug: string) {
     };
   }, [gameData?.platforms]);
 
-  const tags: string[] = useMemo(() => {
-    if (!gameData) return [];
-
-    return gameData.tags.map((tag) => tag.name);
-  }, [gameData?.tags]);
-
   return {
     game: gameData,
     gameDescription: truncateDescription(descriptionHtml),
-    userGame: userGameQuery.data,
-    screenshots: screenshotLinks,
+    userGame: userGameQuery.data || undefined,
+    screenshotUrls: screenshotLinks,
     error: gameQuery.error,
     isLoading: gameQuery.isLoading,
     isError: gameQuery.isError,
     isScreenShotsLoading: screenshotQuery.isLoading,
     isUserGameLoading: userGameQuery.isLoading,
-    uniqueSocialEntries: uniqueSocialEntries,
+    socialEntryLinks: socialEntryLinks,
     pcRequirements,
-    tags,
   };
 }

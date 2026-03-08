@@ -180,3 +180,9 @@ export interface Page {
   link: string;
   pageNumber: number;
 }
+
+export interface SocialEntryLink {
+  slug: string;
+  url: string;
+  brandColor: string;
+}
