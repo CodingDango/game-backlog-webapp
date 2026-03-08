@@ -21,7 +21,7 @@ export default function AppFooter() {
             target="_blank"
             className="text-sm text-muted-foreground transition-colors hover:text-primary"
           >
-            Data provided by{" "}
+            Data by{" "}
             <span className="underline underline-offset-4">RAWG</span>
           </Link>
 
@@ -33,7 +33,7 @@ export default function AppFooter() {
             className="flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-primary"
           >
             <FaGithub className="size-5" />
-            <span>Source Code</span>
+            <span>Source</span>
           </Link>
         </div>
       </div>

@@ -26,14 +26,21 @@ export default function UserLibrary() {
   const { data: hydratedLibrary, isLoading } = useHydratedLibrary();
   const [category, setCategory] = useState<LibraryCategory>("all games");
   const [sort, setSort] = useState<SortFilter>("newest");
+  const [title, setTitle] = useState("");
 
   const games = useMemo(() => {
     if (!hydratedLibrary?.length) return [];
 
-    const filtered = hydratedLibrary.filter(
+    let filtered = hydratedLibrary.filter(
       (game) =>
         category === "all games" ||
         game.user_game?.category === (category as Category),
+    );
+
+    const titleLower = title.toLowerCase();
+
+    filtered = filtered.filter((game) =>
+      game.rawg_game.slug.includes(titleLower),
     );
 
     if (sort === "newest") {
@@ -55,7 +62,7 @@ export default function UserLibrary() {
     }
 
     return filtered.map((game) => game.rawg_game);
-  }, [hydratedLibrary, category, sort]);
+  }, [hydratedLibrary, category, sort, title]);
 
   const sortDropdownItems = [
     { text: "newest added", value: "newest" },
@@ -68,10 +75,14 @@ export default function UserLibrary() {
     <div className="w-full flex flex-col gap-12">
       <h1 className="text-4xl font-semibold">Your Library</h1>
 
-      <div className="flex justify-between gap-8 items-center">
+      <div className="flex flex-col sm:flex-row justify-between gap-6 sm:items-center">
         <div className="flex-1 flex gap-4">
           <div className="max-w-80 w-full">
-            <SearchInput placeholder="Filter games by name"/>
+            <SearchInput
+              placeholder="Filter games by title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
           </div>
 
           <Popover>
@@ -80,11 +91,16 @@ export default function UserLibrary() {
                 <Filter />
               </Button>
             </PopoverTrigger>
-            <PopoverContent align="start" className="flex flex-col gap-4 max-w-56">
+            <PopoverContent
+              align="start"
+              className="flex flex-col gap-4 max-w-56"
+            >
               <PopoverHeader>
-                <PopoverTitle className="text-muted-foreground">Filter by categories</PopoverTitle>
+                <PopoverTitle className="text-muted-foreground">
+                  Filter by categories
+                </PopoverTitle>
               </PopoverHeader>
-              <LibraryCategories value={category} onValueChange={setCategory}/>
+              <LibraryCategories value={category} onValueChange={setCategory} />
             </PopoverContent>
           </Popover>
         </div>
