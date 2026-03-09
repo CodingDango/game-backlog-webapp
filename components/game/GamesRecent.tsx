@@ -16,7 +16,7 @@ export default function GamesRecent() {
 
   return (
     <div className="flex flex-col gap-8">
-      <h2 className="text-4xl font-semibold">Recently Released</h2>
+      <h2 className="text-3xl sm:text-4xl font-semibold">Recently Released</h2>
       <div className="grid md:grid-cols-2 gap-8">
         {(recentlyReleased || Array.from({ length: 6 })).map((game, idx) => (
           <GameCardAlt

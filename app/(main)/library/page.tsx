@@ -73,7 +73,7 @@ export default function UserLibrary() {
 
   return (
     <div className="w-full flex flex-col gap-12">
-      <h1 className="text-4xl font-semibold">Your Library</h1>
+      <h1 className="text-3xl sm:text-4xl font-semibold">Your Library</h1>
 
       <div className="flex flex-col sm:flex-row justify-between gap-6 sm:items-center">
         <div className="flex-1 flex gap-4">

@@ -48,7 +48,7 @@ export default function SearchPage() {
 
   return (
     <div className="flex flex-col gap-16">
-      <h2 className="text-4xl font-semibold">
+      <h2 className="text-3xl sm:text-4xl font-semibold">
         Results for &quot;{query}&quot;
       </h2>
 

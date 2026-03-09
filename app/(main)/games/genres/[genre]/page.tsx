@@ -37,7 +37,9 @@ export default function GameGenresPage() {
 
   return (
     <div className="flex flex-col gap-16">
-      <h2 className="text-4xl font-semibold capitalize">{genre} Games</h2>
+      <h2 className="text-3xl sm:text-4xl font-semibold capitalize">
+        {genre} Games
+      </h2>
       <GameGrid rawgGames={games} isLoading={isLoading} length={20} />
       <AppPagination
         activePageNumber={page}

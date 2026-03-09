@@ -25,7 +25,7 @@ export default function GamesPopular() {
 
   return (
     <div className="space-y-8">
-      <h2 className="text-4xl font-semibold">Popular</h2>
+      <h2 className="text-3xl sm:text-4xl font-semibold">Popular</h2>
 
       {popularGames && popularGames.length > 0 ? (
         <Carousel className="relative">

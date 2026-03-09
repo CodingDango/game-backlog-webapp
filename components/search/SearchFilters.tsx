@@ -1,11 +1,18 @@
 import { Dispatch, SetStateAction, useState } from "react";
-import { RefreshCcw } from "lucide-react";
+import { RefreshCcw, Sliders } from "lucide-react";
 import { Button } from "../ui/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverDescription,
+  PopoverHeader,
+  PopoverTitle,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 import AppDropdown, { DropdownItem } from "../common/AppDropdown";
 import GenresFilterDialog from "../dialogs/GenresDialog";
 import PlatformFilterDialog from "../dialogs/PlatformFilterDialog";
-import { useSearchParams } from "next/navigation";
 
 // TODO: Add date filters using shadcn calendar component
 // TODO: add better ordering. like alphabetical, reversed alphhabetical, rating, etc. there is too many!
@@ -29,7 +36,8 @@ export default function SearchFilters({
 }: SearchFiltersProps) {
   const orderingItems: DropdownItem[] = [
     { text: "popular", value: "-added" },
-    { text: "release date", value: "-released" },
+    { text: "newest", value: "-released" },
+    { text: "oldest", value: "released" },
     { text: "name", value: "name" },
   ];
 
@@ -42,15 +50,34 @@ export default function SearchFilters({
   };
 
   return (
-    <div className="flex justify-between gap-6">
+    <div className="flex flex-wrap justify-between gap-6">
       <div className="flex flex-col gap-6 max-w-[400px]">
-        <div className="flex gap-4">
-          <PlatformFilterDialog {...{ platforms, setActiveFilters }} />
-          <GenresFilterDialog {...{ genres, setActiveFilters }} />
-          <Button onClick={onApply}>Apply Filters</Button>
-          <Button variant={"secondary"} size="icon" onClick={onReset}>
-            <RefreshCcw />
-          </Button>
+        <div className="flex gap-4 flex-wrap sm:flex-nowrap">
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant={"outline"}>
+                Filters <Sliders />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent
+              align="start"
+              className="flex flex-col gap-4 max-w-56"
+            >
+              <PopoverHeader>
+                <PopoverTitle className="text-muted-foreground">
+                  Search Filters
+                </PopoverTitle>
+              </PopoverHeader>
+              <PlatformFilterDialog {...{ platforms, setActiveFilters }} />
+              <GenresFilterDialog {...{ genres, setActiveFilters }} />
+              <div className="grid grid-cols-[1fr_auto] gap-4">
+              <Button onClick={onApply}>Apply Filters</Button>
+              <Button variant={"secondary"} size="icon" onClick={onReset}>
+                <RefreshCcw />
+              </Button>
+              </div>
+            </PopoverContent>
+          </Popover>
         </div>
       </div>
 

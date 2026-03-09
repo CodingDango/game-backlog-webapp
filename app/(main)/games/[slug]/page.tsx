@@ -54,9 +54,9 @@ export default function DetailsPage() {
     );
 
   return (
-  <div className="flex flex-col gap-32">
+    <div className="flex flex-col gap-32">
       <div className="flex flex-col gap-12">
-        <span className="text-4xl font-semibold">{game.name}</span>
+        <span className="text-3xl sm:text-4xl font-semibold">{game.name}</span>
 
         <div className="grid grid-cols-1 md:grid-cols-12 gap-16 md:gap-8 xl:gap-12 w-full">
           <div className="md:order-2 md:col-span-5 lg:col-span-4">
@@ -83,7 +83,9 @@ export default function DetailsPage() {
       </div>
 
       <div className="flex flex-col gap-12">
-        <span className="text-4xl font-semibold">Games like {game.name}</span>
+        <span className="text-3xl sm:text-4xl font-semibold">
+          Games like {game.name}
+        </span>
         <GameGrid
           rawgGames={similarGames || []}
           isLoading={similarGamesLoading}
