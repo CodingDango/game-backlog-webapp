@@ -3,7 +3,7 @@ import { Card, CardHeader, CardTitle } from "../ui/card";
 
 interface StatCardProps {
   title: string;
-  value: string;
+  value: number;
   Icon: React.ComponentType<{ className?: string }>;
 }
 

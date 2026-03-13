@@ -45,9 +45,14 @@ const defaultChartConfig = {
   },
 } satisfies ChartConfig;
 
+interface ChartDataItem {
+  [key: string]: string | number;
+}
+
+
 interface AppPieChartProps {
   chartConfig?: ChartConfig;
-  chartData?: any[];
+  chartData?: ChartDataItem[];
   chartNameKey?: string;
   chartDataKey?: string;
   labelDataKey?: string;

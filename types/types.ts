@@ -186,3 +186,5 @@ export interface SocialEntryLink {
   url: string;
   brandColor: string;
 }
+
+export type GameStatKey = "total" | Category;

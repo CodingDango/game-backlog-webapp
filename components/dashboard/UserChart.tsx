@@ -29,49 +29,27 @@ const chartConfig = {
 };
 
 interface UserChartProps {
-  userGames: UserGame[];
+  gamesCounterMap: Record<Category | 'total', number>;
 }
 
-export default function UserChart({ userGames }: UserChartProps) {
-  const { chartData, gamesCounter } = useMemo(() => {
+export default function UserChart({ gamesCounterMap }: UserChartProps) {
+  const { chartData } = useMemo(() => {
     const data = [
-      { category: "playing", games: 0, fill: "var(--color-playing)" },
-      { category: "completed", games: 0, fill: "var(--color-completed)" },
-      { category: "played", games: 0, fill: "var(--color-played)" },
-      { category: "not played", games: 0, fill: "var(--color-not-played)" },
+      { category: "playing", games: gamesCounterMap['playing'], fill: "var(--color-playing)" },
+      { category: "completed", games: gamesCounterMap['completed'], fill: "var(--color-completed)" },
+      { category: "played", games: gamesCounterMap['played'], fill: "var(--color-played)" },
+      { category: "not played", games: gamesCounterMap['not played'], fill: "var(--color-not-played)" },
       {
         category: "uncategorized",
-        games: 0,
+        games: gamesCounterMap['uncategorized'],
         fill: "var(--color-uncategorized)",
       },
     ];
 
-    const gamesCounter = {
-      total: 0,
-      playing: 0,
-      completed: 0,
-      played: 0,
-      "not played": 0,
-      uncategorized: 0,
-    };
+    const cleanedData = data.filter(row => row.games > 0);
 
-    for (const game of userGames) {
-      gamesCounter[game.category]++;
-      gamesCounter.total++;
-    }
-
-    const cleanedData = [];
-
-    for (const row of data) {
-      const total = gamesCounter[row.category as keyof typeof gamesCounter];
-
-      if (total) {
-        cleanedData.push({ ...row, games: total });
-      }
-    }
-
-    return { chartData: cleanedData, gamesCounter };
-  }, [userGames]);
+    return { chartData: cleanedData };
+  }, [gamesCounterMap]);
 
   return (
     <Card>
@@ -91,13 +69,13 @@ export default function UserChart({ userGames }: UserChartProps) {
             }}
           />
         </div>
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-4">
           {CATEGORIES.map(category => (
             <StatRow
               key={category}
               category={category}
-              value={gamesCounter[category]}
-              total={gamesCounter.total}
+              value={gamesCounterMap[category]}
+              total={gamesCounterMap.total}
               colorClass={chartConfig[category].color}
             />
           ))}
