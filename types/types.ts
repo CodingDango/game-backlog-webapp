@@ -107,7 +107,7 @@ export interface Genre {
 
 export type Category =
   | "uncategorized"
-  | "currently playing"
+  | "playing"
   | "completed"
   | "played"
   | "not played";

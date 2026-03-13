@@ -1,26 +1,25 @@
-"use client"
+"use client";
 
-import { TrendingUp } from "lucide-react"
-import { LabelList, Pie, PieChart } from "recharts"
+import { LabelList, Pie, PieChart } from "recharts";
 
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
   type ChartConfig,
-} from "@/components/ui/chart"
+} from "@/components/ui/chart";
 
-export const description = "A pie chart with a label list"
+export const description = "A pie chart with a label list";
 
-const chartData = [
+const defaultChartData = [
   { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
   { browser: "safari", visitors: 200, fill: "var(--color-safari)" },
   { browser: "firefox", visitors: 187, fill: "var(--color-firefox)" },
   { browser: "edge", visitors: 173, fill: "var(--color-edge)" },
   { browser: "other", visitors: 90, fill: "var(--color-other)" },
-]
+];
 
-const chartConfig = {
+const defaultChartConfig = {
   visitors: {
     label: "Visitors",
   },
@@ -44,34 +43,47 @@ const chartConfig = {
     label: "Other",
     color: "var(--chart-5)",
   },
-} satisfies ChartConfig
+} satisfies ChartConfig;
 
-export function AppPieChart() {
+interface AppPieChartProps {
+  chartConfig?: ChartConfig;
+  chartData?: any[];
+  chartNameKey?: string;
+  chartDataKey?: string;
+  labelDataKey?: string;
+}
+
+export function AppPieChart({
+  chartConfig = defaultChartConfig,
+  chartData = defaultChartData,
+  chartNameKey = "visitors",
+  chartDataKey = "visitors",
+  labelDataKey = "browser",
+}: AppPieChartProps) {
   return (
     <div className="flex flex-col">
       <div className="flex-1 pb-0">
         <ChartContainer
           config={chartConfig}
-          className="mx-auto aspect-square max-h-[300px] [&_.recharts-text]:fill-background"
+          className="mx-auto aspect-square max-h-[300px] [&_.recharts-text]:fill-background scale-110"
         >
           <PieChart>
             <ChartTooltip
-              content={<ChartTooltipContent nameKey="visitors" hideLabel />}
+              content={<ChartTooltipContent nameKey={chartNameKey} hideLabel />}
             />
-            <Pie data={chartData} dataKey="visitors">
+            <Pie data={chartData} dataKey={chartDataKey}>
               <LabelList
-                dataKey="browser"
-                className="fill-background"
+                dataKey={labelDataKey}
+                className="!fill-primary"
                 stroke="none"
+                fill="var(--color-labelColor)"
+                formatter={(value: string) => chartConfig[value]?.label}
                 fontSize={12}
-                formatter={(value: keyof typeof chartConfig) =>
-                  chartConfig[value]?.label
-                }
               />
             </Pie>
           </PieChart>
         </ChartContainer>
       </div>
     </div>
-  )
+  );
 }

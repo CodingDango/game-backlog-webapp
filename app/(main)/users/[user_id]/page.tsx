@@ -2,12 +2,34 @@
 
 import StatCard from "@/components/dashboard/StatCard";
 import UserChart from "@/components/dashboard/UserChart";
+
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { createClient } from "@/lib/supabase/client";
+import { getUserGames } from "@/services/libraryService";
+import { useQuery } from "@tanstack/react-query";
 import { Gamepad2 } from "lucide-react";
 import { useParams } from "next/navigation";
+import { toast } from "sonner";
 
 export default function ProfilePage() {
-  const { user_id } = useParams<{ user_id: string }>();
+  const supabase = createClient();
+  const { user_id: userId } = useParams<{ user_id: string }>();
+  const { data } = useQuery({
+    enabled: !!userId,
+    refetchOnWindowFocus: true,
+    staleTime: 0,
+    queryKey: ["userGames", userId],
+    queryFn: async () => {
+      const res = await getUserGames(userId);
+
+      if (!res.success) {
+        toast.error(res.error);
+        throw new Error(res.error);
+      }
+
+      return res.results;
+    },
+  });
 
   return (
     <div className="flex flex-col gap-12">
@@ -31,7 +53,7 @@ export default function ProfilePage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
         <div className="col-span-3">
-          <UserChart/>
+          <UserChart userGames={data || []} />
         </div>
       </div>
     </div>

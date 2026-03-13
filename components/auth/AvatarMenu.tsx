@@ -16,9 +16,10 @@ import Link from "next/link";
 
 interface AvatarMenuProps {
   logOut: () => Promise<void>;
+  userId: string;
 }
 
-export default function AvatarMenu({ logOut }: AvatarMenuProps) {
+export default function AvatarMenu({ logOut, userId }: AvatarMenuProps) {
   const [openLogout, setOpenLogout] = useState<boolean>(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
@@ -40,6 +41,9 @@ export default function AvatarMenu({ logOut }: AvatarMenuProps) {
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>My Account</DropdownMenuLabel>
           <DropdownMenuSeparator />
+          <DropdownMenuItem asChild>
+            <Link href={`/users/${userId}`}>Profile</Link>
+          </DropdownMenuItem>
           <DropdownMenuItem asChild>
             <Link href={"/library"}>Library</Link>
           </DropdownMenuItem>

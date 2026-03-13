@@ -13,27 +13,34 @@ import type {
 } from "../types/types";
 import { getGames } from "./rawgServices";
 
-export async function getUserGames(): Promise<ApiResponse<UserGame>> {
+export async function getUserGames(
+  userId?: string,
+): Promise<ApiResponse<UserGame>> {
   const supabase = await createClient();
-  const {
-    data: { user },
-    error: authError,
-  } = await supabase.auth.getUser();
 
-  if (authError || !user) {
-    const error = authError?.message || "I don't know, user session is null";
-    console.error(error);
+  if (!userId) {
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
 
-    return {
-      success: false,
-      error: error,
-    };
+    if (authError || !user) {
+      const error = authError?.message || "I don't know, user session is null";
+      console.error(error);
+
+      return {
+        success: false,
+        error: error,
+      };
+    }
+
+    userId = user.id;
   }
 
   const { data: fetchLibrary, error: fetchErr } = await supabase
     .from("user_games")
     .select("*")
-    .eq("user_id", user.id);
+    .eq("user_id", userId);
 
   if (fetchErr) {
     console.error(fetchErr.message);
@@ -119,11 +126,11 @@ export async function removeGameFromLibrary(rawgId: number) {
   return { success: true };
 }
 
-export async function getHydratedUserLibrary(): Promise<
-  SuccessResponse<HydratedGame> | ErrorResponse
-> {
+export async function getHydratedUserLibrary(
+  userId?: string,
+): Promise<SuccessResponse<HydratedGame> | ErrorResponse> {
   const page_size = 20;
-  const userGamesRes = await getUserGames();
+  const userGamesRes = await getUserGames(userId);
 
   if (!userGamesRes.success) {
     return { success: false, error: userGamesRes.error };

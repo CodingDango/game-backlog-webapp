@@ -78,17 +78,17 @@ export function useLibraryMap(session: any) {
   };
 }
 
-export function useHydratedLibrary() {
+export function useHydratedLibrary(userId?: string) {
   const { session } = useAuth();
-  const userId = session?.user?.id;
+  const userIdToFetch = userId || session?.user?.id;
 
   const query = useQuery({
     enabled: !!userId,
     refetchOnWindowFocus: true,
     staleTime: 0,
-    queryKey: ["userGames", "hydratedUserLibrary"],
+    queryKey: ["userGames", 'hydrated', userIdToFetch],
     queryFn: async () => {
-      const res = await getHydratedUserLibrary();
+      const res = await getHydratedUserLibrary(userIdToFetch);
 
       if (!res.success) {
         toast.error(res.error);

@@ -25,7 +25,7 @@ export default function AppNavbar() {
           </div>
 
           {session ? (
-            <AvatarMenu logOut={logOut} />
+            <AvatarMenu logOut={logOut} userId={session.user.id}/>
           ) : (
             <div className="flex gap-4">
               <Button variant={'outline'}>
