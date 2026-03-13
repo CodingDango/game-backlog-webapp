@@ -9,16 +9,16 @@ import { createClient } from "@/lib/supabase/client";
 import { getUserGames } from "@/services/libraryService";
 import { GameStatKey } from "@/types/types";
 import { useQuery } from "@tanstack/react-query";
-import { Gamepad2 } from "lucide-react";
+import { Gamepad2, Play, Check, History } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useMemo } from "react";
 import { toast } from "sonner";
 
 const statCards = [
   { title: "Total Games", Icon: Gamepad2, keyValue: "total" },
-  { title: "Currently Playing", Icon: Gamepad2, keyValue: "playing" },
-  { title: "Completed Games", Icon: Gamepad2, keyValue: "completed" },
-  { title: "Played Games", Icon: Gamepad2, keyValue: "played" },
+  { title: "Currently Playing", Icon: Play, keyValue: "playing" },
+  { title: "Completed Games", Icon: Check, keyValue: "completed" },
+  { title: "Played Games", Icon: History, keyValue: "played" },
 ] as const;
 
 export default function ProfilePage() {
