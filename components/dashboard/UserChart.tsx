@@ -54,10 +54,10 @@ export default function UserChart({ gamesCounterMap }: UserChartProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>User Stat Chart</CardTitle>
-        <CardDescription>Lorem ipsum dolor sit amet.</CardDescription>
+        <CardTitle>Game Collection Stats</CardTitle>
+        <CardDescription>Track users game collection progress by status</CardDescription>
       </CardHeader>
-      <div className="grid grid-cols-[1fr_auto]">
+      <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-6">
         <div>
           <AppPieChart
             {...{
@@ -97,7 +97,7 @@ function StatRow({ category, value, total, colorClass }: StatRowProps) {
   console.log(`value is ${value}, total is ${total}, percentage is ${percentage}`)
 
   return (
-    <div className="flex gap-12 justify-between">
+    <div className="flex sm:gap-12 justify-between">
       <div className="flex gap-4 items-center">
         <div className='rounded-full w-4 h-4' style={{ background: colorClass}}></div>
         <div className="flex flex-col">

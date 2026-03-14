@@ -7,25 +7,40 @@ import { toast } from "sonner";
 
 import AuthVerifyOTP from "@/components/auth/AuthOTPDialog";
 import AuthForm from "@/components/auth/AuthForm";
+import { SignUpFormData } from "@/types/types";
 
 export default function SignUpPage() {
   const supabase = createClient();
   const router = useRouter();
 
-  const [email, setEmail] = useState("");
+  const [form, setForm] = useState<SignUpFormData>({
+    email: "",
+    username: "",
+  });
+
   const [openOtpDialog, setOpenOtpDialog] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
   const [isSendingOtp, setIsSendingOtp] = useState(false);
 
-  const handleEmailSignUp = async (email: string) => {
+  const handleSignUp = async (form: SignUpFormData) => {
     setIsSendingOtp(true);
 
-    const { error, data } = await supabase.auth.signInWithOtp({
-      email: email,
-      options: { shouldCreateUser: true },
-    });
+    const { error: usernameError, data: username } = await supabase
+      .from("profiles")
+      .select("username")
+      .eq("username", form.username)
+      .single();
 
-    console.log(data)
+    if (username) {
+      toast.error('Username already exists.');
+      setIsSendingOtp(false)
+      return;
+    }
+
+    const { error, data } = await supabase.auth.signInWithOtp({
+      email: form.email,
+      options: { shouldCreateUser: true, data: { username: form.username } },
+    });
 
     setIsSendingOtp(false);
 
@@ -40,7 +55,7 @@ export default function SignUpPage() {
     setIsVerifying(true);
 
     const { error } = await supabase.auth.verifyOtp({
-      email: email,
+      email: form.email,
       token: otpValue,
       type: "email",
     });
@@ -59,22 +74,23 @@ export default function SignUpPage() {
   return (
     <div>
       <AuthForm
-        setEmail={setEmail}
-        email={email}
-        handleEmailSubmit={handleEmailSignUp}
-        isEmailSubmitting={isSendingOtp}
+        setForm={setForm}
+        handleSubmit={handleSignUp}
+        isSubmitting={isSendingOtp}
+        form={form}
+        includeUser={true}
         headerText="Create an Account"
         spanText="Already have an account?"
         redirectText="Log in."
         redirectHref="/login"
-        emailButtonText='Create Account'
+        emailButtonText="Create Account"
       />
 
       <AuthVerifyOTP
         onOpenChange={setOpenOtpDialog}
         openDialog={openOtpDialog}
         handleVerify={handleOtpVerify}
-        email={email}
+        email={form.email}
         isVerifying={isVerifying}
       />
     </div>

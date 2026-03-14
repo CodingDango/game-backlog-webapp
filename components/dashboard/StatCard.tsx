@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React from "react";
 import { Card, CardHeader, CardTitle } from "../ui/card";
 
 interface StatCardProps {
@@ -14,7 +14,7 @@ export default function StatCard({ title, value, Icon }: StatCardProps) {
         <CardTitle className="font-medium">{title}</CardTitle>
         <span className="text-muted-foreground"><Icon/></span>
       </CardHeader>
-      <div className="text-4xl font-semibold">{value}</div>
+      <div className="text-3xl sm:text-4xl font-semibold">{value}</div>
     </Card>
   );
 }

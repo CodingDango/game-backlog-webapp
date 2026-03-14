@@ -1,36 +1,39 @@
 import { toast } from "sonner";
-import { FormEvent, useState } from "react";
+import { Dispatch, FormEvent, SetStateAction, useState } from "react";
 import { FaGithub } from "react-icons/fa";
 import { createClient } from "@/lib/supabase/client";
 import { Card } from "../ui/card";
+import { SignUpFormData } from "@/types/types";
 
 import Link from "next/link";
 import BrandLogo from "@/components/common/BrandLogo";
-import AuthEmailForm from "@/components/auth/AuthEmailForm";
 import AppButton from "@/components/common/AppButton";
+import { Input } from "../ui/input";
 
 interface AuthFormProps {
-  setEmail: (email: string) => void;
-  handleEmailSubmit: (email: string) => void;
-  isEmailSubmitting: boolean;
-  email: string;
+  setForm: Dispatch<SetStateAction<SignUpFormData>>;
+  handleSubmit: (form: SignUpFormData) => void;
+  form: SignUpFormData;
+  isSubmitting: boolean;
   headerText: string;
   spanText: string;
   redirectText: string;
   redirectHref: string;
   emailButtonText: string;
+  includeUser?: boolean;
 }
 
 export default function AuthForm({
-  setEmail,
-  handleEmailSubmit,
-  email,
-  isEmailSubmitting,
+  setForm,
+  handleSubmit,
+  form,
+  isSubmitting,
   headerText,
   spanText,
   redirectText,
   redirectHref,
   emailButtonText,
+  includeUser,
 }: AuthFormProps) {
   const supabase = createClient();
 
@@ -68,16 +71,41 @@ export default function AuthForm({
         </span>
       </div>
 
-      <AuthEmailForm
+      <form
+        className="flex flex-col gap-4"
         onSubmit={(e) => {
           e.preventDefault();
-          handleEmailSubmit(email);
+          handleSubmit(form);
         }}
-        onEmailChange={(e) => setEmail(e.target.value)}
-        isSubmitting={isEmailSubmitting}
-        email={email}
-        emailButtonText={emailButtonText}
-      />
+      >
+        {includeUser && (
+          <Input
+            placeholder="John Doe"
+            name="username"
+            type="text"
+            required
+            onChange={e =>
+              setForm(prev => ({ ...prev, username: e.target.value }))
+            }
+            value={form.username}
+            className="py-6"
+          />
+        )}
+
+        <Input
+          placeholder="example@gmail.com"
+          name="email"
+          type="email"
+          required
+          onChange={e => setForm(prev => ({ ...prev, email: e.target.value }))}
+          value={form.email}
+          className="py-6"
+        />
+
+        <AppButton className="py-6" type="submit" isLoading={isSubmitting}>
+          {emailButtonText}
+        </AppButton>
+      </form>
 
       <div className="grid grid-cols-[1fr_auto_1fr] gap-x-4 place-items-center">
         <div className="h-px bg-accent w-full"></div>

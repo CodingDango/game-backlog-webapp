@@ -188,3 +188,8 @@ export interface SocialEntryLink {
 }
 
 export type GameStatKey = "total" | Category;
+
+export interface SignUpFormData {
+  email: string;
+  username: string;
+}

@@ -18,7 +18,7 @@ const statCards = [
   { title: "Total Games", Icon: Gamepad2, keyValue: "total" },
   { title: "Currently Playing", Icon: Play, keyValue: "playing" },
   { title: "Completed Games", Icon: Check, keyValue: "completed" },
-  { title: "Played Games", Icon: History, keyValue: "played" },
+  { title: "Played Games", Icon: History    , keyValue: "played" },
 ] as const;
 
 export default function ProfilePage() {
