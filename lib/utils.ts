@@ -1,6 +1,7 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { Store, SystemRequirements } from "../types/types";
+import { format } from 'date-fns'
 
 interface MetascoreColor {
   bgCol: string;
@@ -34,6 +35,13 @@ export function getMetascoreColor(metascore: number): MetascoreColor {
   }
 }
 
+/**
+ * Formats a date string into a readable format.
+ * @param dateString - A date string in YYYY-MM-DD format (e.g., "2026-03-14")
+ * @returns The formatted date string (e.g., "March 14, 2026")
+ * @example
+ * formatDate("2026-03-14") // "March 14, 2026"
+ */
 export function formatDate(dateString: string): string {
   if (!dateString) return "";
 
@@ -46,6 +54,20 @@ export function formatDate(dateString: string): string {
   const date = new Date(dateString + "T00:00:00");
 
   return date.toLocaleDateString("en-US", options);
+}
+
+/**
+ * Formats an ISO timestamp into a concise date format.
+ * @param timestamp - A full ISO timestamp string with timezone info
+ * @returns Date formatted as "MMM d, y" (e.g., "Mar 14, 2026")
+ * @example
+ * formatTimestamp("2026-03-14T09:08:15.789731+00:00") // "Mar 14, 2026"
+ */
+export function formatTimestamp(timestamp: string): string {
+  const date = new Date(timestamp);
+  const formattedDate = format(date, 'MMM d, y');
+
+  return formattedDate;
 }
 
 export function keyByMap(array: any[], key: string) {
