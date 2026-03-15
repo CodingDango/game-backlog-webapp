@@ -193,3 +193,10 @@ export interface SignUpFormData {
   email: string;
   username: string;
 }
+
+export interface UserProfile {
+  id: string;
+  username: string;
+  created_at: string;
+  avatar_url: string;
+}

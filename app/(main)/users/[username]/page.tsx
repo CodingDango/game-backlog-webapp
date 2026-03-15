@@ -1,16 +1,16 @@
 "use client";
 
+import Profile from "@/components/dashboard/Profile";
 import StatCard from "@/components/dashboard/StatCard";
 import UserChart from "@/components/dashboard/UserChart";
 
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { createClient } from "@/lib/supabase/client";
-import { formatDate, formatTimestamp } from "@/lib/utils";
 import { getUserGames } from "@/services/libraryService";
-import { GameStatKey } from "@/types/types";
+import { GameStatKey, UserProfile } from "@/types/types";
 import { useQuery } from "@tanstack/react-query";
 import { Gamepad2, Play, Check, History } from "lucide-react";
+import { UNSTABLE_REVALIDATE_RENAME_ERROR } from "next/dist/lib/constants";
 import { useParams } from "next/navigation";
 import { useMemo } from "react";
 import { toast } from "sonner";
@@ -24,15 +24,35 @@ const statCards = [
 
 export default function ProfilePage() {
   const supabase = createClient();
-  const { user_id: userId } = useParams<{ user_id: string }>();
+  const { username } = useParams<{ username: string }>();
 
-  const { data: userGames, isLoading: isLoadingGames } = useQuery({
-    enabled: !!userId,
+  const { data: profile, isLoading: isLoadingProfile } = useQuery({
     refetchOnWindowFocus: true,
     staleTime: 0,
-    queryKey: ["userGames", userId],
+    queryKey: ["user", UNSTABLE_REVALIDATE_RENAME_ERROR],
     queryFn: async () => {
-      const res = await getUserGames(userId);
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("username", username)
+        .single();
+
+      if (error) {
+        toast.error(error.message);
+        return undefined;
+      }
+
+      return data as UserProfile;
+    },
+  });
+
+  const { data: userGames, isLoading: isLoadingGames } = useQuery({
+    enabled: !!profile,
+    refetchOnWindowFocus: true,
+    staleTime: 0,
+    queryKey: ["user", username, "games"],
+    queryFn: async () => {
+      const res = await getUserGames(profile?.id);
 
       if (!res.success) {
         toast.error(res.error);
@@ -43,25 +63,7 @@ export default function ProfilePage() {
     },
   });
 
-  const { data: profile, isLoading: isLoadingProfile } = useQuery({
-    refetchOnWindowFocus: true,
-    staleTime: 0,
-    queryKey: ["user", userId],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", userId)
-        .single();
-
-      if (error) {
-        toast.error(error.message);
-        return {};
-      }
-
-      return data;
-    },
-  });
+  const isLoading = isLoadingProfile || isLoadingGames;
 
   const gamesCounterMap: Record<GameStatKey, number> = useMemo(() => {
     const map = {
@@ -87,28 +89,14 @@ export default function ProfilePage() {
 
   return (
     <div className="flex flex-col gap-12">
-      <header className="flex items-center gap-6">
-        <Avatar className="h-24 w-24">
-          <AvatarImage src="https://github.com/shadcn.png" />
-          <AvatarFallback>CN</AvatarFallback>
-        </Avatar>
-        <div>
-          <h1 className="text-3xl font-semibold">
-            {profile?.username ?? "Username"}
-          </h1>
-          <p className="text-muted-foreground">
-            Joined on{" "}
-            {profile?.created_at
-              ? formatTimestamp(profile?.created_at)
-              : "Invalid date"}
-          </p>
-        </div>
+      <header>
+        <Profile profile={profile}/>
       </header>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {isLoadingGames
+        {isLoading
           ? Array.from({ length: 4 }).map((_, idx) => (
-              <Skeleton key={`skeleton-${idx}`} className="h-[130px]" />
+              <Skeleton key={`stats-skeleton-${idx}`} className="h-[130px]" />
             ))
           : statCards.map(({ title, Icon, keyValue }) => (
               <StatCard
@@ -120,9 +108,13 @@ export default function ProfilePage() {
             ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
-        <div className="col-span-3">
-          <UserChart gamesCounterMap={gamesCounterMap} />
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 w-full h-full">
+        <div className="col-span-3 w-full h-full">
+          {isLoading ? (
+            <Skeleton className="w-full h-full min-h-[410px]" key="graph-skeleton"/>
+          ) : (
+            <UserChart gamesCounterMap={gamesCounterMap} />
+          )}
         </div>
       </div>
     </div>
