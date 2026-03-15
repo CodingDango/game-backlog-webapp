@@ -189,7 +189,7 @@ export interface SocialEntryLink {
 
 export type GameStatKey = "total" | Category;
 
-export interface SignUpFormData {
+export interface AuthFormData {
   email: string;
   username: string;
 }

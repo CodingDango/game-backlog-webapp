@@ -1,5 +1,6 @@
 "use client";
 
+import { AuthFormData } from "@/types/types";
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
@@ -12,33 +13,20 @@ export default function LoginPage() {
   const supabase = createClient();
   const router = useRouter();
 
-  const [email, setEmail] = useState("");
+  const [form, setForm] = useState<AuthFormData>({
+    email: "",
+    username: "",
+  });
+
   const [openOtpDialog, setOpenOtpDialog] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
   const [isSendingOtp, setIsSendingOtp] = useState(false);
-
-  const handleEmailLogin = async (email: string) => {
-    setIsSendingOtp(true);
-
-    const { error } = await supabase.auth.signInWithOtp({
-      email: email,
-      options: { shouldCreateUser: false },
-    });
-
-    setIsSendingOtp(false);
-
-    if (!error) {
-      setOpenOtpDialog(true);
-    } else {
-      toast.error(error.message);
-    }
-  };
 
   const handleOtpVerify = async (otpValue: string) => {
     setIsVerifying(true);
 
     const { error } = await supabase.auth.verifyOtp({
-      email: email,
+      email: form.email,
       token: otpValue,
       type: "email",
     });
@@ -54,13 +42,30 @@ export default function LoginPage() {
     router.push("/");
   };
 
+  const handleLogin = async (form: AuthFormData) => {
+    setIsSendingOtp(true);
+
+    const { error } = await supabase.auth.signInWithOtp({
+      email: form.email,
+      options: { shouldCreateUser: false },
+    });
+
+    setIsSendingOtp(false);
+
+    if (!error) {
+      setOpenOtpDialog(true);
+    } else {
+      toast.error(error.message);
+    }
+  };
+
   return (
     <div>
       <AuthForm
-        setEmail={setEmail}
-        email={email}
-        handleEmailSubmit={handleEmailLogin}
-        isEmailSubmitting={isSendingOtp}
+        setForm={setForm}
+        handleSubmit={handleLogin}
+        isSubmitting={isSendingOtp}
+        form={form}
         headerText="Log in to Game Backlog"
         spanText="Don't have an account?"
         redirectText="Sign up."
@@ -72,7 +77,7 @@ export default function LoginPage() {
         onOpenChange={setOpenOtpDialog}
         openDialog={openOtpDialog}
         handleVerify={handleOtpVerify}
-        email={email}
+        email={form.email}
         isVerifying={isVerifying}
       />
     </div>

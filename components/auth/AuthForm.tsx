@@ -3,7 +3,7 @@ import { Dispatch, FormEvent, SetStateAction, useState } from "react";
 import { FaGithub } from "react-icons/fa";
 import { createClient } from "@/lib/supabase/client";
 import { Card } from "../ui/card";
-import { SignUpFormData } from "@/types/types";
+import { AuthFormData } from "@/types/types";
 
 import Link from "next/link";
 import BrandLogo from "@/components/common/BrandLogo";
@@ -11,9 +11,9 @@ import AppButton from "@/components/common/AppButton";
 import { Input } from "../ui/input";
 
 interface AuthFormProps {
-  setForm: Dispatch<SetStateAction<SignUpFormData>>;
-  handleSubmit: (form: SignUpFormData) => void;
-  form: SignUpFormData;
+  setForm: Dispatch<SetStateAction<AuthFormData>>;
+  handleSubmit: (form: AuthFormData) => void;
+  form: AuthFormData;
   isSubmitting: boolean;
   headerText: string;
   spanText: string;

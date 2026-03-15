@@ -4,16 +4,16 @@ import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { AuthFormData } from "@/types/types";
 
 import AuthVerifyOTP from "@/components/auth/AuthOTPDialog";
 import AuthForm from "@/components/auth/AuthForm";
-import { SignUpFormData } from "@/types/types";
 
 export default function SignUpPage() {
   const supabase = createClient();
   const router = useRouter();
 
-  const [form, setForm] = useState<SignUpFormData>({
+  const [form, setForm] = useState<AuthFormData>({
     email: "",
     username: "",
   });
@@ -22,7 +22,7 @@ export default function SignUpPage() {
   const [isVerifying, setIsVerifying] = useState(false);
   const [isSendingOtp, setIsSendingOtp] = useState(false);
 
-  const handleSignUp = async (form: SignUpFormData) => {
+  const handleSignUp = async (form: AuthFormData) => {
     setIsSendingOtp(true);
 
     const { error: usernameError, data: username } = await supabase
