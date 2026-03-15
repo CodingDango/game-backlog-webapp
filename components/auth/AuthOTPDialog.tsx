@@ -5,78 +5,84 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { useState } from "react";
 import AppButton from "../common/AppButton";
+import { Card } from "../ui/card";
+import { ArrowLeft } from "lucide-react";
+import { Button } from "../ui/button";
 
 interface AuthVerifyOTPProps {
-  openDialog: boolean;
-  onOpenChange: (open: boolean) => void;
+  setView: (view: "form" | "otp") => void;
   handleVerify: (otpValue: string) => void;
   email: string;
   isVerifying: boolean;
 }
 
 export default function AuthVerifyOTP({
-  onOpenChange,
+  setView,
   handleVerify,
-  openDialog,
   email,
   isVerifying,
 }: AuthVerifyOTPProps) {
   const [otpValue, setOtpValue] = useState("");
 
   return (
-    <Dialog open={openDialog} onOpenChange={onOpenChange}>
-      <DialogContent className="flex flex-col gap-10 max-w-96!">
-        <DialogHeader>
-          <DialogTitle className="text-start!">Verification</DialogTitle>
-          <DialogDescription className="line-clamp-1 break-all">
-            Enter the code sent to {email}
-          </DialogDescription>
-        </DialogHeader>
+    <div className="flex flex-col gap-4">
+      <Card className="flex flex-col gap-10 max-w-96 items-center w-full px-4! sm:px-6">
+        <div className="text-center space-y-3 w-full">
+          <h1 className="text-2xl sm:text-3xl font-medium">Verify OTP</h1>
+          <p className="text-sm line-clamp-2 text-muted-foreground">
+            If you don&apos;t have an account yet, we have sent a code to{" "}
+            <span className="font-medium">{email || "example@gmail.com"}</span>{" "}
+            Enter it below.
+          </p>
+        </div>
 
         <form
-          className="space-y-10"
+          className="flex flex-col gap-8 items-center w-full"
           onSubmit={(e) => {
             e.preventDefault();
             handleVerify(otpValue);
           }}
         >
           <InputOTP
-            className="justify-between w-full"
-            maxLength={8}
+            maxLength={6}
             value={otpValue}
             onChange={(value) => setOtpValue(value)}
             required
           >
-            <InputOTPGroup>
+            <InputOTPGroup className="*:data-[slot=input-otp-slot]:h-12 *:data-[slot=input-otp-slot]:w-11 *:data-[slot=input-otp-slot]:text-xl">
               <InputOTPSlot index={0} />
               <InputOTPSlot index={1} />
               <InputOTPSlot index={2} />
-              <InputOTPSlot index={3} />
             </InputOTPGroup>
 
             <InputOTPSeparator />
 
-            <InputOTPGroup>
+            <InputOTPGroup className="*:data-[slot=input-otp-slot]:h-12 *:data-[slot=input-otp-slot]:w-11 *:data-[slot=input-otp-slot]:text-xl">
+              <InputOTPSlot index={3} />
               <InputOTPSlot index={4} />
               <InputOTPSlot index={5} />
-              <InputOTPSlot index={6} />
-              <InputOTPSlot index={7} />
             </InputOTPGroup>
           </InputOTP>
+
+          <span className="text-muted-foreground text-sm">
+            Didn&apos;t receive code?{" "}
+            <span className="text-primary underline">Resend OTP</span>
+          </span>
+
           <AppButton className="w-full" type="submit" disabled={isVerifying}>
             Verify OTP
           </AppButton>
         </form>
-      </DialogContent>
-    </Dialog>
+      </Card>
+      <div className="flex justify-center items-center">
+      <Button asChild variant={'ghost'} onClick={() => setView('form')}>
+        <div className="flex gap-1 justify-center items-center text-muted-foreground">
+          <ArrowLeft className="size-4" /> Back
+        </div>
+      </Button>
+      </div>
+    </div>
   );
 }

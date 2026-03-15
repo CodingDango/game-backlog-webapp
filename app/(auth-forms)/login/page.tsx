@@ -18,7 +18,7 @@ export default function LoginPage() {
     username: "",
   });
 
-  const [openOtpDialog, setOpenOtpDialog] = useState(false);
+  const [view, setView] = useState<"form" | "otp">("form");
   const [isVerifying, setIsVerifying] = useState(false);
   const [isSendingOtp, setIsSendingOtp] = useState(false);
 
@@ -53,33 +53,36 @@ export default function LoginPage() {
     setIsSendingOtp(false);
 
     if (!error) {
-      setOpenOtpDialog(true);
+      setView("otp");
     } else {
       toast.error(error.message);
     }
   };
 
   return (
-    <div>
-      <AuthForm
-        setForm={setForm}
-        handleSubmit={handleLogin}
-        isSubmitting={isSendingOtp}
-        form={form}
-        headerText="Log in to Game Backlog"
-        spanText="Don't have an account?"
-        redirectText="Sign up."
-        redirectHref="/sign-up"
-        emailButtonText="Log In"
-      />
+    <>
+      {view === "form" && (
+        <AuthForm
+          setForm={setForm}
+          handleSubmit={handleLogin}
+          isSubmitting={isSendingOtp}
+          form={form}
+          headerText="Log in to Game Backlog"
+          spanText="Don't have an account?"
+          redirectText="Sign up."
+          redirectHref="/sign-up"
+          emailButtonText="Log In"
+        />
+      )}
 
-      <AuthVerifyOTP
-        onOpenChange={setOpenOtpDialog}
-        openDialog={openOtpDialog}
-        handleVerify={handleOtpVerify}
-        email={form.email}
-        isVerifying={isVerifying}
-      />
-    </div>
+      {view === "otp" && (
+        <AuthVerifyOTP
+          setView={setView}
+          handleVerify={handleOtpVerify}
+          email={form.email}
+          isVerifying={isVerifying}
+        />
+      )}
+    </>
   );
 }

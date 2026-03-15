@@ -57,12 +57,12 @@ export default function AuthForm({
   return (
     <div className="flex flex-col gap-8 ">
       <div className="flex justify-center">
-        <Card className="rounded-lg">
+        <Card className="rounded-lg w-18 h-18 flex justify-center items-center">
           <BrandLogo className="size-7" />
         </Card>
       </div>
       <div className="text-center space-y-2">
-        <h1 className="text-center text-3xl font-semibold">{headerText}</h1>
+        <h1 className="text-center text-2xl sm:text-3xl font-semibold">{headerText}</h1>
         <span className="text-sm text-muted-foreground">
           {spanText}{" "}
           <Link href={redirectHref} className="text-foreground font-semibold">
