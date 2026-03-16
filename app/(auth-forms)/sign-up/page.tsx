@@ -20,10 +20,10 @@ export default function SignUpPage() {
 
   const [view, setView] = useState<"form" | "otp">("form");
   const [isVerifying, setIsVerifying] = useState(false);
-  const [isSendingOtp, setIsSendingOtp] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSignUp = async (form: AuthFormData) => {
-    setIsSendingOtp(true);
+    setIsSubmitting(true);
 
     const { error: usernameError, data: username } = await supabase
       .from("profiles")
@@ -33,7 +33,17 @@ export default function SignUpPage() {
 
     if (username) {
       toast.error("Username already exists.");
-      setIsSendingOtp(false);
+      setIsSubmitting(false);
+      return;
+    }
+
+    const { data: emailExists, error: emailExistsError } = await supabase.rpc('check_email_exists', { 
+      email_input: form.email
+    });
+
+    if (emailExists) {
+      toast.error('Email already exists');
+      setIsSubmitting(false);
       return;
     }
 
@@ -42,7 +52,7 @@ export default function SignUpPage() {
       options: { shouldCreateUser: true, data: { username: form.username } },
     });
 
-    setIsSendingOtp(false);
+    setIsSubmitting(false);
 
     if (!error) {
       setView("otp");
@@ -74,11 +84,11 @@ export default function SignUpPage() {
   return (
     <>
       {view === "form" && (
-        
+
         <AuthForm
           setForm={setForm}
           handleSubmit={handleSignUp}
-          isSubmitting={isSendingOtp}
+          isSubmitting={isSubmitting}
           form={form}
           includeUser={true}
           headerText="Create an Account"
