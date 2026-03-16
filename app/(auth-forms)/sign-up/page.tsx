@@ -18,7 +18,7 @@ export default function SignUpPage() {
     username: "",
   });
 
-  const [openOtpDialog, setOpenOtpDialog] = useState(false);
+  const [view, setView] = useState<"form" | "otp">("form");
   const [isVerifying, setIsVerifying] = useState(false);
   const [isSendingOtp, setIsSendingOtp] = useState(false);
 
@@ -32,8 +32,8 @@ export default function SignUpPage() {
       .single();
 
     if (username) {
-      toast.error('Username already exists.');
-      setIsSendingOtp(false)
+      toast.error("Username already exists.");
+      setIsSendingOtp(false);
       return;
     }
 
@@ -45,7 +45,7 @@ export default function SignUpPage() {
     setIsSendingOtp(false);
 
     if (!error) {
-      setOpenOtpDialog(true);
+      setView("otp");
     } else {
       toast.error(error.message);
     }
@@ -72,27 +72,31 @@ export default function SignUpPage() {
   };
 
   return (
-    <div>
-      <AuthForm
-        setForm={setForm}
-        handleSubmit={handleSignUp}
-        isSubmitting={isSendingOtp}
-        form={form}
-        includeUser={true}
-        headerText="Create an Account"
-        spanText="Already have an account?"
-        redirectText="Log in."
-        redirectHref="/login"
-        emailButtonText="Create Account"
-      />
+    <>
+      {view === "form" && (
+        
+        <AuthForm
+          setForm={setForm}
+          handleSubmit={handleSignUp}
+          isSubmitting={isSendingOtp}
+          form={form}
+          includeUser={true}
+          headerText="Create an Account"
+          spanText="Already have an account?"
+          redirectText="Log in."
+          redirectHref="/login"
+          emailButtonText="Create Account"
+        />
+      )}
 
-      <AuthVerifyOTP
-        onOpenChange={setOpenOtpDialog}
-        openDialog={openOtpDialog}
-        handleVerify={handleOtpVerify}
-        email={form.email}
-        isVerifying={isVerifying}
-      />
-    </div>
+      {view === "otp" && (
+        <AuthVerifyOTP
+          setView={setView}
+          handleVerify={handleOtpVerify}
+          email={form.email}
+          isVerifying={isVerifying}
+        />
+      )}
+    </>
   );
 }

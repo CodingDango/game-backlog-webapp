@@ -22,7 +22,7 @@ export default function AuthFormLayout({ children }: Props) {
             </Link>
           </Button>
         </div>
-        <div>{children}</div>
+        <div className="max-w-96 w-full">{children}</div>
       </div>
     </div>
   );
