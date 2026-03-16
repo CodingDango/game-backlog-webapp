@@ -42,7 +42,7 @@ export default function SignUpPage() {
     });
 
     if (emailExists) {
-      toast.error('Email already exists');
+      toast.error('Email already exists.');
       setIsSubmitting(false);
       return;
     }
