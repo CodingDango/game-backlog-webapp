@@ -138,10 +138,10 @@ export interface StoreEntry {
   store: Store;
 }
 
-export type InsertResponse<T> =
+export type CustomResponse<T> =
   | {
       success: true;
-      inserted: T;
+      data: T;
     }
   | {
       success: false;

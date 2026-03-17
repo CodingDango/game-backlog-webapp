@@ -16,18 +16,16 @@ interface GameFormProps {
   isNewEntry: boolean;
   onSave: (cat: Category, rate: number) => void;
   onRemove: () => void;
-  isAdding?: boolean;
-  isSavingChanges?: boolean;
+  isLoading?: boolean;
 }
 export default function GameForm({
   title,
   defaultCategory,
   defaultRating,
   isNewEntry,
-  isAdding = false,
-  isSavingChanges = false,
   onSave,
   onRemove,
+  isLoading = false,
 }: GameFormProps) {
   const [category, setCategory] = useState<Category>(defaultCategory);
   const [rating, setRating] = useState<number>(defaultRating);
@@ -59,11 +57,11 @@ export default function GameForm({
 
       <div className="space-y-3">
         {isNewEntry ? (
-          <AppButton type="submit" className="w-full" icon={<Plus /> } isLoading={isAdding} loadingText="Adding to library">
+          <AppButton type="submit" className="w-full" icon={<Plus /> } isLoading={isLoading} loadingText="Adding to library">
             Add to library
           </AppButton>
         ) : (
-          <AppButton type="submit" className="w-full" icon={<Check /> } isLoading={isSavingChanges} loadingText="Saving">
+          <AppButton type="submit" className="w-full" icon={<Check /> } isLoading={isLoading} loadingText="Saving">
             Save Changes
           </AppButton>
         )}

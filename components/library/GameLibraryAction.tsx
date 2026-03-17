@@ -23,25 +23,48 @@ export default function GameLibraryAction({
   rawgId,
   isSessionLoading,
 }: Props) {
-  const { handleAddGame, handleRemoveGame } = useGameMutation();
+  const { handleAddGame, handleRemoveGame, handleUpdateGame } =
+    useGameMutation();
   const [view, setView] = useState<"closed" | "form" | "confirm">("closed");
   const [isRemoving, setIsRemoving] = useState(false);
-  const [isAdding, setIsAdding] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const isNew = !userGame?.category;
 
-  const onSave = async (newCategory: Category, newRating: number) => {
-    setIsAdding(true);
-    const res = await handleAddGame({ rawgId, category: newCategory, rating: newRating });
+  const onSave = async (category: Category, rating: number) => {
+    setIsSaving(true);
 
     if (isNew) {
-      if (!res.success) {
-        toast.error(`Could not add game to library: ${res.error}`);
-      } else {
-        toast.success(`Successfully added ${title || "game"} to the library`);
-      }
+      await handleAdd(category, rating);
+    } else {
+      await handleUpdate(category, rating);
     }
 
-    setIsAdding(false);
+    setIsSaving(false);
+  };
+
+  const handleAdd = async (category: Category, rating: number) => {
+    const res = await handleAddGame({
+      rawgId,
+      category: category,
+      rating: rating,
+    });
+
+    if (!res.success) {
+      toast.error(`Could not add game to library: ${res.error}`);
+    } else {
+      toast.success(`Successfully added ${title || "game"} to the library`);
+    }
+  };
+
+  const handleUpdate = async (newCategory: Category, newRating: number) => {
+    debugger;
+    const res = await handleUpdateGame({ rawgId, newCategory, newRating });
+
+    if (!res.success) {
+      toast.error("Could not update game in library.");
+    } else {
+      toast.success("Successfully updated game.");
+    }
   };
 
   const onRemove = async () => {
@@ -85,8 +108,7 @@ export default function GameLibraryAction({
             isNewEntry={!userGame?.category}
             onSave={onSave}
             onRemove={() => setView("confirm")}
-            isAdding={isAdding}
-            isSavingChanges={isAdding}
+            isLoading={isSaving}
           />
         )}
 

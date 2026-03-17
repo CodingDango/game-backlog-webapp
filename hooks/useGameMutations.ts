@@ -4,6 +4,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   addGameToLibrary,
   removeGameFromLibrary,
+  updateGameInLibrary,
 } from "@/services/libraryService";
 
 export function useGameMutation() {
@@ -16,7 +17,7 @@ export function useGameMutation() {
       rating,
     }: {
       rawgId: number;
-      category?: any;
+      category?: Category;
       rating?: number;
     }) => addGameToLibrary(rawgId, category, rating),
     onSuccess: () => {
@@ -31,8 +32,24 @@ export function useGameMutation() {
     },
   });
 
+  const updateMutation = useMutation({
+    mutationFn: ({
+      rawgId,
+      newCategory,
+      newRating,
+    }: {
+      rawgId: number;
+      newCategory: Category;
+      newRating: number;
+    }) => updateGameInLibrary(rawgId, newCategory, newRating),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["userGames"] });
+    },
+  });
+
   return {
     handleAddGame: addMutation.mutateAsync,
     handleRemoveGame: removeMutation.mutateAsync,
+    handleUpdateGame: updateMutation.mutateAsync,
   };
 }

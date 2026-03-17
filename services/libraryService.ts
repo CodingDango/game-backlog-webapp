@@ -5,11 +5,11 @@ import { RawgGame } from "../types/types";
 import type {
   Category,
   HydratedGame,
-  InsertResponse,
   UserGame,
   SuccessResponse,
   ErrorResponse,
   ApiResponse,
+  CustomResponse,
 } from "../types/types";
 import { getGames } from "./rawgServices";
 
@@ -63,7 +63,7 @@ export async function addGameToLibrary(
   rawgId: number,
   category: Category = "uncategorized",
   userRating: number | null = 0,
-): Promise<InsertResponse<RawgGame>> {
+): Promise<CustomResponse<RawgGame>> {
   const supabase = await createClient();
   const { data: authData, error: authError } = await supabase.auth.getUser();
 
@@ -74,17 +74,12 @@ export async function addGameToLibrary(
   const userId = authData.user.id;
   const { data: insertedData, error: insertErr } = await supabase
     .from("user_games")
-    .upsert(
-      {
-        user_id: userId,
-        rawg_id: rawgId,
-        user_rating: userRating,
-        category,
-      },
-      {
-        onConflict: "user_id,rawg_id",
-      },
-    )
+    .insert({
+      user_id: userId,
+      rawg_id: rawgId,
+      user_rating: userRating,
+      category,
+    })
     .select("*")
     .single();
 
@@ -92,7 +87,39 @@ export async function addGameToLibrary(
     return { success: false, error: insertErr.message };
   }
 
-  return { success: true, inserted: insertedData };
+  return { success: true, data: insertedData };
+}
+
+export async function updateGameInLibrary(
+  rawgId: number,
+  newCategory: Category,
+  newUserRating: number,
+): Promise<CustomResponse<UserGame>> {
+  const supabase = await createClient();
+  const { data: authData, error: authError } = await supabase.auth.getUser();
+
+  if (authError) {
+    return { success: false, error: authError.message };
+  }
+
+  const userId = authData.user.id;
+  const { data: updatedData, error: insertErr } = await supabase
+    .from("user_games")
+    .update({
+      user_id: userId,
+      rawg_id: rawgId,
+      user_rating: newUserRating,
+      category: newCategory,
+    })
+    .eq("rawg_id", rawgId)
+    .select("*")
+    .single();
+
+  if (insertErr) {
+    return { success: false, error: insertErr.message };
+  }
+
+  return { success: true, data: updatedData };
 }
 
 export async function removeGameFromLibrary(rawgId: number) {
@@ -175,6 +202,7 @@ export async function getHydratedUserLibrary(
     results: hydrated,
   };
 }
+
 export async function getUserGame(
   rawgId: number,
 ): Promise<UserGame | ErrorResponse> {
