@@ -47,6 +47,7 @@ export default function GameLibraryAction({
       rawgId,
       category: category,
       rating: rating,
+      game_name: title
     });
 
     if (!res.success) {
@@ -58,7 +59,7 @@ export default function GameLibraryAction({
 
   const handleUpdate = async (newCategory: Category, newRating: number) => {
     debugger;
-    const res = await handleUpdateGame({ rawgId, newCategory, newRating });
+    const res = await handleUpdateGame({ rawgId, newCategory, newRating, game_name: title });
 
     if (!res.success) {
       toast.error("Could not update game in library.");
@@ -69,7 +70,7 @@ export default function GameLibraryAction({
 
   const onRemove = async () => {
     setIsRemoving(true);
-    const res = await handleRemoveGame(rawgId);
+    const res = await handleRemoveGame({ rawgId, game_name: title });
 
     if (!res.success) {
       toast.error("Could not remove game from library");

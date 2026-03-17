@@ -63,6 +63,7 @@ export async function addGameToLibrary(
   rawgId: number,
   category: Category = "uncategorized",
   userRating: number | null = 0,
+  game_name: string,
 ): Promise<CustomResponse<RawgGame>> {
   const supabase = await createClient();
   const { data: authData, error: authError } = await supabase.auth.getUser();
@@ -87,6 +88,13 @@ export async function addGameToLibrary(
     return { success: false, error: insertErr.message };
   }
 
+  await supabase.from("activity_logs").insert({
+    user_id: userId,
+    action_type: "added",
+    game_name: game_name,
+    to_category: category,
+  });
+
   return { success: true, data: insertedData };
 }
 
@@ -94,6 +102,7 @@ export async function updateGameInLibrary(
   rawgId: number,
   newCategory: Category,
   newUserRating: number,
+  game_name: string,
 ): Promise<CustomResponse<UserGame>> {
   const supabase = await createClient();
   const { data: authData, error: authError } = await supabase.auth.getUser();
@@ -119,10 +128,17 @@ export async function updateGameInLibrary(
     return { success: false, error: insertErr.message };
   }
 
+  await supabase.from("activity_logs").insert({
+    user_id: userId,
+    action_type: "category_changed",
+    game_name: game_name,
+    to_category: newCategory,
+  });
+
   return { success: true, data: updatedData };
 }
 
-export async function removeGameFromLibrary(rawgId: number) {
+export async function removeGameFromLibrary(rawgId: number, game_name: string) {
   const supabase = await createClient();
   const {
     data: { user },
@@ -149,6 +165,12 @@ export async function removeGameFromLibrary(rawgId: number) {
   if (error) {
     return { success: false, error: error.message };
   }
+
+  await supabase.from("activity_logs").insert({
+    user_id: user.id,
+    action_type: "removed",
+    game_name: game_name,
+  });
 
   return { success: true };
 }
