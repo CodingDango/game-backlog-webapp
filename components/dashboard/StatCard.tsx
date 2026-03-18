@@ -11,7 +11,7 @@ export default function StatCard({ title, value, Icon }: StatCardProps) {
   return (
     <Card>
       <CardHeader className="flex justify-between gap-4">
-        <CardTitle className="font-medium">{title}</CardTitle>
+        <CardTitle>{title}</CardTitle>
         <span className="text-muted-foreground"><Icon/></span>
       </CardHeader>
       <div className="text-3xl sm:text-4xl font-semibold">{value}</div>

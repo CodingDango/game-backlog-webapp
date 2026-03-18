@@ -2,6 +2,7 @@
 
 import Profile from "@/components/dashboard/Profile";
 import StatCard from "@/components/dashboard/StatCard";
+import UserActivity from "@/components/dashboard/UserActivity";
 import UserChart from "@/components/dashboard/UserChart";
 
 import { Skeleton } from "@/components/ui/skeleton";
@@ -60,6 +61,9 @@ export default function ProfilePage() {
           ) : (
             <UserChart gamesCounterMap={gamesCounterMap} />
           )}
+        </div>
+        <div>
+          <UserActivity/>
         </div>
       </div>
     </div>
