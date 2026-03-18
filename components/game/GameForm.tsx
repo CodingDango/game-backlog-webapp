@@ -6,7 +6,7 @@ import { FormEvent, useState } from "react";
 import { Category } from "@/types/types";
 
 import RatingSelector from "../common/Rating";
-import { Check, CirclePlus, Plus, Trash } from "lucide-react";
+import { Check, Plus, Trash } from "lucide-react";
 import AppButton from "../common/AppButton";
 
 interface GameFormProps {
@@ -29,6 +29,7 @@ export default function GameForm({
 }: GameFormProps) {
   const [category, setCategory] = useState<Category>(defaultCategory);
   const [rating, setRating] = useState<number>(defaultRating);
+  const isNoChange = category === defaultCategory && rating === defaultRating;
 
   const handleOnSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -57,21 +58,34 @@ export default function GameForm({
 
       <div className="space-y-3">
         {isNewEntry ? (
-          <AppButton type="submit" className="w-full" icon={<Plus /> } isLoading={isLoading} loadingText="Adding to library">
+          <AppButton
+            type="submit"
+            className="w-full"
+            icon={<Plus />}
+            isLoading={isLoading}
+            loadingText="Adding to library"
+          >
             Add to library
           </AppButton>
         ) : (
-          <AppButton type="submit" className="w-full" icon={<Check /> } isLoading={isLoading} loadingText="Saving">
+          <AppButton
+            type="submit"
+            className="w-full"
+            icon={<Check />}
+            isLoading={isLoading}
+            loadingText="Saving"
+            disabled={isNoChange}
+          >
             Save Changes
           </AppButton>
         )}
-        
+
         {!isNewEntry && (
           <Button
             type="button"
             className="w-full"
             variant={"secondary"}
-            onClick={onRemove}  
+            onClick={onRemove}
           >
             <Trash /> Remove from Library
           </Button>

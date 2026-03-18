@@ -189,14 +189,25 @@ export interface SocialEntryLink {
 
 export type GameStatKey = "total" | Category;
 
+export type UserAction = "added" | "removed" | "category_changed";
+
 export interface AuthFormData {
   email: string;
   username: string;
 }
 
 export interface UserProfile {
-  id: string;
+  id: string; // uuid
   username: string;
   created_at: string;
   avatar_url: string;
+}
+
+export interface UserActivity {
+  id: number;
+  created_at: string;
+  user_id: string;
+  action_type: UserAction;
+  to_category: Category;
+  game_name: string;
 }

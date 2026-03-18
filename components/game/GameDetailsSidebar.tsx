@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { AppImage } from "@/components/common/AppImage";
 import { Plus } from "lucide-react";
-import { RawgGame, RawgGameDetails, SocialEntryLink, UserGame } from "@/types/types";
+import { RawgGameDetails, SocialEntryLink, UserGame } from "@/types/types";
 import { Session } from "@supabase/supabase-js";
 
 import GameLibraryAction from "@/components/library/GameLibraryAction";

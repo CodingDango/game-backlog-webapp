@@ -4,7 +4,7 @@ import { UserProfile } from "@/types/types";
 import { Skeleton } from "../ui/skeleton";
 
 interface ProfileProps {
-  profile?: UserProfile;
+  profile?: UserProfile | null;
 }
 
 export default function Profile({ profile }: ProfileProps) {
