@@ -19,7 +19,7 @@ export default function ProfilePage() {
     isLoading,
     isLoadingProfile,
     isLoadingGames,
-    statCards
+    statCards,
   } = useUserProfile(username);
 
   if (!profile && !isLoadingProfile) {
@@ -36,34 +36,36 @@ export default function ProfilePage() {
         <Profile profile={profile} />
       </header>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {isLoading
-          ? Array.from({ length: 4 }).map((_, idx) => (
-              <Skeleton key={`stats-skeleton-${idx}`} className="h-[130px]" />
-            ))
-          : statCards.map(({ title, Icon, keyValue }) => (
-              <StatCard
-                key={title}
-                title={title}
-                value={gamesCounterMap[keyValue] ?? 0}
-                Icon={Icon}
-              />
-            ))}
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 w-full h-full">
-        <div className="col-span-3 w-full h-full">
-          {isLoading ? (
-            <Skeleton
-              className="w-full h-full min-h-[410px]"
-              key="graph-skeleton"
-            />
-          ) : (
-            <UserChart gamesCounterMap={gamesCounterMap} />
-          )}
+      <div className="space-y-4 sm:space-y-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          {isLoading
+            ? Array.from({ length: 4 }).map((_, idx) => (
+                <Skeleton key={`stats-skeleton-${idx}`} className="h-[130px]" />
+              ))
+            : statCards.map(({ title, Icon, keyValue }) => (
+                <StatCard
+                  key={title}
+                  title={title}
+                  value={gamesCounterMap[keyValue] ?? 0}
+                  Icon={Icon}
+                />
+              ))}
         </div>
-        <div>
-          <UserActivity/>
+
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6 w-full h-full">  
+          <div className="lg:col-span-3 w-full h-full">
+            {isLoading ? (
+              <Skeleton
+                className="w-full h-full min-h-[410px]"
+                key="graph-skeleton"
+              />
+            ) : (
+              <UserChart gamesCounterMap={gamesCounterMap} />
+            )}
+          </div>
+          <div className="min-h-[410px] w-full h-full">
+            <UserActivity />
+          </div>
         </div>
       </div>
     </div>
