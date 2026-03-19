@@ -2,7 +2,7 @@ import { Gamepad2, Play, Check, History } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { createClient } from "@/lib/supabase/client";
 import { getUserGames } from "@/services/libraryService";
-import { GameStatKey, UserProfile } from "@/types/types";
+import { GameStatKey, UserActivity, UserProfile } from "@/types/types";
 import { useMemo } from "react";
 import { toast } from "sonner";
 
@@ -17,24 +17,26 @@ export function useUserProfile(username: string) {
   const supabase = createClient();
 
   // Fetch profile
-  const { data: profile, isLoading: isLoadingProfile } = useQuery<UserProfile | null>({
-    refetchOnWindowFocus: true,
-    staleTime: 0,
-    queryKey: ["user", username],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("username", username)
-        .single();
+  const { data: profile, isLoading: isLoadingProfile } =
+    useQuery<UserProfile | null>({
+      refetchOnWindowFocus: true,
+      staleTime: 0,
+      queryKey: ["user", username],
+      queryFn: async () => {
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("username", username)
+          .single();
 
-      if (error) {
-        return null;
-      }
+        if (error) {
+          toast.error('Could not fetch user history.');
+          return null;
+        }
 
-      return data as UserProfile;
-    },
-  });
+        return data as UserProfile;
+      },
+    });
 
   // Fetch user games
   const { data: userGames, isLoading: isLoadingGames } = useQuery({
@@ -53,6 +55,31 @@ export function useUserProfile(username: string) {
       }
 
       return res.results;
+    },
+  });
+
+  // Fetch user activity
+  const { data: userHistory, isLoading: isLoadingHistory } = useQuery({
+    enabled: !!profile,
+    refetchOnWindowFocus: true,
+    staleTime: 0,
+    queryKey: ["user", username, "activity"],
+    queryFn: async () => {
+      if (!profile) return null;
+
+      const { data: userHistory, error } = await supabase
+        .from("activity_logs")
+        .select("*")
+        .order('created_at', { ascending: false })
+        .eq('user_id', profile.id)
+        .limit(10);
+
+      if (error) {
+        toast.error("Could not fetch user history.");
+        return null;
+      }
+
+      return userHistory as UserActivity[];
     },
   });
 
@@ -78,12 +105,14 @@ export function useUserProfile(username: string) {
   }, [userGames]);
 
   return {
+    statCards,
     profile,
     userGames,
+    userHistory,
     gamesCounterMap,
     isLoading: isLoadingProfile || isLoadingGames,
+    isLoadingHistory,
     isLoadingProfile,
     isLoadingGames,
-    statCards
   };
 }

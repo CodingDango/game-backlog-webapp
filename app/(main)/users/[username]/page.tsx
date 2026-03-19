@@ -2,7 +2,7 @@
 
 import Profile from "@/components/dashboard/Profile";
 import StatCard from "@/components/dashboard/StatCard";
-import UserActivity from "@/components/dashboard/UserActivity";
+import RecentUserActivity from "@/components/dashboard/RecentUserActivity";
 import UserChart from "@/components/dashboard/UserChart";
 
 import { Skeleton } from "@/components/ui/skeleton";
@@ -18,7 +18,8 @@ export default function ProfilePage() {
     gamesCounterMap,
     isLoading,
     isLoadingProfile,
-    isLoadingGames,
+    isLoadingHistory,
+    userHistory,
     statCards,
   } = useUserProfile(username);
 
@@ -63,8 +64,8 @@ export default function ProfilePage() {
               <UserChart gamesCounterMap={gamesCounterMap} />
             )}
           </div>
-          <div className="min-h-[410px] w-full h-full">
-            <UserActivity />
+          <div className="max-h-[410px] w-full h-full overflow-hidden">
+            <RecentUserActivity activityList={userHistory || undefined}/>
           </div>
         </div>
       </div>
