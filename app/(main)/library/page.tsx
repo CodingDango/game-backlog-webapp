@@ -91,10 +91,10 @@ export default function UserLibrary() {
             </PopoverTrigger>
             <PopoverContent
               align="start"
-              className="flex flex-col gap-4 max-w-56"
+              className="flex flex-col gap-4 max-w-44"
             >
               <PopoverHeader>
-                <PopoverTitle className="text-muted-foreground">
+                <PopoverTitle>
                   Filter by categories
                 </PopoverTitle>
               </PopoverHeader>
