@@ -30,7 +30,7 @@ export function useUserProfile(username: string) {
           .single();
 
         if (error) {
-          toast.error('Could not fetch user history.');
+          toast.error("Could not fetch user history.");
           return null;
         }
 
@@ -70,9 +70,9 @@ export function useUserProfile(username: string) {
       const { data: userHistory, error } = await supabase
         .from("activity_logs")
         .select("*")
-        .order('created_at', { ascending: false })
-        .eq('user_id', profile.id)
-        .limit(10);
+        .order("created_at", { ascending: false })
+        .eq("user_id", profile.id)
+        .limit(15);
 
       if (error) {
         toast.error("Could not fetch user history.");

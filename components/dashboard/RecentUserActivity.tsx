@@ -1,39 +1,66 @@
-import { CirclePlus, Edit, LucideIcon, Plus, Trash } from "lucide-react";
+import {
+  ArrowRight,
+  CirclePlus,
+  CircleX,
+  Edit,
+  LucideIcon,
+  Plus,
+  Trash,
+} from "lucide-react";
 import { Badge } from "../ui/badge";
-import { Card, CardTitle } from "../ui/card";
+import { Card, CardTitle, CardDescription } from "../ui/card";
 import { UserAction, UserActivity } from "@/types/types";
 import { formatTimestamp } from "@/lib/utils";
 import { ScrollArea } from "../ui/scroll-area";
 import { ReactNode } from "react";
+import { Button } from "../ui/button";
+import Link from "next/link";
 
 export default function RecentUserActivity({
   activityList = [],
 }: {
   activityList?: UserActivity[];
 }) {
-  console.log(activityList);
-
   return (
     <Card className="h-full px-0!">
-      <CardTitle className="px-4 lg:px-6">Recent Activity</CardTitle>
+      <CardTitle className="px-4 lg:px-6 flex justify-between">
+        Recent Activity
+      </CardTitle>
       <ScrollArea className="h-full overflow-hidden px-4 lg:px-6">
-        <div className="flex flex-col gap-y-6">
-          {activityList.map((activity, idx) => {
-            const isLast = idx == activityList.length - 1;
+        {[].length ? (
+          <div className="flex flex-col gap-y-5">
+            {activityList.map((activity, idx) => {
+              const isLast = idx == activityList.length - 1;
 
-            return (
-              <div className="flex gap-3" key={`activity-icon-${activity.action_type}-${idx}`}>
-                <ActionIcon
-                  actionType={activity.action_type}
-                  includeConnector={!isLast}
-                />
-                <ActivityInfo
-                  activity={activity}
-                />
-              </div>
-            );
-          })}
-        </div>
+              return (
+                <div
+                  className="flex gap-3"
+                  key={`activity-icon-${activity.action_type}-${idx}`}
+                >
+                  <ActionIcon
+                    actionType={activity.action_type}
+                    includeConnector={!isLast}
+                  />
+                  <ActivityInfo activity={activity} />
+                </div>
+              );
+            })}
+            <Link href={"/activity"} className="w-full">
+              <Button variant={"secondary"} asChild>
+                <div className="w-full">
+                  See more <ArrowRight />
+                </div>
+              </Button>
+            </Link>
+          </div>
+        ) : (
+          <div className="flex gap-2">
+            <CircleX className="mt-1 size-6 text-muted-foreground" />
+            <span className="text-muted-foreground">
+              User has no recorded actions
+            </span>
+          </div>
+        )}
       </ScrollArea>
     </Card>
   );
