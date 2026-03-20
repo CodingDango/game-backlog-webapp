@@ -83,7 +83,7 @@ export function useHydratedLibrary(userId?: string) {
   const userIdToFetch = userId || session?.user?.id;
 
   const query = useQuery({
-    enabled: !!userId,
+    enabled: !!userIdToFetch,
     refetchOnWindowFocus: true,
     staleTime: 0,
     queryKey: ["userGames", 'hydrated', userIdToFetch],

@@ -18,6 +18,7 @@ import { UserProfile } from "@/types/types";
 
 interface Props {
   children: ReactNode;
+  providedSession: Session | null;
 }
 
 interface AuthContextType {
@@ -39,30 +40,22 @@ export const useAuth = (): AuthContextType | never => {
   return context;
 };
 
-export const AuthProvider = ({ children }: Props) => {
-  const [session, setSession] = useState<Session | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-
+export const AuthProvider = ({ children, providedSession }: Props) => {
   const router = useRouter();
   const supabase = createClient();
 
+  const [session, setSession] = useState<Session | null>(providedSession);
+  const [isLoading, setIsLoading] = useState(true);
+
+
   useEffect(() => {
-    const checkSession = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      setSession(session);
-      setIsLoading(false);
-    };
-
-    checkSession();
-
     const { data: authListener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
         setSession(session);
         setIsLoading(false);
 
         if (_event === "SIGNED_OUT") {
+          router.push("/login");
           router.refresh();
         }
       },
@@ -75,8 +68,6 @@ export const AuthProvider = ({ children }: Props) => {
 
   const { data: profile, error } = useQuery({
     enabled: !!session,
-    refetchOnWindowFocus: true,
-    staleTime: 0,
     queryKey: ["user", session?.user.id],
     queryFn: async () => {
       const { data, error } = await supabase

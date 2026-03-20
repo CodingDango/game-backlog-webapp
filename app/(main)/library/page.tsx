@@ -8,7 +8,6 @@ import { Filter } from "lucide-react";
 import {
   Popover,
   PopoverContent,
-  PopoverDescription,
   PopoverHeader,
   PopoverTitle,
   PopoverTrigger,
@@ -17,7 +16,6 @@ import {
 import LibraryCategories from "@/components/library/LibraryCategories";
 import GameGrid from "@/components/game/GameGrid";
 import AppDropdown from "@/components/common/AppDropdown";
-import AppSearch from "@/components/search/AppSearch";
 import SearchInput from "@/components/search/SearchInput";
 
 type SortFilter = "newest" | "oldest" | "title-asc" | "title-desc";
@@ -113,11 +111,13 @@ export default function UserLibrary() {
             items={sortDropdownItems}
           />
         </div>
-
-        {/* <LibraryCategories value={category} onValueChange={setCategory} /> */}
       </div>
 
-      <GameGrid isLoading={isLoading} rawgGames={games} length={15} />
+      {hydratedLibrary?.length == 0 && !isLoading ? (
+        <span>Your library is empty. You should add some games!</span>
+      ) : (
+        <GameGrid isLoading={isLoading} rawgGames={games} length={15} />
+      )}
     </div>
   );
 }

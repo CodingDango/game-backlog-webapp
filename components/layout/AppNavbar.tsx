@@ -7,6 +7,7 @@ import Link from "next/link";
 import AppSearch from "../search/AppSearch";
 import AvatarMenu from "../auth/AvatarMenu";
 import BrandLogo from "../common/BrandLogo";
+import { Skeleton } from "../ui/skeleton";
 
 export default function AppNavbar() {
   const { session, logOut, userProfile } = useAuth();
@@ -24,8 +25,9 @@ export default function AppNavbar() {
             </div>
           </div>
 
-          {session && userProfile ? (
-            <AvatarMenu logOut={logOut} username={userProfile.username} />
+          {session ? (
+            userProfile ? (<AvatarMenu logOut={logOut} username={userProfile.username} />)
+            : <Skeleton className="size-8 rounded-full"/>
           ) : (
             <div className="flex gap-4">
               <Button variant={"outline"}>

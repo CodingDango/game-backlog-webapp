@@ -1,5 +1,6 @@
 import { RawgGame } from "@/types/types";
 import GameCard from "./GameCard";
+import { FrownIcon } from "lucide-react";
 
 interface Props {
   rawgGames: RawgGame[];
@@ -24,7 +25,7 @@ export default function GameGrid({ rawgGames, isLoading = false, length = 15}: P
       )}
 
       {!isLoading && !rawgGames.length && (
-        <span>No games found..</span>
+        <span className="items-center flex gap-3"><FrownIcon/> No games found..</span>
       )}
     </div>
   );
