@@ -79,7 +79,7 @@ export function AppPieChart({
             <Pie data={chartData} dataKey={chartDataKey}>
               <LabelList
                 dataKey={labelDataKey}
-                className="!fill-primary"
+                className="fill-primary!"
                 stroke="none"
                 fill="var(--color-labelColor)"
                 formatter={(value: string) => chartConfig[value]?.label}

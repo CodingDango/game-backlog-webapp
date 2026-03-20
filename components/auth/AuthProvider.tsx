@@ -66,7 +66,7 @@ export const AuthProvider = ({ children, providedSession }: Props) => {
     };
   }, [supabase, router]);
 
-  const { data: profile, error } = useQuery({
+  const { data: profile } = useQuery({
     enabled: !!session,
     queryKey: ["user", session?.user.id],
     queryFn: async () => {

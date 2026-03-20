@@ -14,11 +14,9 @@ export default function ProfilePage() {
   const { username } = useParams<{ username: string }>();
   const {
     profile,
-    userGames,
     gamesCounterMap,
     isLoading,
     isLoadingProfile,
-    isLoadingHistory,
     userHistory,
     statCards,
   } = useUserProfile(username);

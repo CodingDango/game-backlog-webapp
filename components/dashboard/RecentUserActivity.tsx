@@ -1,6 +1,5 @@
 import {
   ArrowRight,
-  CirclePlus,
   CircleX,
   Edit,
   LucideIcon,
@@ -8,7 +7,7 @@ import {
   Trash,
 } from "lucide-react";
 import { Badge } from "../ui/badge";
-import { Card, CardTitle, CardDescription } from "../ui/card";
+import { Card, CardTitle } from "../ui/card";
 import { UserAction, UserActivity } from "@/types/types";
 import { formatTimestamp } from "@/lib/utils";
 import { ScrollArea } from "../ui/scroll-area";

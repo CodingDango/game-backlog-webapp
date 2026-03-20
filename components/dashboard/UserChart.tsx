@@ -1,8 +1,8 @@
 import { Card, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import { AppPieChart } from "../charts/AppPieChart";
 import { Progress } from "../ui/progress";
-import { Category, UserGame } from "@/types/types";
-import { useEffect, useMemo } from "react";
+import { Category } from "@/types/types";
+import { useMemo } from "react";
 import { CATEGORIES } from "@/constants/gameConstants";
 
 const chartConfig = {
