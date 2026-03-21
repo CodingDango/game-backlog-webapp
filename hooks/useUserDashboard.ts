@@ -17,8 +17,6 @@ const statCards = [
 ] as const;
 
 export function useUserDashboard(username: string) {
-  const supabase = createClient();
-
   const { profile, isLoadingProfile  } = useProfile({ username });
 
   const { userGames, isLoadingUserGames } = useUserGames({ userId: profile?.id });
