@@ -19,16 +19,12 @@ const statCards = [
 export function useUserDashboard(username: string) {
   const supabase = createClient();
 
-  // Fetch profile
   const { profile, isLoadingProfile  } = useProfile({ username });
 
-  // Fetch user games
   const { userGames, isLoadingUserGames } = useUserGames({ userId: profile?.id });
 
-  // Fetch user activity
   const { userActivity, isLoadingActivity } = useActivity({ userId: profile?.id });
 
-  // Calculate games counter map
   const gamesCounterMap: Record<GameStatKey, number> = useMemo(() => {
     const map = {
       total: 0,
