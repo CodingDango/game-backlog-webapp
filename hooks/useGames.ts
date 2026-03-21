@@ -1,7 +1,7 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { getHydratedUserLibrary } from "@/services/libraryService";
 import { getGames } from "@/services/rawgServices";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { toast } from "sonner";
 import { keyByMap } from "@/lib/utils";
 import { GetGamesParams, UserGame } from "@/types/types";
@@ -46,7 +46,7 @@ export function useRawgGames({
   };
 }
 
-export function useLibraryMap(session: any) {
+export function useLibraryMap(session: any, errorMsg?: string) {
   const query = useQuery({
     enabled: Boolean(session),
     queryKey: ["userGames"],
@@ -56,7 +56,7 @@ export function useLibraryMap(session: any) {
       if (userGamesRes.success) {
         return userGamesRes.results;
       } else {
-        toast.error(userGamesRes.error);
+        toast.error(errorMsg || userGamesRes.error);
         return [];
       }
     },
@@ -78,6 +78,33 @@ export function useLibraryMap(session: any) {
   };
 }
 
+export function useUserGames({ userId }: { userId?: string }) {
+  const { data: userGames, isLoading: isLoadingUserGames, isError } = useQuery({
+    enabled: !!userId,
+    refetchOnWindowFocus: true,
+    staleTime: 0,
+    queryKey: ["user", userId, "games"],
+    queryFn: async () => {
+      if (!userId) return null;
+
+      const res = await getUserGames(userId);
+
+      if (!res.success) {
+        throw new Error(res.error)
+      }
+
+      return res.results;
+    },
+  });
+
+  useEffect(() => {
+    if (!isError) return;
+    toast.error('Could not fetch user games');
+  }, [isError]);
+
+  return { userGames, isLoadingUserGames };
+}
+
 export function useHydratedLibrary(userId?: string) {
   const { session } = useAuth();
   const userIdToFetch = userId || session?.user?.id;
@@ -86,7 +113,7 @@ export function useHydratedLibrary(userId?: string) {
     enabled: !!userIdToFetch,
     refetchOnWindowFocus: true,
     staleTime: 0,
-    queryKey: ["userGames", 'hydrated', userIdToFetch],
+    queryKey: ["userGames", "hydrated", userIdToFetch],
     queryFn: async () => {
       const res = await getHydratedUserLibrary(userIdToFetch);
 

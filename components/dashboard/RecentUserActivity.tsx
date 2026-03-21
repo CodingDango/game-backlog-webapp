@@ -16,9 +16,11 @@ import { Button } from "../ui/button";
 import Link from "next/link";
 
 export default function RecentUserActivity({
-  activityList = [],
+  userActivity = [],
+  username,
 }: {
-  activityList?: UserActivity[];
+  userActivity?: UserActivity[];
+  username: string;
 }) {
   return (
     <Card className="h-full px-0!">
@@ -26,10 +28,10 @@ export default function RecentUserActivity({
         Recent Activity
       </CardTitle>
       <ScrollArea className="h-full overflow-hidden px-4 lg:px-6">
-        {[].length ? (
+        {userActivity.length ? (
           <div className="flex flex-col gap-y-5">
-            {activityList.map((activity, idx) => {
-              const isLast = idx == activityList.length - 1;
+            {userActivity.map((activity, idx) => {
+              const isLast = idx == userActivity.length - 1;
 
               return (
                 <div
@@ -44,7 +46,7 @@ export default function RecentUserActivity({
                 </div>
               );
             })}
-            <Link href={"/activity"} className="w-full">
+            <Link href={`/users/${username}/activity`} className="w-full">
               <Button variant={"secondary"} asChild>
                 <div className="w-full">
                   See more <ArrowRight />

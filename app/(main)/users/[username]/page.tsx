@@ -6,7 +6,7 @@ import RecentUserActivity from "@/components/dashboard/RecentUserActivity";
 import UserChart from "@/components/dashboard/UserChart";
 
 import { Skeleton } from "@/components/ui/skeleton";
-import { useUserProfile } from "@/hooks/useUserProfile";
+import { useUserDashboard } from "@/hooks/useUserDashboard";
 import { Frown } from "lucide-react";
 import { useParams } from "next/navigation";
 
@@ -15,11 +15,12 @@ export default function ProfilePage() {
   const {
     profile,
     gamesCounterMap,
-    isLoading,
+    isLoadingUserGames,
     isLoadingProfile,
-    userHistory,
+    isLoadingActivity,
+    userActivity,
     statCards,
-  } = useUserProfile(username);
+  } = useUserDashboard(username);
 
   if (!profile && !isLoadingProfile) {
     return (
@@ -37,7 +38,7 @@ export default function ProfilePage() {
 
       <div className="space-y-4 sm:space-y-6">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-          {isLoading
+          {isLoadingUserGames
             ? Array.from({ length: 4 }).map((_, idx) => (
                 <Skeleton key={`stats-skeleton-${idx}`} className="h-[130px]" />
               ))
@@ -53,7 +54,7 @@ export default function ProfilePage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6 w-full h-full">  
           <div className="lg:col-span-3 w-full h-full">
-            {isLoading ? (
+            {isLoadingUserGames ? (
               <Skeleton
                 className="w-full h-full min-h-[410px]"
                 key="graph-skeleton"
@@ -63,7 +64,11 @@ export default function ProfilePage() {
             )}
           </div>
           <div className="max-h-[410px] w-full h-full overflow-hidden">
-            <RecentUserActivity activityList={userHistory || undefined}/>
+            {isLoadingActivity ? (
+              <Skeleton className="w-full h-full"/>
+            ) : (
+              <RecentUserActivity userActivity={userActivity || undefined} username={username}/>
+            )}
           </div>
         </div>
       </div>
