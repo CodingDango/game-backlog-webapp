@@ -2,9 +2,8 @@
 
 ## TODOS
 
-1. Add a dedicated route for the users activity. `users\[username]\activity`
-2. Logic for getting users history  should be a useInfiniteQuery. hint is to use the range() function from supabase.
-3. Implement global query cache error handler with tanstack
+1. Logic for getting users history  should be a useInfiniteQuery. hint is to use the range() function from supabase.
+2. Implement global query cache error handler with tanstack
 
 ## FINISHED
 
@@ -17,3 +16,4 @@
 7. Improve Game Form Experience but not letting user save changes when there are no change.
 8. Add the UI for the history tracker to the users profile page.
 9. Make profile picture consistent throughout pages. ( app navbar has different profile to route `users\[username]` dashboard.)
+10. Add a dedicated route for the users activity. `users\[username]\activity`
