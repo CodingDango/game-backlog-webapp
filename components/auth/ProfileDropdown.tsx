@@ -21,7 +21,10 @@ interface ProfileDropdownProps {
   profile?: UserProfile;
 }
 
-export default function ProfileDropdown({ logOut, profile  }: ProfileDropdownProps) {
+export default function ProfileDropdown({
+  logOut,
+  profile,
+}: ProfileDropdownProps) {
   const [openLogout, setOpenLogout] = useState<boolean>(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
@@ -35,23 +38,36 @@ export default function ProfileDropdown({ logOut, profile  }: ProfileDropdownPro
     <>
       <DropdownMenu>
         <DropdownMenuTrigger className="cursor-pointer">
-          <UserAvatar profile={profile} fallbackClass="text-sm" avatarClass="size-9"/>
+          <UserAvatar
+            profile={profile}
+            fallbackClass="text-sm"
+            avatarClass="size-9"
+          />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>My Account</DropdownMenuLabel>
+
           <DropdownMenuSeparator />
+
           <DropdownMenuItem asChild>
             <Link href={`/users/${profile?.username}`}>Profile</Link>
           </DropdownMenuItem>
+
           <DropdownMenuItem asChild>
             <Link href={"/library"}>Library</Link>
           </DropdownMenuItem>
+
+          <DropdownMenuItem asChild>
+            <Link href={`/users/${profile?.username}/activity`}>Activity</Link>
+          </DropdownMenuItem>
+
           <DropdownMenuItem
             variant="destructive"
             onClick={() => setOpenLogout((prev) => !prev)}
-          >
-            Log out
-          </DropdownMenuItem>
+          >Log out</DropdownMenuItem>
+          
+
+          
         </DropdownMenuContent>
       </DropdownMenu>
 

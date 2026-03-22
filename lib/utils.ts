@@ -1,7 +1,10 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { Store, SystemRequirements } from "../types/types";
-import { format } from 'date-fns'
+import {   format, 
+  isToday, 
+  isYesterday, 
+} from 'date-fns'
 
 interface MetascoreColor {
   bgCol: string;
@@ -68,6 +71,20 @@ export function formatTimestamp(timestamp: string): string {
   const formattedDate = format(date, 'MMM d, y');
 
   return formattedDate;
+}
+
+export function formatActivityTimestamp(date: Date | string) {
+  const d = new Date(date);
+
+  if (isToday(d)) {
+    return `Today, ${format(d, "H:mm")}`;
+  }
+
+  if (isYesterday(d)) {
+    return `Yesterday, ${format(d, "H:mm")}`;
+  }
+
+  return format(d, "MMM d, yyyy");
 }
 
 export function keyByMap(array: any[], key: string) {

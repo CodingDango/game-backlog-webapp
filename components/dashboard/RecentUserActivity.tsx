@@ -9,7 +9,7 @@ import {
 import { Badge } from "../ui/badge";
 import { Card, CardTitle } from "../ui/card";
 import { UserAction, UserActivity } from "@/types/types";
-import { formatTimestamp } from "@/lib/utils";
+import { cn, formatActivityTimestamp, formatTimestamp } from "@/lib/utils";
 import { ScrollArea } from "../ui/scroll-area";
 import { ReactNode } from "react";
 import { Button } from "../ui/button";
@@ -42,7 +42,7 @@ export default function RecentUserActivity({
                     actionType={activity.action_type}
                     includeConnector={!isLast}
                   />
-                  <ActivityInfo activity={activity} />
+                  <ActivityInfo activity={activity} textClass="text-sm" />
                 </div>
               );
             })}
@@ -67,7 +67,16 @@ export default function RecentUserActivity({
   );
 }
 
-function ActivityInfo({ activity }: { activity: UserActivity }) {
+export function ActivityInfo({
+  activity,
+  textClass,
+  timeFormat = formatActivityTimestamp,
+
+}: {
+  activity: UserActivity;
+  textClass?: string;
+  timeFormat?: (timestamp: string) => string;
+}) {
   const map: Record<UserAction, (title: ReactNode) => ReactNode> = {
     added: (title) => <span>Added {title} to library</span>,
     category_changed: (title) => (
@@ -88,9 +97,9 @@ function ActivityInfo({ activity }: { activity: UserActivity }) {
   return (
     <div>
       <Badge className="text-sm font-normal" variant={"secondary"}>
-        {formatTimestamp(activity.created_at)}
+        {timeFormat(activity.created_at)}
       </Badge>
-      <div className="text-muted-foreground line-clamp-3 text-sm">
+      <div className={cn("line-clamp-3 text-muted-foreground", textClass)}>
         {map[activity.action_type](gameName)}
       </div>
     </div>
@@ -102,7 +111,10 @@ interface ActionIconProps {
   includeConnector?: boolean;
 }
 
-function ActionIcon({ actionType, includeConnector = false }: ActionIconProps) {
+export function ActionIcon({
+  actionType,
+  includeConnector = false,
+}: ActionIconProps) {
   const iconMap: Record<UserAction, LucideIcon> = {
     added: Plus,
     category_changed: Edit,
@@ -114,10 +126,10 @@ function ActionIcon({ actionType, includeConnector = false }: ActionIconProps) {
   return (
     <div className="relative">
       <div className="relative z-1 bg-secondary rounded-full w-10 h-10 flex items-center justify-center">
-        <Icon className="size-4" />
+        <Icon className="size-5" />
       </div>
       {includeConnector && (
-        <div className="absolute left-1/2  w-2 h-full bg-border transform -translate-x-1/2" />
+        <div className="absolute left-1/2  w-1 h-full bg-border transform -translate-x-1/2" />
       )}
     </div>
   );
