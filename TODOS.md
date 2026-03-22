@@ -2,9 +2,9 @@
 
 ## TODOS
 
-2. Add a dedicated route for the users activity. `users\[username]\activity`
-3. Logic for getting users history  should be a useInfiniteQuery. hint is to use the range() function from supabase.
-4. Implement global query cache error handler with tanstack
+1. Add a dedicated route for the users activity. `users\[username]\activity`
+2. Logic for getting users history  should be a useInfiniteQuery. hint is to use the range() function from supabase.
+3. Implement global query cache error handler with tanstack
 
 ## FINISHED
 
