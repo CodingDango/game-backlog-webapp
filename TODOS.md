@@ -4,6 +4,7 @@
 
 1. Logic for getting users history  should be a useInfiniteQuery. hint is to use the range() function from supabase.
 2. Implement global query cache error handler with tanstack
+3. Add an empty state for activity page
 
 ## FINISHED
 

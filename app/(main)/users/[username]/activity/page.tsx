@@ -26,7 +26,7 @@ export default function ActivityPage() {
 
   return (
     <div className="space-y-8">
-      <h1 className="text-3xl sm:text-4xl font-semibold">Activity</h1>
+      <h1 className="text-3xl sm:text-4xl font-semibold">{profile?.username ?? "User's"}&apos;s Activity</h1>
       <div className="space-y-6">
         {levels.map((level) => (
           <div key={level} className="flex flex-col gap-4">
