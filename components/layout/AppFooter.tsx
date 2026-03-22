@@ -1,4 +1,5 @@
 import { FaGithub } from "react-icons/fa";
+import { Button } from "../ui/button";
 import Link from "next/link";
 import BrandLogo from "../common/BrandLogo";
 
@@ -9,9 +10,11 @@ export default function AppFooter() {
     <footer className="px-4 md:px-8 py-8 flex border-t border-t-accent justify-center">
       <div className="max-w-6xl w-full flex justify-between items-center flex-col sm:flex-row gap-4">
         <div className="flex items-center gap-2 text-muted-foreground">
-          <div className="bg-secondary rounded-lg p-2">
-            <BrandLogo className="size-5 text-secondary-foreground" />
-          </div>
+          <Button size={'icon'} variant={'outline'} asChild>
+            <Link href={'/'}>
+              <BrandLogo className="size-5 text-secondary-foreground" />
+            </Link>
+          </Button>
           <p className="text-sm">© {year} Game Backlog</p>
         </div>
 

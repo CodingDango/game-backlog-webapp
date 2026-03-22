@@ -5,7 +5,7 @@ import { Button } from "../ui/button";
 
 import Link from "next/link";
 import AppSearch from "../search/AppSearch";
-import AvatarMenu from "../auth/AvatarMenu";
+import ProfileDropdown from "../auth/ProfileDropdown";
 import BrandLogo from "../common/BrandLogo";
 import { Skeleton } from "../ui/skeleton";
 
@@ -18,7 +18,7 @@ export default function AppNavbar() {
         <div className="flex gap-8 justify-between items-center">
           <div className="flex gap-8 items-center flex-1">
             <Link className="font-semibold shrink-0 block" href={"/"}>
-              <BrandLogo className="size-6 text-secondary-foreground" />
+              <BrandLogo className="size-6" />
             </Link>
             <div className="w-full max-w-3xs">
               <AppSearch />
@@ -26,7 +26,7 @@ export default function AppNavbar() {
           </div>
 
           {session ? (
-            userProfile ? (<AvatarMenu logOut={logOut} username={userProfile.username} />)
+            userProfile ? (<ProfileDropdown logOut={logOut} profile={userProfile} />)
             : <Skeleton className="size-8 rounded-full"/>
           ) : (
             <div className="flex gap-4">

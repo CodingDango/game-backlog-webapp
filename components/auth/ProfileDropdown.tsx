@@ -9,17 +9,19 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useCallback, useState } from "react";
 import { Dialog, DialogContent } from "../ui/dialog";
+import { UserProfile } from "@/types/types";
+
+import UserAvatar from "../common/UserAvatar";
 import Link from "next/link";
 
-interface AvatarMenuProps {
+interface ProfileDropdownProps {
   logOut: () => Promise<void>;
-  username: string;
+  profile?: UserProfile;
 }
 
-export default function AvatarMenu({ logOut, username }: AvatarMenuProps) {
+export default function ProfileDropdown({ logOut, profile  }: ProfileDropdownProps) {
   const [openLogout, setOpenLogout] = useState<boolean>(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
@@ -33,16 +35,13 @@ export default function AvatarMenu({ logOut, username }: AvatarMenuProps) {
     <>
       <DropdownMenu>
         <DropdownMenuTrigger className="cursor-pointer">
-          <Avatar>
-            <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
+          <UserAvatar profile={profile} fallbackClass="text-sm" avatarClass="size-9"/>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>My Account</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem asChild>
-            <Link href={`/users/${username}`}>Profile</Link>
+            <Link href={`/users/${profile?.username}`}>Profile</Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
             <Link href={"/library"}>Library</Link>

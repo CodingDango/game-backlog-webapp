@@ -1,10 +1,6 @@
 import { Gamepad2, Play, Check, History } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
-import { createClient } from "@/lib/supabase/client";
-import { getUserGames } from "@/services/libraryService";
-import { GameStatKey, UserActivity, UserProfile } from "@/types/types";
+import { GameStatKey } from "@/types/types";
 import { useMemo } from "react";
-import { toast } from "sonner";
 import { useProfile } from "./useProfile";
 import { useActivity } from "./useActivity";
 import { useUserGames } from "./useGames";
@@ -45,7 +41,7 @@ export function useUserDashboard(username: string) {
 
   return {
     statCards,
-    profile,
+    profile: profile || undefined,
     userGames,
     userActivity,
     gamesCounterMap,

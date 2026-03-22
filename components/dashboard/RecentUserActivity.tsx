@@ -29,7 +29,7 @@ export default function RecentUserActivity({
       </CardTitle>
       <ScrollArea className="h-full overflow-hidden px-4 lg:px-6">
         {userActivity.length ? (
-          <div className="flex flex-col gap-y-5">
+          <div className="flex flex-col gap-y-4">
             {userActivity.map((activity, idx) => {
               const isLast = idx == userActivity.length - 1;
 
@@ -68,7 +68,6 @@ export default function RecentUserActivity({
 }
 
 function ActivityInfo({ activity }: { activity: UserActivity }) {
-  // index 0 is prefix, index 1 is suffix
   const map: Record<UserAction, (title: ReactNode) => ReactNode> = {
     added: (title) => <span>Added {title} to library</span>,
     category_changed: (title) => (

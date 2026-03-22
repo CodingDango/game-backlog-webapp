@@ -1,6 +1,6 @@
 "use client";
 
-import Profile from "@/components/dashboard/Profile";
+import DashboardProfile from "@/components/dashboard/DashboardProfile";
 import StatCard from "@/components/dashboard/StatCard";
 import RecentUserActivity from "@/components/dashboard/RecentUserActivity";
 import UserChart from "@/components/dashboard/UserChart";
@@ -33,7 +33,7 @@ export default function ProfilePage() {
   return (
     <div className="flex flex-col gap-12">
       <header>
-        <Profile profile={profile} />
+        <DashboardProfile profile={profile} />
       </header>
 
       <div className="space-y-4 sm:space-y-6">
@@ -52,7 +52,7 @@ export default function ProfilePage() {
               ))}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6 w-full h-full">  
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6 w-full h-full">
           <div className="lg:col-span-3 w-full h-full">
             {isLoadingUserGames ? (
               <Skeleton
@@ -65,9 +65,12 @@ export default function ProfilePage() {
           </div>
           <div className="max-h-[410px] w-full h-full overflow-hidden">
             {isLoadingActivity ? (
-              <Skeleton className="w-full h-full"/>
+              <Skeleton className="w-full h-full" />
             ) : (
-              <RecentUserActivity userActivity={userActivity || undefined} username={username}/>
+              <RecentUserActivity
+                userActivity={userActivity || undefined}
+                username={username}
+              />
             )}
           </div>
         </div>

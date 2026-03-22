@@ -1,27 +1,17 @@
 import { formatTimestamp } from "@/lib/utils";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { UserProfile } from "@/types/types";
 import { Skeleton } from "../ui/skeleton";
+import UserAvatar from "../common/UserAvatar";
 
 interface ProfileProps {
-  profile?: UserProfile | null;
+  profile?: UserProfile;
 }
 
-export default function Profile({ profile }: ProfileProps) {
-  const fallbackName = profile
-    ? `${profile.username[0]}${profile.username[1]}`
-    : "CN";
+export default function DashboardProfile({ profile }: ProfileProps) {
 
   return (
     <div className="flex items-center gap-6">
-      {!profile ? (
-        <Skeleton className="rounded-full w-24 h-24" />
-      ) : (
-        <Avatar className="h-24 w-24">
-          <AvatarImage src={profile?.avatar_url} />
-          <AvatarFallback>{fallbackName.toUpperCase()}</AvatarFallback>
-        </Avatar>
-      )}
+      <UserAvatar profile={profile} avatarClass="w-24 h-24"/>
 
       <div>
         {!profile ? (
