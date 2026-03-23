@@ -6,7 +6,6 @@ import { cn } from "@/lib/utils";
 import Image, { ImageProps } from "next/image"; // We extend standard Next Image props
 import NotFoundCard from "./NotFoundCard";
 
-
 interface AppImageProps extends ImageProps {
   wrapperClassName?: string;
 }
@@ -25,11 +24,7 @@ export function AppImage({
     <div
       className={cn("relative overflow-hidden w-full h-full", wrapperClassName)}
     >
-      {isLoading && (
-        <Skeleton className="absolute inset-0 z-5 h-full w-full" />
-      )}
-
-      {(!!src || src?.length) ? (
+      {!!src || src?.length ? (
         <Image
           {...props}
           src={src}
@@ -42,9 +37,10 @@ export function AppImage({
           )}
         />
       ) : (
-        <NotFoundCard/>
+        <NotFoundCard />
       )}
 
+      {isLoading && <Skeleton className="absolute inset-0 z-5 h-full w-full" />}
     </div>
   );
 }

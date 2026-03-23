@@ -7,11 +7,13 @@ import { Frown } from "lucide-react";
 
 export default function GameTags({ tags }: { tags: Tag[] }) {
   return (
-    <ScrollArea className="h-full max-h-48 overflow-hidden flex flex-col gap-4 border border-accent rounded-md pb-2">
-      <Card className="border-0">
-        <div className="text-muted-foreground font-semibold">Tags</div>
+    <Card className="w-full h-full px-0!">
+      <div className="text-muted-foreground font-semibold px-4 lg:px-6">Tags</div>
+      <ScrollArea className="h-full overflow-hidden flex flex-col gap-4 px-4 lg:px-6">
         {!tags.length ? (
-          <span className="text-muted-foreground flex gap-4">No tags provided <Frown/></span>
+          <span className="text-muted-foreground flex gap-4">
+            No tags provided <Frown />
+          </span>
         ) : (
           <div className="flex flex-wrap gap-2">
             {tags.map(({ id, name }, key) => (
@@ -21,7 +23,7 @@ export default function GameTags({ tags }: { tags: Tag[] }) {
             ))}
           </div>
         )}
-      </Card>
-    </ScrollArea>
+      </ScrollArea>
+    </Card>
   );
 }

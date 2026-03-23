@@ -41,7 +41,7 @@ export function GameDetailsMainSection({
           <GameSystemRequirements requirements={pcRequirements} />
         ) : (
           <div className="text-muted-foreground">None listed.</div>
-        )}
+        )}  
       </div>
     </div>
   );

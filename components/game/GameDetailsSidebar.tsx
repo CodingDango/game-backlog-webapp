@@ -66,10 +66,10 @@ export default function GameDetailsSidebar({
           <div className="sm:col-span-2 md:col-span-auto">
             <GameDetails game={gameDetails} />
           </div>
-          <div className="h-full col-span-1 md:col-span-2">
+          <div className="max-h-56 h-full col-span-1 md:col-span-2">
             <GameTags tags={gameDetails.tags} />
           </div>
-          <div className="h-full col-span-1 md:col-span-2">
+          <div className="w-full h-full col-span-1 md:col-span-2 flex">
             <GameSocialLinks socialEntryLinks={socialEntryLinks} />
           </div>
         </div>

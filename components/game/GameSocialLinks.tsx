@@ -9,9 +9,9 @@ interface Props {
 
 export default function GameSocialLinks({ socialEntryLinks }: Props) {
   return (
-    <Card className="py-4 px-4 gap-4">
+    <Card className="w-full py-4 px-4 gap-4">
       <div className="text-muted-foreground font-semibold">Links</div>
-      <div className="flex flex-wrap gap-4">
+      <div className="flex flex-wrap gap-4">        
         {socialEntryLinks.length ? (
           socialEntryLinks.map((store, idx) => (
             <div key={idx}>
