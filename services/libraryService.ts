@@ -26,7 +26,6 @@ export async function getUserGames(
 
     if (authError || !user) {
       const error = authError?.message || "I don't know, user session is null";
-      console.error(error);
 
       return {
         success: false,
@@ -43,7 +42,6 @@ export async function getUserGames(
     .eq("user_id", userId);
 
   if (fetchErr) {
-    console.error(fetchErr.message);
     return {
       success: false,
       error: fetchErr.message,
@@ -236,7 +234,6 @@ export async function getUserGame(
 
   if (authError || !user) {
     const error = authError?.message || "I don't know, user session is null";
-    console.error(error);
 
     return {
       success: false,

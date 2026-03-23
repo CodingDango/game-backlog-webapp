@@ -175,7 +175,6 @@ export const getRelatedGames = async (game: RawgGame): Promise<RawgGame[]> => {
       accumulatedGames = [...accumulatedGames, ...validGames];
       currentPage++;
     } catch (error) {
-      console.error("API call failed:", error);
       break;
     }
   }

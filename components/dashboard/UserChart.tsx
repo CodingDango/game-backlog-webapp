@@ -94,7 +94,6 @@ interface StatRowProps {
 
 function StatRow({ category, value, total, colorClass }: StatRowProps) {
   const percentage = value == 0 ? 0 : Number((value / total * 100).toFixed(0));
-  console.log(`value is ${value}, total is ${total}, percentage is ${percentage}`)
 
   return (
     <div className="flex sm:gap-12 justify-between">

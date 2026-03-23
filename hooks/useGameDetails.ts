@@ -29,8 +29,6 @@ export function useGameDetails(slug: string) {
   const gameData =
     gameQuery.data && !("error" in gameQuery.data) ? gameQuery.data : null;
 
-  console.log("game data", gameData);
-
   const userGameQuery = useQuery({
     enabled: !!gameData?.id,
     queryKey: ["userGames", slug],
