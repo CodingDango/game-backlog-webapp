@@ -17,7 +17,7 @@ export function AppImage({
   wrapperClassName,
   ...props
 }: AppImageProps) {
-  const [isLoading, setLoading] = useState(false);
+  const [isLoading, setLoading] = useState(true);
   const handleLoadingComplete = () => setLoading(false);
 
   return (
@@ -40,7 +40,8 @@ export function AppImage({
         <NotFoundCard />
       )}
 
-      {isLoading && <Skeleton className="absolute inset-0 z-5 h-full w-full" />}
+      {isLoading && <Skeleton className="absolute inset-0 z-5 rounded-md"/>}
+
     </div>
   );
 }

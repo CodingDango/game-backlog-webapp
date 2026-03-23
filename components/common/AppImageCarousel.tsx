@@ -37,10 +37,10 @@ export function AppImageCarousel({ images, isLoading }: Props) {
 
   const isEmpty = images.length === 0 && !isLoading;
 
-  return (  
+  return (    
     <Carousel
-      onMouseEnter={() => api?.plugins().autoplay.stop()}
-      onMouseLeave={() => api?.plugins().autoplay.play()}
+      onMouseEnter={() => api?.plugins()?.autoplay?.stop()}
+      onMouseLeave={() => api?.plugins()?.autoplay?.play()}
       setApi={setApi}
       className="w-full flex flex-col gap-4" // flex-col puts children (Content & Div) in a stack
       opts={{ loop: !isEmpty }}
