@@ -6,7 +6,6 @@ import {
   extractRequirements,
   formatRawRequirements,
   getStoreUrl,
-  truncateDescription,
 } from "@/lib/utils";
 import {
   getBrandColor,
@@ -24,11 +23,13 @@ import { getGameDetails, getScreenshots } from "@/services/rawgServices";
 export function useGameDetails(slug: string) {
   const gameQuery = useQuery({
     queryKey: ["rawgGames", slug],
-    queryFn: () => getGameDetails(slug),
+    queryFn: async () => getGameDetails(slug),
   });
 
   const gameData =
     gameQuery.data && !("error" in gameQuery.data) ? gameQuery.data : null;
+
+  console.log("game data", gameData);
 
   const userGameQuery = useQuery({
     enabled: !!gameData?.id,
@@ -49,13 +50,17 @@ export function useGameDetails(slug: string) {
     queryFn: () => getScreenshots(slug),
   });
 
-  const descriptionHtml = useMemo(() => {
-    if (!gameData?.description) return "";
+  const descriptionParagraphs = useMemo(() => {
+    if (!gameData?.description) return [];
 
     const parts = gameData.description.split("</p>");
-    const englishPart = parts[0] ? parts[0] + "</p>" : gameData.description;
+    const englishPart = parts[0] ? parts[0] : gameData.description;
+    const cleanEnglishPart = englishPart
+      .replace(/^<p>/, "")
+      .replace(/<\/p>$/, "");
+    const paragraphs = cleanEnglishPart.split(/<br\s*\/?>/gi);
 
-    return englishPart;
+    return paragraphs;
   }, [gameData?.description]);
 
   const screenshotLinks: string[] = useMemo(() => {
@@ -134,7 +139,7 @@ export function useGameDetails(slug: string) {
 
   return {
     game: gameData,
-    gameDescription: truncateDescription(descriptionHtml),
+    descriptionParagraphs,
     userGame: userGameQuery.data || undefined,
     screenshotUrls: screenshotLinks,
     error: gameQuery.error,

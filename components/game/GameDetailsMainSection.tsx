@@ -1,18 +1,19 @@
 import { AppImageCarousel } from "@/components/common/AppImageCarousel";
 import { PCRequirements } from "@/types/types";
 import GameSystemRequirements from "@/components/game/GameSystemRequirements";
+import { Skeleton } from "../ui/skeleton";
 
 interface GameDetailsMainSectionProps {
   screenshotUrls: string[];
   isLoading: boolean;
-  gameDescription: string;
+  descriptionParagraphs: string[];
   pcRequirements: PCRequirements | null;
 }
 
 export function GameDetailsMainSection({
   screenshotUrls,
   isLoading,
-  gameDescription,
+  descriptionParagraphs,
   pcRequirements,
 }: GameDetailsMainSectionProps) {
   return (
@@ -24,10 +25,13 @@ export function GameDetailsMainSection({
       {/* About Section */}
       <div className="flex flex-col gap-2">
         <span className="text-xl font-semibold">About</span>
-        <div
-          className="prose max-w-none overflow-hidden text-muted-foreground"
-          dangerouslySetInnerHTML={{ __html: gameDescription }}
-        />
+        <div className="overflow-hidden space-y-4">
+          {!descriptionParagraphs.length && "No description provided"}
+          {descriptionParagraphs.length &&
+            descriptionParagraphs.map((paragraph, idx) => (
+              <p key={`paragraph-${idx}`}>{paragraph}</p>
+            ))}
+        </div>
       </div>
 
       {/* System Requirements */}

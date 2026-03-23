@@ -8,8 +8,6 @@ export default function GameSystemRequirements({
   const { minimum, recommended, rawMinimumText, rawRecommendedText } =
     requirements;
 
-  debugger;
-
   return (
     <div className="flex flex-col gap-4">
       <div>

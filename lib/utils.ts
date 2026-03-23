@@ -202,18 +202,6 @@ export function formatRawRequirements(text?: string): string {
     .trim();
 }
 
-export function truncateDescription(text: string, sentenceCount: number = 2): string {
-  if (!text) return '';
-
-  const sentences = text.match(/[^\.!\?]+[\.!\?]+/g);
-
-  if (!sentences || sentences.length <= sentenceCount) {
-    return text;
-  }
-
-  return sentences.slice(0, sentenceCount).join(' ').trim();
-}
-
 export function toFormattedISO(date: Date): string {
   return date.toISOString().split('T')[0];
 }

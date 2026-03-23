@@ -20,7 +20,7 @@ export default function DetailsPage() {
   const {
     isLoading,
     game,
-    gameDescription,
+    descriptionParagraphs,
     isError,
     error,
     screenshotUrls,
@@ -75,7 +75,7 @@ export default function DetailsPage() {
             <GameDetailsMainSection
               screenshotUrls={screenshotUrls}
               isLoading={isScreenShotsLoading}
-              gameDescription={gameDescription}
+              descriptionParagraphs={descriptionParagraphs}
               pcRequirements={pcRequirements}
             />
           </div>

@@ -29,7 +29,7 @@ export function AppImage({
         <Skeleton className="absolute inset-0 z-5 h-full w-full" />
       )}
 
-      {!!src ? (
+      {(!!src || src?.length) ? (
         <Image
           {...props}
           src={src}

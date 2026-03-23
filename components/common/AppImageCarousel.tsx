@@ -35,7 +35,7 @@ export function AppImageCarousel({ images, isLoading }: Props) {
     });
   }, [api]);
 
-  if (images.length === 0 && !isLoading) return <NotFoundCard />;
+  const isEmpty = images.length === 0 && !isLoading;
 
   return (  
     <Carousel
@@ -43,7 +43,7 @@ export function AppImageCarousel({ images, isLoading }: Props) {
       onMouseLeave={() => api?.plugins().autoplay.play()}
       setApi={setApi}
       className="w-full flex flex-col gap-4" // flex-col puts children (Content & Div) in a stack
-      opts={{ loop: true }}
+      opts={{ loop: !isEmpty }}
       plugins={[
         Autoplay({
           delay: 5000,
@@ -53,12 +53,15 @@ export function AppImageCarousel({ images, isLoading }: Props) {
         Fade(),
       ]}
     >
-      <Content images={images} isLoading={isLoading} />
+      <CarouselContent className="aspect-video lg:aspect-auto lg:h-[375px]">
+        {!isEmpty ? <Content images={images} isLoading={isLoading} /> : <NotFoundCard/>}
+        
+      </CarouselContent>
 
       <div className="w-full flex justify-between items-center">
         <div className="flex items-center justify-start gap-4">
-          <CarouselPrevious className="static translate-y-0" />
-          <CarouselNext className="static translate-y-0" />
+          <CarouselPrevious className="static translate-y-0" disabled={isEmpty}/>
+          <CarouselNext className="static translate-y-0" disabled={isEmpty}/>
         </div>
 
         <div className="ml-auto flex gap-2">
@@ -82,7 +85,7 @@ export function AppImageCarousel({ images, isLoading }: Props) {
 
 function Content({ images, isLoading }: Props) {
   return (
-    <CarouselContent className="aspect-video lg:aspect-auto lg:h-[375px]">
+    <>
       {isLoading ? (
         <CarouselItem>
           <Skeleton className="w-full h-full" />
@@ -102,6 +105,6 @@ function Content({ images, isLoading }: Props) {
           </CarouselItem>
         ))
       )}
-    </CarouselContent>
+    </>
   );
 }
