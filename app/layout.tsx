@@ -8,7 +8,7 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: "Game Backlog",
-  description: "A Library for tracking your games",
+  description: "A Library for tracking your games.",
 };
 
 export default function RootLayout({
