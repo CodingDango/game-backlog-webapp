@@ -80,7 +80,7 @@ export default function AuthForm({
       >
         {includeUser && (
           <Input
-            placeholder="John Doe"
+            placeholder="Enter your username"
             name="username"
             type="text"
             required

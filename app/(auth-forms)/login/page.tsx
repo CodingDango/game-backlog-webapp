@@ -21,6 +21,26 @@ export default function LoginPage() {
   const [view, setView] = useState<"form" | "otp">("form");
   const [isVerifying, setIsVerifying] = useState(false);
   const [isSendingOtp, setIsSendingOtp] = useState(false);
+  const [isResending, setIsResending] = useState(false);
+
+  const handleResendOtp = async () => {
+    setIsResending(true);
+
+    const { error } = await supabase.auth.signInWithOtp({
+      email: form.email,
+      options: {
+        shouldCreateUser: false,
+      },
+    });
+
+    setIsResending(false);
+
+    if (error) {
+      toast.error(error.message);
+    } else {
+      toast.success("A new code has been sent to your email.");
+    }
+  };
 
   const handleOtpVerify = async (otpValue: string) => {
     setIsVerifying(true);
@@ -81,6 +101,8 @@ export default function LoginPage() {
           handleVerify={handleOtpVerify}
           email={form.email}
           isVerifying={isVerifying}
+          isResendingOtp={isResending}
+          resendOtp={handleResendOtp}
         />
       )}
     </>

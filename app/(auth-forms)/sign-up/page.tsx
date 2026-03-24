@@ -21,14 +21,47 @@ export default function SignUpPage() {
   const [view, setView] = useState<"form" | "otp">("form");
   const [isVerifying, setIsVerifying] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isResending, setIsResending] = useState(false);
+
+  const handleResendOtp = async () => {
+    setIsResending(true);
+
+    if (!isUsernameValid(form.username.trim())) {
+      toast.error('Invalid username.');
+    }
+
+    const { error } = await supabase.auth.signInWithOtp({
+      email: form.email,
+      options: {
+        shouldCreateUser: true,
+        data: { username: form.username.trim() },
+      },
+    });
+
+    setIsResending(false);
+
+    if (error) {
+      toast.error(error.message);
+    } else {
+      toast.success("A new code has been sent to your email.");
+    }
+  };
 
   const handleSignUp = async (form: AuthFormData) => {
     setIsSubmitting(true);
 
+    const cleanedUsername = form.username.trim().toLowerCase();
+
+    if (!isUsernameValid(cleanedUsername)) {
+      toast.error("Username must be 3-20 characters and contain only letters, numbers, or underscores.");
+      setIsSubmitting(false);
+      return;
+    }
+
     const { error: usernameError, data: username } = await supabase
       .from("profiles")
       .select("username")
-      .eq("username", form.username)
+      .eq("username", cleanedUsername)
       .single();
 
     if (username) {
@@ -37,19 +70,22 @@ export default function SignUpPage() {
       return;
     }
 
-    const { data: emailExists, error: emailExistsError } = await supabase.rpc('check_email_exists', { 
-      email_input: form.email
-    });
+    const { data: emailExists, error: emailExistsError } = await supabase.rpc(
+      "check_email_exists",
+      {
+        email_input: form.email,
+      },
+    );
 
     if (emailExists) {
-      toast.error('Email already exists.');
+      toast.error("Email already exists.");
       setIsSubmitting(false);
       return;
     }
 
     const { error, data } = await supabase.auth.signInWithOtp({
       email: form.email,
-      options: { shouldCreateUser: true, data: { username: form.username } },
+      options: { shouldCreateUser: true, data: { username: cleanedUsername } },
     });
 
     setIsSubmitting(false);
@@ -60,6 +96,11 @@ export default function SignUpPage() {
       toast.error(error.message);
     }
   };
+
+  function isUsernameValid(username: string) {
+    const usernameRegex = /^[a-zA-Z0-9_]{3,20}$/;
+    return usernameRegex.test(username)
+  }
 
   const handleOtpVerify = async (otpValue: string) => {
     setIsVerifying(true);
@@ -84,7 +125,6 @@ export default function SignUpPage() {
   return (
     <>
       {view === "form" && (
-
         <AuthForm
           setForm={setForm}
           handleSubmit={handleSignUp}
@@ -105,6 +145,8 @@ export default function SignUpPage() {
           handleVerify={handleOtpVerify}
           email={form.email}
           isVerifying={isVerifying}
+          resendOtp={handleResendOtp}
+          isResendingOtp={isResending}
         />
       )}
     </>

@@ -16,7 +16,7 @@ const LibraryTrigger = forwardRef<HTMLButtonElement, Props>(
         <AppButton
           {...props}
           ref={ref}
-          className="w-full flex justify-start"
+          className="w-full flex justify-center"
           isLoading={isAdding}
           icon={<Plus />}
         >
@@ -26,7 +26,7 @@ const LibraryTrigger = forwardRef<HTMLButtonElement, Props>(
         <Button
           {...props}
           ref={ref}
-          className="w-full flex justify-start capitalize"
+          className="w-full flex justify-center capitalize"
         >
           <ChevronDown /> {gameCategory}
         </Button>

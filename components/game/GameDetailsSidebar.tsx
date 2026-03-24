@@ -53,7 +53,7 @@ export default function GameDetailsSidebar({
             />
           ) : (
             <Button onClick={() => router.push('/login')} className="w-full">
-              <Plus className="mr-2" /> Add to library
+              <Plus/> Add to library
             </Button>
           )}
           <GameMetacriticRating metacriticScore={gameDetails.metacritic} />
