@@ -9,11 +9,12 @@ import {
 import { Badge } from "../ui/badge";
 import { Card, CardTitle } from "../ui/card";
 import { UserAction, UserActivity } from "@/types/types";
-import { cn, formatActivityTimestamp, formatTimestamp } from "@/lib/utils";
+import { cn, formatActivityTimestamp } from "@/lib/utils";
 import { ScrollArea } from "../ui/scroll-area";
 import { ReactNode } from "react";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import { ActivityListItem } from "./ActivityListItem";
 
 export default function RecentUserActivity({
   userActivity = [],
@@ -30,22 +31,14 @@ export default function RecentUserActivity({
       <ScrollArea className="h-full overflow-hidden px-4 lg:px-6">
         {userActivity.length ? (
           <div className="flex flex-col gap-y-4">
-            {userActivity.map((activity, idx) => {
-              const isLast = idx == userActivity.length - 1;
+            {userActivity.map((activity, idx) => (
+              <ActivityListItem 
+                key={`activity-icon-${activity.action_type}-${activity.id}`}
+                activity={activity} 
+                isLast={idx == userActivity.length - 1}
+              />
+            ))}
 
-              return (
-                <div
-                  className="flex gap-3"
-                  key={`activity-icon-${activity.action_type}-${idx}`}
-                >
-                  <ActionIcon
-                    actionType={activity.action_type}
-                    includeConnector={!isLast}
-                  />
-                  <ActivityInfo activity={activity} textClass="text-sm" />
-                </div>
-              );
-            })}
             <Link href={`/users/${username}/activity`} className="w-full">
               <Button variant={"secondary"} asChild>
                 <div className="w-full">

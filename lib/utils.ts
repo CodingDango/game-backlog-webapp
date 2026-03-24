@@ -1,10 +1,14 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { Store, SystemRequirements } from "../types/types";
-import {   format, 
-  isToday, 
-  isYesterday, 
-} from 'date-fns'
+import { Store, SystemRequirements, UserActivity } from "../types/types";
+import {
+  format,
+  isToday,
+  isYesterday,
+  differenceInDays,
+  differenceInMonths,
+  differenceInYears,
+} from "date-fns";
 
 interface MetascoreColor {
   bgCol: string;
@@ -68,7 +72,7 @@ export function formatDate(dateString: string): string {
  */
 export function formatTimestamp(timestamp: string): string {
   const date = new Date(timestamp);
-  const formattedDate = format(date, 'MMM d, y');
+  const formattedDate = format(date, "MMM d, y");
 
   return formattedDate;
 }
@@ -119,7 +123,7 @@ export const getStoreUrl = (store: Store, gameName: string) => {
 };
 
 export function extractRequirements(
-  rawString: string
+  rawString: string,
 ): SystemRequirements | null {
   if (!rawString) return null;
 
@@ -157,9 +161,9 @@ export function extractRequirements(
   // (Value): Captures everything UNTIL it sees another keyword followed by a colon
   const pattern = new RegExp(
     `(${keywords.join("|")}):\\s*([\\s\\S]*?)(?=\\s*(?:${keywords.join(
-      "|"
+      "|",
     )}):|$)`,
-    "gi"
+    "gi",
   );
 
   const matches = cleanInput.matchAll(pattern);
@@ -173,10 +177,24 @@ export function extractRequirements(
   try {
     return {
       os: (results["OS"] || "").split(",")[0].split("/")[0].trim(),
-      processor: (results["Processor"] || results['CPU'] || "").split("/")[0].trim(),
+      processor: (results["Processor"] || results["CPU"] || "")
+        .split("/")[0]
+        .trim(),
       memory: results["Memory"] || "",
-      gpu: (results["Graphics"] || results["GPU"] || results['Video Card'] || "").split("/")[0].trim(),
-      storage: results["Storage"] || results["Hard Disk Space"] || results["Hard Drive"] || results["Disk Space"] || "",
+      gpu: (
+        results["Graphics"] ||
+        results["GPU"] ||
+        results["Video Card"] ||
+        ""
+      )
+        .split("/")[0]
+        .trim(),
+      storage:
+        results["Storage"] ||
+        results["Hard Disk Space"] ||
+        results["Hard Drive"] ||
+        results["Disk Space"] ||
+        "",
       soundCard: results["Sound Card"] || results["Sound"] || "",
     };
   } catch (err) {
@@ -191,17 +209,50 @@ export function formatRawRequirements(text?: string): string {
     .replace(/^(Minimum|Recommended):?\s*/i, "")
     .replace(
       /(Additional Notes|Other requirements|Partner Requirements|Legal)[\s\S]*/i,
-      ""
+      "",
     )
     .replace(/&amp;/g, "&")
     .replace(/&quot;/g, '"')
     .replace(
       /([a-z0-9])(Processor|Memory|Hard Disk|Graphics|Video Card|Sound|DirectX)/gi,
-      "$1\n$2"
+      "$1\n$2",
     )
     .trim();
 }
 
 export function toFormattedISO(date: Date): string {
-  return date.toISOString().split('T')[0];
+  return date.toISOString().split("T")[0];
+}
+
+export function groupActivitiesByDate(activities: UserActivity[]) {
+  const group: Record<string, UserActivity[]> = {
+    today: [],
+    yesterday: [],
+    "this week": [],
+    "this month": [],
+    "this year": [],
+    "long time ago": [],
+  };
+
+  for (const activity of activities) {
+    const now = new Date();
+    const date = new Date(activity.created_at);
+    const daysDiff = differenceInDays(now, date);
+    const monthsDiff = differenceInMonths(now, date);
+    const yearsDiff = differenceInYears(now, date);
+
+    const getKey = () => {
+      if (isToday(date)) return "today";
+      if (isYesterday(date)) return "yesterday";
+      if (daysDiff > 1 && daysDiff < 7) return "this week";
+      if (monthsDiff < 1) return "this month";
+      if (yearsDiff < 1) return "this year";
+
+      return "long time ago";
+    };
+
+    group[getKey()].push(activity);
+  }
+
+  return group;
 }
