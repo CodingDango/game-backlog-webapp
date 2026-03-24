@@ -13,7 +13,7 @@ export function AppRadioGroup({ options, value, onValueChange }: Props) {
       {options.map((option, idx) => (
         <Label
           key={`option-${idx}`}
-          className="flex items-center gap-3 capitalize"
+          className="flex items-center gap-3 capitalize cursor-pointer"
         >
           <RadioGroupItem value={option} id={`option-${idx}`} />
           {option}

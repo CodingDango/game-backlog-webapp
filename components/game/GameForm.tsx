@@ -4,9 +4,9 @@ import { Button } from "../ui/button";
 import { DialogHeader, DialogTitle } from "../ui/dialog";
 import { FormEvent, useState } from "react";
 import { Category } from "@/types/types";
+import { Check, Plus, Trash } from "lucide-react";
 
 import RatingSelector from "../common/Rating";
-import { Check, Plus, Trash } from "lucide-react";
 import AppButton from "../common/AppButton";
 
 interface GameFormProps {
@@ -16,7 +16,7 @@ interface GameFormProps {
   isNewEntry: boolean;
   onSave: (cat: Category, rate: number) => void;
   onRemove: () => void;
-  isLoading?: boolean;
+  isPending?: boolean;
 }
 export default function GameForm({
   title,
@@ -25,11 +25,12 @@ export default function GameForm({
   isNewEntry,
   onSave,
   onRemove,
-  isLoading = false,
+  isPending = false,
+
 }: GameFormProps) {
   const [category, setCategory] = useState<Category>(defaultCategory);
   const [rating, setRating] = useState<number>(defaultRating);
-  const isNoChange = category === defaultCategory && rating === defaultRating;
+  const isNoChange = (category === defaultCategory && rating === defaultRating) || isPending;
 
   const handleOnSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -62,7 +63,7 @@ export default function GameForm({
             type="submit"
             className="w-full"
             icon={<Plus />}
-            isLoading={isLoading}
+            isLoading={isPending}
             loadingText="Adding to library"
           >
             Add to library
@@ -72,7 +73,7 @@ export default function GameForm({
             type="submit"
             className="w-full"
             icon={<Check />}
-            isLoading={isLoading}
+            isLoading={isPending}
             loadingText="Saving"
             disabled={isNoChange}
           >

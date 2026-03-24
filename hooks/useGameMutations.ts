@@ -23,7 +23,7 @@ export function useGameMutation() {
       game_name: string;
     }) => addGameToLibrary(rawgId, category, rating, game_name),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["userGames"] });
+      return queryClient.invalidateQueries({ queryKey: ["userGames"] });
     },
   });
 
@@ -36,7 +36,7 @@ export function useGameMutation() {
       game_name: string;
     }) => removeGameFromLibrary(rawgId, game_name),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["userGames"] });
+      return queryClient.invalidateQueries({ queryKey: ["userGames"] });
     },
   });
 
@@ -53,13 +53,13 @@ export function useGameMutation() {
       game_name: string;
     }) => updateGameInLibrary(rawgId, newCategory, newRating, game_name),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["userGames"] });
+      return queryClient.invalidateQueries({ queryKey: ["userGames"] });
     },
   });
 
   return {
-    handleAddGame: addMutation.mutateAsync,
-    handleRemoveGame: removeMutation.mutateAsync,
-    handleUpdateGame: updateMutation.mutateAsync,
+    addMutation,
+    removeMutation,
+    updateMutation,
   };
 }

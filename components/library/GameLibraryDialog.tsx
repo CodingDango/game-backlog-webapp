@@ -2,7 +2,7 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { useGameMutation } from "@/hooks/useGameMutations";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Category, UserGame } from "@/types/types";
 import { Spinner } from "../ui/spinner";
 import { ConfirmationBox } from "../dialogs/ConfirmationBox";
@@ -17,37 +17,35 @@ interface Props {
   isSessionLoading: boolean;
 }
 
-export default function GameLibraryAction({
+export default function GameLibraryDialog({
   userGame,
   title,
   rawgId,
   isSessionLoading,
 }: Props) {
-  const { handleAddGame, handleRemoveGame, handleUpdateGame } =
-    useGameMutation();
-  const [view, setView] = useState<"closed" | "form" | "confirm">("closed");
-  const [isRemoving, setIsRemoving] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
+  const { addMutation, removeMutation, updateMutation } = useGameMutation();
+
+  const [view, setView] = useState<"form" | "confirm">("form");
+  const [isOpen, setIsOpen] = useState(false);
+
   const isNew = !userGame?.category;
+  const isPending = addMutation.isPending || updateMutation.isPending;
 
   const onSave = async (category: Category, rating: number) => {
-    setIsSaving(true);
-
     if (isNew) {
       await handleAdd(category, rating);
+      setIsOpen(false);
     } else {
       await handleUpdate(category, rating);
     }
-
-    setIsSaving(false);
   };
 
   const handleAdd = async (category: Category, rating: number) => {
-    const res = await handleAddGame({
+    const res = await addMutation.mutateAsync({
       rawgId,
       category: category,
       rating: rating,
-      game_name: title
+      game_name: title,
     });
 
     if (!res.success) {
@@ -58,8 +56,12 @@ export default function GameLibraryAction({
   };
 
   const handleUpdate = async (newCategory: Category, newRating: number) => {
-    debugger;
-    const res = await handleUpdateGame({ rawgId, newCategory, newRating, game_name: title });
+    const res = await updateMutation.mutateAsync({
+      rawgId,
+      newCategory,
+      newRating,
+      game_name: title,
+    });
 
     if (!res.success) {
       toast.error("Could not update game in library.");
@@ -69,8 +71,7 @@ export default function GameLibraryAction({
   };
 
   const onRemove = async () => {
-    setIsRemoving(true);
-    const res = await handleRemoveGame({ rawgId, game_name: title });
+    const res = await removeMutation.mutateAsync({ rawgId, game_name: title });
 
     if (!res.success) {
       toast.error("Could not remove game from library");
@@ -78,7 +79,7 @@ export default function GameLibraryAction({
       toast.success("Successfully removed game from library");
     }
 
-    setIsRemoving(false);
+    setIsOpen(false);
   };
 
   if (isSessionLoading) {
@@ -90,10 +91,7 @@ export default function GameLibraryAction({
   }
 
   return (
-    <Dialog
-      open={view !== "closed"}
-      onOpenChange={(isOpen) => setView(isOpen ? "form" : "closed")}
-    >
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger className="w-full" asChild>
         <LibraryTrigger gameCategory={userGame?.category} />
       </DialogTrigger>
@@ -109,7 +107,7 @@ export default function GameLibraryAction({
             isNewEntry={!userGame?.category}
             onSave={onSave}
             onRemove={() => setView("confirm")}
-            isLoading={isSaving}
+            isPending={isPending}
           />
         )}
 
@@ -120,7 +118,7 @@ export default function GameLibraryAction({
             title="Remove Confirmation"
             description={`Are you sure you want to remove ${title} from your library?`}
             buttonText="Remove"
-            isLoading={isRemoving}
+            isLoading={removeMutation.isPending}
           />
         )}
       </DialogContent>

@@ -5,7 +5,6 @@ import {
   SiPlaystation, 
   SiEpicgames, 
   SiGogdotcom, 
-  SiNintendoswitch, 
   SiReddit, 
   SiMetacritic,
   SiYoutube,
@@ -13,6 +12,7 @@ import {
   SiApple,
   SiAndroid
 } from "react-icons/si";
+import { BsNintendoSwitch } from "react-icons/bs";
 import { FaXbox, FaApple } from "react-icons/fa";
 import { TbView360Number } from "react-icons/tb";
 import { Globe } from "lucide-react"; // Generic fallback
@@ -30,7 +30,7 @@ const icons: Record<string, React.ElementType> = {
   "xbox-one": FaXbox,
   "epic-games": SiEpicgames,
   "gog": SiGogdotcom,
-  "nintendo": SiNintendoswitch,
+  "nintendo": BsNintendoSwitch,
   "app-store": SiApple,
   "google-play": SiAndroid,
   'apple-appstore': FaApple,

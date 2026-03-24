@@ -1,11 +1,7 @@
 import { Button } from "@/components/ui/button";
 import AppButton from "../common/AppButton";
 import {
-  Dialog,
-  DialogClose,
-  DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";

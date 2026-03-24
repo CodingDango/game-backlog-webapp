@@ -13,10 +13,11 @@ export default function AppButton({
   className,
   loadingText,
   isLoading = false,
+  disabled,
   ...props
 }: AppButtonProps) {
   return (
-    <Button className={className} disabled={isLoading} {...props}>
+    <Button {...props} className={className} disabled={isLoading || disabled}>
       {isLoading ? (
         <>
           <Spinner />

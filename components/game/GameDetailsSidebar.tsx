@@ -4,7 +4,7 @@ import { Plus } from "lucide-react";
 import { RawgGameDetails, SocialEntryLink, UserGame } from "@/types/types";
 import { Session } from "@supabase/supabase-js";
 
-import GameLibraryAction from "@/components/library/GameLibraryAction";
+import GameLibraryDialog from "@/components/library/GameLibraryDialog";
 import GameSocialLinks from "@/components/game/GameSocialLinks";
 import GameMetacriticRating from "@/components/game/GameMetacriticRating";
 import GameCommunityRating from "@/components/game/GameCommunityRating";
@@ -44,7 +44,7 @@ export default function GameDetailsSidebar({
       <div className="flex flex-col gap-8">
         <div className="flex flex-col gap-6">
           {session ? (
-            <GameLibraryAction
+            <GameLibraryDialog
               key={userGame?.id ?? "new-" + gameDetails.id}
               isSessionLoading={isUserGameLoading}
               userGame={userGame ?? null}
