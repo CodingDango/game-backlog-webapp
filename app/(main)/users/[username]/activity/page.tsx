@@ -5,46 +5,79 @@ import { useProfile } from "@/hooks/useProfile";
 import { groupActivitiesByDate } from "@/lib/utils";
 import { useParams } from "next/navigation";
 import { useMemo } from "react";
-import { useOnInView } from 'react-intersection-observer';
+import { useOnInView } from "react-intersection-observer";
+import { Frown, History } from "lucide-react";
+import { sample } from "lodash";
 
-import AppButton from "@/components/common/AppButton";
 import useInfiniteActivity from "@/hooks/useInfiniteActivity";
+import ActivitySkeleton from "@/components/dashboard/ActivitySkeleton";
 
 const ACTIVITY_PAGE_SIZE = 30;
+const maxWidthClasses = ["w-64", "w-72", "max-w-80", "max-w-88", "max-w-96"];
 
 export default function ActivityPage() {
   const { username } = useParams<{ username: string }>();
   const { profile } = useProfile({ username });
-  const { userActivity, fetchNextPage, hasNextPage, isFetching } = useInfiniteActivity({ userId: profile?.id, pageSize: ACTIVITY_PAGE_SIZE});
-  const groupedActivities = useMemo(() => groupActivitiesByDate(userActivity), [userActivity]);
 
-  const fetchInViewRef = useOnInView(
-    (inView) => {
-      if (inView && !isFetching && hasNextPage) {
-        fetchNextPage();
-      } 
-    },
+  const { userActivity, fetchNextPage, hasNextPage, isFetching, isLoading } =
+    useInfiniteActivity({ userId: profile?.id, pageSize: ACTIVITY_PAGE_SIZE });
+
+  const groupedActivities = useMemo(
+    () => groupActivitiesByDate(userActivity),
+    [userActivity],
   );
+
+  const fetchInViewRef = useOnInView((inView) => {
+    if (inView && !isFetching && hasNextPage) {
+      fetchNextPage();
+    }
+  });
+
+  const isStarting = !profile || isLoading;
 
   return (
     <div className="space-y-8">
-      <h1 className="text-3xl sm:text-4xl font-semibold">
-        {profile?.username ?? "User's"}&apos;s Activity
-      </h1>
-
-
-      <div className="space-y-6">
-        {Object.entries(groupedActivities).map(([label, activities]) => (
-          <ActivityGroup key={label} label={label} activities={activities} />
-        ))}
+      <div className="flex gap-3 items-center">
+        <History />
+        <h1 className="text-3xl sm:text-4xl font-semibold">
+          {profile?.username ?? "User"}&apos;s Activity
+        </h1>
       </div>
 
-      <AppButton
-        ref={fetchInViewRef}
-        isLoading={isFetching}       
-        onClick={() => fetchNextPage()}
-        disabled={!hasNextPage}
-      >Get next</AppButton>
+      <div className="space-y-6">
+        {isStarting &&
+          Array.from({ length: 30 }).map((_, idx) => (
+            <ActivitySkeleton key={`loading-initial-item-${idx}`} maxWidthClass={sample(maxWidthClasses)}/>
+          ))}
+
+        {!userActivity.length && !isStarting && (
+          <span className="text-muted-foreground flex gap-3 items-center">
+            <Frown />
+            <span>User has no recorded history</span>
+          </span>
+        )}
+
+        {!!userActivity.length &&
+          !isStarting &&
+          Object.entries(groupedActivities).map(([label, activities]) => (
+            <ActivityGroup key={label} label={label} activities={activities} />
+          ))}
+
+        {isFetching &&
+          !isStarting &&
+          Array.from({ length: ACTIVITY_PAGE_SIZE }).map((_, idx) => (
+            <ActivitySkeleton
+              key={`loading-fetch-item-${idx}`}
+              maxWidthClass={sample(maxWidthClasses)}
+            />
+          ))}
+      </div>
+
+      {userActivity.length !== 0 && !isStarting && (
+        <div ref={fetchInViewRef} className="text-muted-foreground">
+          User&apos;s history ends here.
+        </div>
+      )}
     </div>
   );
 }

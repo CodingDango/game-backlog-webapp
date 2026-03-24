@@ -3,14 +3,6 @@ import { fetchUserActivity } from "@/services/userService";
 import { UserActivity } from "@/types/types";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
-import {
-  isToday,
-  isYesterday,
-  differenceInDays,
-  differenceInMonths,
-  differenceInYears,
-} from "date-fns";
-
 interface InfiniteActivityProps {
   userId?: string;
   pageSize?: number;
@@ -20,7 +12,7 @@ export default function useInfiniteActivity({
   userId,
   pageSize = 20,
 }: InfiniteActivityProps) {
-  const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery({
+  const { data, fetchNextPage, hasNextPage, isFetching, isLoading } = useInfiniteQuery({
     enabled: !!userId,
     queryKey: ["user", userId, "activity"],
     initialPageParam: 0,
@@ -38,8 +30,8 @@ export default function useInfiniteActivity({
     },
 
     getNextPageParam: (lastPage, allPages) => {
-      if (!lastPage || lastPage.length < pageSize) return undefined;
-      return allPages.length;
+      if (!lastPage || lastPage?.length < pageSize) return undefined;
+      return allPages?.length;
     },
   });
 
@@ -47,5 +39,5 @@ export default function useInfiniteActivity({
     return data?.pages.flatMap((page) => page) || [];
   }, [data?.pages]);
 
-  return { userActivity, fetchNextPage, hasNextPage, isFetching};
+  return { userActivity, fetchNextPage, hasNextPage, isFetching, isLoading};
 }

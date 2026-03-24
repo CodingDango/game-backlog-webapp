@@ -7,9 +7,10 @@ import { UserActivity } from "@/types/types";
 interface ActivityListItemProps {
   activity: UserActivity;
   isLast: boolean;
+  textClass?: string;
 }
 
-export function ActivityListItem({ activity, isLast }: ActivityListItemProps) {
+export function ActivityListItem({ activity, isLast, textClass }: ActivityListItemProps) {
   return (
     <div
       className="flex gap-3"
@@ -18,7 +19,7 @@ export function ActivityListItem({ activity, isLast }: ActivityListItemProps) {
         actionType={activity.action_type}
         includeConnector={!isLast}
       />
-      <ActivityInfo activity={activity} />
+      <ActivityInfo activity={activity} textClass={textClass}/>
     </div>
   );
 }

@@ -15,7 +15,6 @@ export async function fetchUserActivity({
   rangeTo,
   ascending = false,
 }: Props) {
-  debugger
   const supabase = createClient();
   const query = supabase
     .from("activity_logs")

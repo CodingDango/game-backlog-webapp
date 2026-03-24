@@ -36,6 +36,7 @@ export default function RecentUserActivity({
                 key={`activity-icon-${activity.action_type}-${activity.id}`}
                 activity={activity} 
                 isLast={idx == userActivity.length - 1}
+                textClass="text-sm"
               />
             ))}
 
