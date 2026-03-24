@@ -64,6 +64,7 @@ export default function LoginPage() {
 
   const handleLogin = async (form: AuthFormData) => {
     setIsSendingOtp(true);
+    debugger
 
     const { error } = await supabase.auth.signInWithOtp({
       email: form.email,

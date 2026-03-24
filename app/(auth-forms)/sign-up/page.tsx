@@ -50,7 +50,7 @@ export default function SignUpPage() {
   const handleSignUp = async (form: AuthFormData) => {
     setIsSubmitting(true);
 
-    const cleanedUsername = form.username.trim().toLowerCase();
+    const cleanedUsername = form.username.trim();
 
     if (!isUsernameValid(cleanedUsername)) {
       toast.error("Username must be 3-20 characters and contain only letters, numbers, or underscores.");
@@ -58,11 +58,11 @@ export default function SignUpPage() {
       return;
     }
 
-    const { error: usernameError, data: username } = await supabase
+    const { data: username } = await supabase
       .from("profiles")
       .select("username")
-      .eq("username", cleanedUsername)
-      .single();
+      .ilike("username", cleanedUsername)
+      .maybeSingle();
 
     if (username) {
       toast.error("Username already exists.");
@@ -71,7 +71,7 @@ export default function SignUpPage() {
     }
 
     const { data: emailExists, error: emailExistsError } = await supabase.rpc(
-      "check_email_exists",
+      "check_email_exists_and_valid",
       {
         email_input: form.email,
       },

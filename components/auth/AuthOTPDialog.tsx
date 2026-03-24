@@ -83,8 +83,8 @@ export default function AuthVerifyOTP({
             Didn&apos;t receive code?{" "}
             <button
               className={cn(
-                "text-primary font-semibold",
-                isResendingOtp && "text-muted-foreground",
+                "text-primary font-semibold cursor-pointer",
+                isResendingOtp && "text-muted-foreground cursor-none"
               )}
               onClick={resendOtp}
               disabled={isResendingOtp}
