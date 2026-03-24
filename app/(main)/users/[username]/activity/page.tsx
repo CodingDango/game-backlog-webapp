@@ -47,7 +47,10 @@ export default function ActivityPage() {
       <div className="space-y-6">
         {isStarting &&
           Array.from({ length: 30 }).map((_, idx) => (
-            <ActivitySkeleton key={`loading-initial-item-${idx}`} maxWidthClass={sample(maxWidthClasses)}/>
+            <ActivitySkeleton 
+              key={`loading-initial-item-${idx}`} 
+              maxWidthClass={maxWidthClasses[idx % maxWidthClasses.length]}
+            />
           ))}
 
         {!userActivity.length && !isStarting && (
@@ -68,7 +71,7 @@ export default function ActivityPage() {
           Array.from({ length: ACTIVITY_PAGE_SIZE }).map((_, idx) => (
             <ActivitySkeleton
               key={`loading-fetch-item-${idx}`}
-              maxWidthClass={sample(maxWidthClasses)}
+              maxWidthClass={maxWidthClasses[idx % maxWidthClasses.length]}
             />
           ))}
       </div>
