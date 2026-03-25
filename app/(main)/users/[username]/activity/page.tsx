@@ -39,7 +39,7 @@ export default function ActivityPage() {
     <div className="space-y-8">
       <div className="flex gap-3 items-center">
         <History />
-        <h1 className="text-3xl sm:text-4xl font-semibold">
+        <h1 className="text-2xl sm:text-3xl font-semibold">
           {profile?.username ?? "User"}&apos;s Activity
         </h1>
       </div>
