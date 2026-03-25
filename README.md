@@ -20,3 +20,4 @@ A sleek, modern web application for gamers to track their collections, monitor t
 - **Data Fetching:** TanStack Query (React Query)
 - **Icons:** Lucide React and React Icons
 - **Charts:** Recharts
+  
