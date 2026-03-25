@@ -1,10 +1,5 @@
 # Roadmap
 
-## TODOS
-
-1. Clean up README
-2. Host to Vercel
-
 ## FINISHED
 
 1. Change the users profile path from `users\[user_id]` to `users\[username]` instead.
@@ -19,3 +14,5 @@
 10. Add a dedicated route for the users activity. `users\[username]\activity`
 11. Logic for getting users history  should be a useInfiniteQuery. hint is to use the range() function from supabase.
 12. Add an empty state for activity page
+13. Clean up README
+14. Host to Vercel
