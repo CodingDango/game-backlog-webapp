@@ -24,7 +24,7 @@ export function useProfile({ username, userId }: UseProfileProps) {
       const query = supabase.from("profiles").select("*");
 
       if (username) {
-        query.eq("username", username);
+        query.ilike("username", username);
       } else if (userId) {
         query.eq("id", userId);
       } else {
