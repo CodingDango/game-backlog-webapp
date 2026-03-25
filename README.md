@@ -2,7 +2,7 @@
 
 A sleek, modern web application for gamers to track their collections, monitor their gaming activity, and visualize their progress.
 
-**[Live Demo Link](game-backlog-webapp.vercel.app)**
+**[Live Demo Link](https://game-backlog-webapp.vercel.app)**
 
 ## Features
 

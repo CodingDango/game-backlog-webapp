@@ -1,5 +1,9 @@
 # Roadmap
 
+## TODOS
+
+1. Add rating updates for the activity
+
 ## FINISHED
 
 1. Change the users profile path from `users\[user_id]` to `users\[username]` instead.
