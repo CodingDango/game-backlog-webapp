@@ -2,7 +2,7 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { useGameMutation } from "@/hooks/useGameMutations";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Category, UserGame } from "@/types/types";
 import { Spinner } from "../ui/spinner";
 import { ConfirmationBox } from "../dialogs/ConfirmationBox";
@@ -45,7 +45,8 @@ export default function GameLibraryDialog({
       rawgId,
       category: category,
       rating: rating,
-      game_name: title,
+      gameName: title,
+
     });
 
     if (!res.success) {
@@ -60,7 +61,9 @@ export default function GameLibraryDialog({
       rawgId,
       newCategory,
       newRating,
-      game_name: title,
+      gameName: title,
+      fromRating: userGame?.user_rating,
+      fromCategory: userGame?.category
     });
 
     if (!res.success) {
@@ -71,7 +74,7 @@ export default function GameLibraryDialog({
   };
 
   const onRemove = async () => {
-    const res = await removeMutation.mutateAsync({ rawgId, game_name: title });
+    const res = await removeMutation.mutateAsync({ rawgId, gameName: title });
 
     if (!res.success) {
       toast.error("Could not remove game from library");

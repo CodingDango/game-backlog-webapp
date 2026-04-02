@@ -4,6 +4,7 @@ import {
   Edit,
   LucideIcon,
   Plus,
+  Star,
   Trash,
 } from "lucide-react";
 import { Badge } from "../ui/badge";
@@ -82,6 +83,14 @@ export function ActivityInfo({
       </span>
     ),
     removed: (title) => <span>Removed {title} from library</span>,
+    rating_changed: (title) => (
+      <span>
+        Rated {title} to{" "}
+        <span className="font-medium text-primary capitalize">
+          {activity.to_rating} stars.
+        </span>
+      </span>
+    ),
   };
 
   const gameName = (
@@ -113,6 +122,7 @@ export function ActionIcon({
     added: Plus,
     category_changed: Edit,
     removed: Trash,
+    rating_changed: Star
   };
 
   const Icon = iconMap[actionType];

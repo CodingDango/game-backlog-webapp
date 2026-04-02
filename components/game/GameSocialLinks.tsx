@@ -26,8 +26,8 @@ export default function GameSocialLinks({ socialEntryLinks }: Props) {
             </div>
           ))
         ) : (
-          <span className="text-muted-foreground flex gap-4">
-            No links provided <Frown />
+          <span className="text-muted-foreground flex gap-3">
+            <Frown /> No links provided 
           </span>
         )}
       </div>

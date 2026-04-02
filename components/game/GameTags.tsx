@@ -11,8 +11,8 @@ export default function GameTags({ tags }: { tags: Tag[] }) {
       <div className="text-muted-foreground font-semibold px-4 lg:px-6">Tags</div>
       <ScrollArea className="h-full overflow-hidden flex flex-col gap-4 px-4 lg:px-6">
         {!tags.length ? (
-          <span className="text-muted-foreground flex gap-4">
-            No tags provided <Frown />
+          <span className="text-muted-foreground flex gap-3">
+            <Frown /> No tags provided 
           </span>
         ) : (
           <div className="flex flex-wrap gap-2">

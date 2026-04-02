@@ -15,13 +15,13 @@ export function useGameMutation() {
       rawgId,
       category,
       rating,
-      game_name,
+      gameName,
     }: {
       rawgId: number;
       category?: Category;
       rating?: number;
-      game_name: string;
-    }) => addGameToLibrary(rawgId, category, rating, game_name),
+      gameName: string;
+    }) => addGameToLibrary(rawgId, category, rating, gameName),
     onSuccess: () => {
       return queryClient.invalidateQueries({ queryKey: ["userGames"] });
     },
@@ -30,11 +30,11 @@ export function useGameMutation() {
   const removeMutation = useMutation({
     mutationFn: ({
       rawgId,
-      game_name,
+      gameName,
     }: {
       rawgId: number;
-      game_name: string;
-    }) => removeGameFromLibrary(rawgId, game_name),
+      gameName: string;
+    }) => removeGameFromLibrary(rawgId, gameName),
     onSuccess: () => {
       return queryClient.invalidateQueries({ queryKey: ["userGames"] });
     },
@@ -45,13 +45,17 @@ export function useGameMutation() {
       rawgId,
       newCategory,
       newRating,
-      game_name
+      gameName,
+      fromCategory,
+      fromRating
     }: {
       rawgId: number;
       newCategory: Category;
       newRating: number;
-      game_name: string;
-    }) => updateGameInLibrary(rawgId, newCategory, newRating, game_name),
+      gameName: string;
+      fromCategory?: Category;
+      fromRating?: number
+    }) => updateGameInLibrary(rawgId, newCategory, newRating, gameName, fromCategory, fromRating),
     onSuccess: () => {
       return queryClient.invalidateQueries({ queryKey: ["userGames"] });
     },

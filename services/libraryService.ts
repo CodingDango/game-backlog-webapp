@@ -100,7 +100,9 @@ export async function updateGameInLibrary(
   rawgId: number,
   newCategory: Category,
   newUserRating: number,
-  game_name: string,
+  gameName: string,
+  fromCategory?: Category,
+  fromRating?: number,
 ): Promise<CustomResponse<UserGame>> {
   const supabase = await createClient();
   const { data: authData, error: authError } = await supabase.auth.getUser();
@@ -126,12 +128,29 @@ export async function updateGameInLibrary(
     return { success: false, error: insertErr.message };
   }
 
-  await supabase.from("activity_logs").insert({
-    user_id: userId,
-    action_type: "category_changed",
-    game_name: game_name,
-    to_category: newCategory,
-  });
+  const activitiesToLog = [];
+
+  if (fromCategory !== newCategory) {
+    activitiesToLog.push({
+      user_id: userId,
+      action_type: "category_changed",
+      game_name: gameName,
+      to_category: newCategory,
+    });
+  }
+
+  if (fromRating !== newUserRating) {
+    activitiesToLog.push({
+      user_id: userId,
+      action_type: "rating_changed",
+      game_name: gameName,
+      to_rating: newUserRating,
+    });
+  }
+
+  if (activitiesToLog.length) {
+    await supabase.from("activity_logs").insert(activitiesToLog);
+  }
 
   return { success: true, data: updatedData };
 }

@@ -4,6 +4,7 @@ import {
   CarouselContent,
   CarouselItem,
   CarouselNext,
+  CarouselNextButton,
   CarouselPrevious,
 } from "@/components/ui/carousel";
 
@@ -35,15 +36,27 @@ export function AppImageCarousel({ images, isLoading }: Props) {
     });
   }, [api]);
 
-  const isEmpty = images.length === 0 && !isLoading;
+  if (!images?.length) {
+    return (
+      <div className="flex flex-col gap-4">
+        <div className="aspect-video lg:aspect-auto lg:h-94 w-full">
+          { isLoading ? <Skeleton className="w-full h-full"/> : <NotFoundCard/>}
+        </div>
+        <div className="w-full flex gap-4">
+          <CarouselNextButton disabled variant={"secondary"} className="static rotate-180"/>
+          <CarouselNextButton disabled variant={"secondary"} className="static"/>
+        </div>
+      </div>
+    );
+  }
 
-  return (    
+  return (
     <Carousel
       onMouseEnter={() => api?.plugins()?.autoplay?.stop()}
       onMouseLeave={() => api?.plugins()?.autoplay?.play()}
       setApi={setApi}
-      className="w-full flex flex-col gap-4" // flex-col puts children (Content & Div) in a stack
-      opts={{ loop: !isEmpty }}
+      className="w-full flex flex-col gap-4"
+      opts={{ loop: true }}
       plugins={[
         Autoplay({
           delay: 5000,
@@ -53,15 +66,20 @@ export function AppImageCarousel({ images, isLoading }: Props) {
         Fade(),
       ]}
     >
-      <CarouselContent className="aspect-video lg:aspect-auto lg:h-[375px]">
-        {!isEmpty ? <Content images={images} isLoading={isLoading} /> : <NotFoundCard/>}
-        
+      <CarouselContent className="aspect-video lg:aspect-auto lg:h-94">
+        <Content images={images} />
       </CarouselContent>
 
       <div className="w-full flex justify-between items-center">
         <div className="flex items-center justify-start gap-4">
-          <CarouselPrevious variant={'secondary'} className="static translate-y-0" disabled={isEmpty}/>
-          <CarouselNext variant={'secondary'} className="static translate-y-0" disabled={isEmpty}/>
+          <CarouselPrevious
+            variant={"secondary"}
+            className="static translate-y-0"
+          />
+          <CarouselNext
+            variant={"secondary"}
+            className="static translate-y-0"
+          />
         </div>
 
         <div className="ml-auto flex gap-2">
@@ -83,28 +101,22 @@ export function AppImageCarousel({ images, isLoading }: Props) {
   );
 }
 
-function Content({ images, isLoading }: Props) {
+function Content({ images }: { images: string[] }) {
   return (
     <>
-      {isLoading ? (
-        <CarouselItem>
-          <Skeleton className="w-full h-full" />
+      {images.map((link, index) => (
+        <CarouselItem key={index}>
+          <div className="h-full relative border rounded-md border-accent">
+            <AppImage
+              className="object-cover"
+              src={link}
+              fill
+              alt="idk image?"
+              wrapperClassName="rounded-md"
+            />
+          </div>
         </CarouselItem>
-      ) : (
-        images.map((link, index) => (
-          <CarouselItem key={index}>
-            <div className="h-full relative border rounded-md border-accent">
-              <AppImage
-                className="object-cover"
-                src={link}
-                fill
-                alt="idk image?"
-                wrapperClassName="rounded-md"
-              />
-            </div>
-          </CarouselItem>
-        ))
-      )}
+      ))}
     </>
   );
-}
+} 
