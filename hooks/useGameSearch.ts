@@ -13,7 +13,7 @@ export function useGameSearch() {
   const platformsArr = platforms.length > 0 ? platforms.split(",") : [];
 
   const [ordering, setOrdering] = useState(
-    searchParams.get("ordering") ?? "-released",
+    searchParams.get("ordering") ?? "-added",
   );
 
   const [activeFilters, setActiveFilters] = useState({

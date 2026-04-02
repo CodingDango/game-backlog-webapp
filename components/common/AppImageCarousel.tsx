@@ -60,8 +60,8 @@ export function AppImageCarousel({ images, isLoading }: Props) {
 
       <div className="w-full flex justify-between items-center">
         <div className="flex items-center justify-start gap-4">
-          <CarouselPrevious className="static translate-y-0" disabled={isEmpty}/>
-          <CarouselNext className="static translate-y-0" disabled={isEmpty}/>
+          <CarouselPrevious variant={'secondary'} className="static translate-y-0" disabled={isEmpty}/>
+          <CarouselNext variant={'secondary'} className="static translate-y-0" disabled={isEmpty}/>
         </div>
 
         <div className="ml-auto flex gap-2">

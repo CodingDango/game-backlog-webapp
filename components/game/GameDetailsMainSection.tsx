@@ -1,7 +1,10 @@
 import { AppImageCarousel } from "@/components/common/AppImageCarousel";
 import { PCRequirements } from "@/types/types";
-import GameSystemRequirements from "@/components/game/GameSystemRequirements";
 import { Skeleton } from "../ui/skeleton";
+import { Button } from "../ui/button";
+
+import GameSystemRequirements from "@/components/game/GameSystemRequirements";
+import ExpandableText from "../common/ExpandableText";
 
 interface GameDetailsMainSectionProps {
   screenshotUrls: string[];
@@ -18,20 +21,22 @@ export function GameDetailsMainSection({
 }: GameDetailsMainSectionProps) {
   return (
     <div className="flex flex-col gap-12 min-w-0">
-      <div className="relative max-h-[500px]">
+      <div className="relative max-h-125">
         <AppImageCarousel images={screenshotUrls} isLoading={isLoading} />
       </div>
 
       {/* About Section */}
       <div className="flex flex-col gap-2">
         <span className="text-xl font-semibold">About</span>
-        <div className="overflow-hidden space-y-4">
-          {!descriptionParagraphs.length && "No description provided"}
-          {descriptionParagraphs.length &&
-            descriptionParagraphs.map((paragraph, idx) => (
-              <p key={`paragraph-${idx}`}>{paragraph}</p>
-            ))}
-        </div>
+        <ExpandableText>
+          <div className="space-y-3">
+            {!descriptionParagraphs.length
+              ? "No description provided"
+              : descriptionParagraphs.map((paragraph, idx) => (
+                  <p key={`paragraph-${idx}`}>{paragraph}</p>
+                ))}
+          </div>
+        </ExpandableText>
       </div>
 
       {/* System Requirements */}
@@ -41,7 +46,7 @@ export function GameDetailsMainSection({
           <GameSystemRequirements requirements={pcRequirements} />
         ) : (
           <div className="text-muted-foreground">None listed.</div>
-        )}  
+        )}
       </div>
     </div>
   );
