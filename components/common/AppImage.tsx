@@ -15,6 +15,7 @@ export function AppImage({
   alt,
   className,
   wrapperClassName,
+  sizes = '720px',
   ...props
 }: AppImageProps) {
   const [isLoading, setLoading] = useState(true);
@@ -30,6 +31,7 @@ export function AppImage({
           src={src}
           alt={alt}
           onLoad={handleLoadingComplete}
+          sizes={sizes}
           className={cn(
             className,
             "transition-all duration-300 w-full h-full object-cover rounded-md",

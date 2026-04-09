@@ -7,7 +7,6 @@ import { useParams } from "next/navigation";
 import { useMemo } from "react";
 import { useOnInView } from "react-intersection-observer";
 import { Frown, History } from "lucide-react";
-import { sample } from "lodash";
 
 import useInfiniteActivity from "@/hooks/useInfiniteActivity";
 import ActivitySkeleton from "@/components/dashboard/ActivitySkeleton";

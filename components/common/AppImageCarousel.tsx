@@ -113,6 +113,7 @@ function Content({ images }: { images: string[] }) {
               fill
               alt="idk image?"
               wrapperClassName="rounded-md"
+              sizes="1080px"
             />
           </div>
         </CarouselItem>

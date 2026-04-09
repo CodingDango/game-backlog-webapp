@@ -14,7 +14,7 @@ export default function useInfiniteActivity({
 }: InfiniteActivityProps) {
   const { data, fetchNextPage, hasNextPage, isFetching, isLoading } = useInfiniteQuery({
     enabled: !!userId,
-    queryKey: ["user", userId, "activity"],
+    queryKey: ["user", userId, "activity", "infinite"],
     initialPageParam: 0,
     queryFn: async ({ pageParam = 0 }) => {
       const from = (pageParam ?? 0) * pageSize;

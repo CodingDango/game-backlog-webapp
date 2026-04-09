@@ -30,13 +30,13 @@ export default function RecentUserActivity({
         Recent Activity
       </CardTitle>
       <ScrollArea className="h-full overflow-hidden px-4 lg:px-6">
-        {userActivity.length ? (
+        {userActivity?.length ? (
           <div className="flex flex-col gap-y-4">
             {userActivity.map((activity, idx) => (
               <ActivityListItem 
                 key={`activity-icon-${activity.action_type}-${activity.id}`}
                 activity={activity} 
-                isLast={idx == userActivity.length - 1}
+                isLast={idx == userActivity?.length - 1}
                 textClass="text-sm"
               />
             ))}
